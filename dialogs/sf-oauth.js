@@ -28,7 +28,8 @@ module.exports = controller => {
                 console.log('keys----');
                 console.log(Object.keys(bot));
                 console.log('bot----');
-                console.dir(bot);
+                console.log(bot.api.team.info());
+                console.log(bot.api.team.profile());
                 const authUrl = connFactory.getAuthUrl(bot.team_id);
                 convo.setVar('authUrl',authUrl);
                 await convo.gotoThread('connect');
