@@ -26,10 +26,11 @@ module.exports = controller => {
                 console.log('nlp response----');
                 console.log(response);
                 var teamResponse = await bot.api.team.info();
-                console.log(teamResponse);
                 const authUrl = connFactory.getAuthUrl(teamResponse.team.id);
                 convo.setVar('authUrl','' + authUrl);
-                console.log('{{vars.authUrl}}');
+                var url = '{{vars.authUrl}}';
+                console.log(url);
+                console.log('----Convo.vars:', convo.vars)
                 await convo.gotoThread('connect');
             }
         },
