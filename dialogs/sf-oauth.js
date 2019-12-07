@@ -24,10 +24,11 @@ module.exports = controller => {
             pattern: '^(yes|yea|yup|yep|ya|sure|ok|y|yeah|yah)',
             handler: async function(response, convo, bot) {
                 console.log('nlp response----');
-                console.log(response);
-                console.dir(bot);
+
+                console.log('keys----');
                 console.log(Object.keys(bot));
-                console.dir(convo);
+                console.log('bot----');
+                console.dir(bot);
                 const authUrl = connFactory.getAuthUrl(bot.team_id);
                 convo.setVar('authUrl',authUrl);
                 await convo.gotoThread('connect');
