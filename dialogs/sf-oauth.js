@@ -25,8 +25,8 @@ module.exports = controller => {
             handler: async function(response, convo, bot) {
                 console.log('nlp response----');
                 console.log(response);
-                console.dir(bot.team.info());
-                console.dir(bot.team.profile());
+                console.dir(bot);
+                console.log(Object.keys(bot));
                 console.dir(convo);
                 const authUrl = connFactory.getAuthUrl(bot.team_id);
                 convo.setVar('authUrl',authUrl);
@@ -53,3 +53,4 @@ module.exports = controller => {
 
     controller.addDialog(convo);
 }
+
