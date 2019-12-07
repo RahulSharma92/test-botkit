@@ -25,9 +25,9 @@ module.exports = controller => {
             handler: async function(response, convo, bot) {
                 console.log('nlp response----');
                 console.log(response);
-                console.dir(bot.api.team.info());
-                console.dir(bot.api.team.profile);
-                const authUrl = connFactory.getAuthUrl(bot.team_id);
+                var teamResponse = await bot.api.team.info();
+                console.log(teamResponse);
+                const authUrl = connFactory.getAuthUrl(teamResponse.team.id);
                 convo.setVar('authUrl',authUrl);
                 await convo.gotoThread('connect');
             }
