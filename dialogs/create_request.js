@@ -31,8 +31,7 @@ module.exports = controller => {
         }
     }],'song', 'singing');
     
-    convo.addMessage('Bood bye  {{vars.name}}! It was nice knowing that ur fav color is {{vars.color}} and that you like singing', 'finalyes');
-    convo.addMessage('Bood bye  {{vars.name}}! It was nice knowing that ur fav color is {{vars.color}} and that you do not like singing', 'finalno');
+    convo.addMessage('Good bye  {{vars.name}}! It was nice knowing that ur fav color is {{vars.color}} and that you do not like singing', 'finalno');
 
     convo.addQuestion('Your name is {{vars.name}} and your favorite color is {{vars.color}}. Is that right?', [
         {
@@ -50,6 +49,16 @@ module.exports = controller => {
             }
         }
     ], 'confirm', 'confirmation');
+    
+    convo.addMessage({
+        text: `Good bye  {{vars.name}}! It was nice knowing that ur fav color is {{vars.color}} and that you like singing`,
+        action: 'complete'
+    }, 'finalyes');
+    convo.after(async(results, bot) => {
+        console.log('--------');
+        console.dir(results);
+   
+   });
     
     controller.addDialog(convo);
 }
