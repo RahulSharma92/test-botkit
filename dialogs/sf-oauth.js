@@ -27,10 +27,8 @@ module.exports = controller => {
                 console.log(response);
                 var teamResponse = await bot.api.team.info();
                 const authUrl = connFactory.getAuthUrl(teamResponse.team.id);
-                convo.setVar('authUrl','' + authUrl);
-                var url = '{{vars.authUrl}}';
-                console.log(url);
-                console.log('----Convo.vars:', convo.vars)
+                convo.setVar('authUrl',authUrl);
+                console.log('----Convo.vars:', convo.vars.authUrl);
                 await convo.gotoThread('connect');
             }
         },

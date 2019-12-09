@@ -31,7 +31,9 @@ module.exports = controller => {
                     } else {
                         await bot.beginDialog('sf_auth');
                     }
-                } else {
+                } else if (message.intent === 'create_request') {
+                    await bot.beginDialog('create_request');
+                }else {
                     await bot.reply(message, 'hello');
                 }
             } catch (err) {
