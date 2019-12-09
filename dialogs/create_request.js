@@ -8,7 +8,8 @@ module.exports = controller => {
     convo.ask('What is your name?', async(response, convo, bot) => {
         console.log(`user name is ${ response }`);
     }, 'name');
-
+    convo.addAction('favorite_color');
+    
     convo.addMessage('Awesome {{vars.name}}!', 'favorite_color');
     convo.addQuestion('Now, what is your favorite color?', async(response, convo, bot) => {
         console.log(`user favorite color is ${ response }`);
