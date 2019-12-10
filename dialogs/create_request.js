@@ -3,62 +3,21 @@ const connFactory = require('../util/connection-factory');
 
 module.exports = controller => {
     let convo = new BotkitConversation('create_request', controller);
-    convo.say('Howdy!');
-
-    convo.ask('What is your name?', async(response, convo, bot) => {
-        console.log(`user name is ${ response }`);
-    }, 'name');
-    convo.addAction('favorite_color');
-
-    convo.addMessage('Awesome {{vars.name}}!', 'favorite_color');
-    convo.addQuestion('Now, what is your favorite color?', async(response, convo, bot) => {
-        console.log(`user favorite color is ${ response }`);
-    },'color', 'favorite_color');
-
-    convo.addAction('confirmation' ,'favorite_color');
-    convo.addQuestion('Okay, Do you like singing', [{
-        pattern: 'no',
-        handler: async(response, convo, bot) => {
-            // if user says no, go back to favorite color.
-            await convo.gotoThread('finalno');
-        }
-    },
-    {
-        default: true,
-        handler: async(response, convo, bot) => {
-            console.dir(convo);
-            await convo.gotoThread('finalyes');
-        }
-    }],'song', 'singing');
-    
-    convo.addMessage('Good bye  {{vars.name}}! It was nice knowing that ur fav color is {{vars.color}} and that you do not like singing', 'finalno');
-
-    convo.addQuestion('Your name is {{vars.name}} and your favorite color is {{vars.color}}. Is that right?', [
-        {
-            pattern: 'no',
-            handler: async(response, convo, bot) => {
-                // if user says no, go back to favorite color.
-                await convo.gotoThread('favorite_color');
-            }
-        },
+    convo.addQuestion('Please Enter the Account Name u want to create request for', [
         {
             default: true,
-            handler: async(response, convo, bot) => {
-                console.dir(convo);
-                await convo.gotoThread('singing');
+            handler: async function(response, convo, bot) {
+                let existingConn = await connFactory.getConnection(message.team, controller);
+                if (existingConn) {
+                    console.log('instance url----' + existingConn.instanceUrl);
+                }
+                console.log('nlp response----');
+                console.log(response);
+                console.log(response);
+                bot.say('url' + existingConn.instanceUrl);
             }
         }
-    ], 'confirm', 'confirmation');
-    
-    convo.addMessage({
-        text: `Good bye  {{vars.name}}! It was nice knowing that ur fav color is {{vars.color}} and that you like singing`,
-        action: 'complete'
-    }, 'finalyes');
-    convo.after(async(results, bot) => {
-        console.log('--------');
-        console.dir(results);
-   
-   });
-    
+    ], 'reconnect', 'default');
+
     controller.addDialog(convo);
 }

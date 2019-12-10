@@ -36,7 +36,7 @@ module.exports = controller => {
                 } else if (message.intent === 'create_request') {
                     await bot.beginDialog('create_request');
                 } else {
-                    await bot.beginDialog('create_request');
+                    bot.say("Hello");
                 }
             } catch (err) {
                 logger.log(err);
