@@ -7,7 +7,8 @@ module.exports = controller => {
         {
             default: true,
             handler: async function(response, convo, bot) {
-                let existingConn = await connFactory.getConnection(message.team, controller);
+                var teamResponse = await bot.api.team.info();
+                let existingConn = await connFactory.getConnection(teamResponse.team.id, controller);
                 if (existingConn) {
                     console.log('instance url----' + existingConn.instanceUrl);
                 }
