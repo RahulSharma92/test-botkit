@@ -40,14 +40,15 @@ module.exports = controller => {
                     console.dir(message);
                     let existingConn = await connFactory.getConnection(message.team, controller);
                     if (existingConn) {
-                        
+                        console.log('existingConn*****');
                         await bot.beginDialog('create_request');
+                        console.log(message.entities.Account);
                         let convo = new BotkitConversation('create_request', controller);
-                        if (Account == '') {
-                            convo.addAction(getAccount);
+                        if (message.entities.Account == '') {
+                            await convo.gotoThread('getAccount');
                         } else {
-                            console.log(Account);
-                            getAccounts(existingConn,Account);
+                            console.log(message.entities.Account);
+                            getAccounts(existingConn,message.entities.Account);
                         }
                     } else if (!existingConn) {
                         const authUrl = connFactory.getAuthUrl(message.team);
