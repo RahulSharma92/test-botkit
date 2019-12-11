@@ -38,7 +38,7 @@ module.exports = controller => {
                     }
                 } else if (message.intent === 'create_request') {
                     console.dir(message);
-                    let existingConn = await connFactory.getConnection(teamResponse.team.id, controller);
+                    let existingConn = await connFactory.getConnection(message.team, controller);
                     if (existingConn) {
                         
                         await bot.beginDialog('create_request');
