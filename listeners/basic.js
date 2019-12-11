@@ -41,7 +41,6 @@ module.exports = controller => {
                     let existingConn = await connFactory.getConnection(message.team, controller);
                     if (existingConn) {
                         console.log('existingConn*****');
-                        await bot.beginDialog('create_request');
                         console.log(message.entities);
                         console.log('*******entities');
                         let convo = new BotkitConversation('create_request', controller);
@@ -63,6 +62,8 @@ module.exports = controller => {
                                 }
                             }
                         ], 'reconnect', 'getRefType');
+                        await bot.beginDialog('create_request');
+                        
                         if (message.entities.Account == '') {
                             await convo.gotoThread('getAccount');
                         } else {
