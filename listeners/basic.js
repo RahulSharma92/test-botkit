@@ -42,8 +42,27 @@ module.exports = controller => {
                     if (existingConn) {
                         console.log('existingConn*****');
                         await bot.beginDialog('create_request');
-                        console.log(message.entities.Account);
+                        console.log(message.entities);
+                        console.log('*******entities');
                         let convo = new BotkitConversation('create_request', controller);
+                        convo.addQuestion(message.text, [
+                            {
+                                default: true,
+                                handler: async function(response, convo, bot) {
+                                    console.log('nlp response----');
+                                    console.log(response);
+                                }
+                            }
+                        ], 'account', 'getAccount');
+                        convo.addQuestion(message.text, [
+                            {
+                                default: true,
+                                handler: async function(response, convo, bot) {
+                                    console.log('nlp response----');
+                                    console.log(response);
+                                }
+                            }
+                        ], 'reconnect', 'getRefType');
                         if (message.entities.Account == '') {
                             await convo.gotoThread('getAccount');
                         } else {
@@ -54,24 +73,6 @@ module.exports = controller => {
                         const authUrl = connFactory.getAuthUrl(message.team);
                         await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
                     } 
-                    convo.addQuestion(message.text, [
-                        {
-                            default: true,
-                            handler: async function(response, convo, bot) {
-                                console.log('nlp response----');
-                                console.log(response);
-                            }
-                        }
-                    ], 'account', 'getAccount');
-                    convo.addQuestion(message.text, [
-                        {
-                            default: true,
-                            handler: async function(response, convo, bot) {
-                                console.log('nlp response----');
-                                console.log(response);
-                            }
-                        }
-                    ], 'reconnect', 'getRefType');
                 } else {
                     bot.say("Hello");
                 }
