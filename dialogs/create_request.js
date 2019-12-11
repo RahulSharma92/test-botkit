@@ -2,7 +2,7 @@ const { BotkitConversation } = require('botkit');
 const connFactory = require('../util/connection-factory');
 
 module.exports = controller => {
-    let convo = new BotkitConversation('create_request', controller);
+    let convo = new BotkitConversation('create_requests', controller);
     convo.addQuestion('Please Enter the Account Name u want to create request for', [
         {
             default: true,
