@@ -1,5 +1,7 @@
 const connFactory = require('../util/connection-factory');
 const logger = require('../util/logger');
+const { BotkitConversation } = require('botkit');
+
 const { checkTeamMigration } = require('../listeners/middleware/migration-filter');
 
 module.exports = controller => {
