@@ -62,9 +62,10 @@ module.exports = controller => {
                                 }
                             }
                         ], 'reconnect', 'getRefType');
-                        await bot.beginDialog('create_request');
-                        
+                        controller.addDialog(convo);
+
                         if (message.entities.Account == '') {
+                            await bot.beginDialog('create_request');
                             await convo.gotoThread('getAccount');
                         } else {
                             console.log(message.entities.Account);
