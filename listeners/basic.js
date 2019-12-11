@@ -38,8 +38,8 @@ module.exports = controller => {
                     }
                 } else if (message.intent === 'create_request') {
                     console.dir(message);
+                    let existingConn = await connFactory.getConnection(teamResponse.team.id, controller);
                     if (existingConn) {
-                        let existingConn = await connFactory.getConnection(teamResponse.team.id, controller);
                         
                         await bot.beginDialog('create_request');
                         let convo = new BotkitConversation('create_request', controller);
