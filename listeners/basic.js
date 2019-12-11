@@ -1,5 +1,6 @@
 const connFactory = require('../util/connection-factory');
 const logger = require('../util/logger');
+const { getAccounts } = require('../util/refedge');
 const { BotkitConversation } = require('botkit');
 
 const { checkTeamMigration } = require('../listeners/middleware/migration-filter');
@@ -37,24 +38,39 @@ module.exports = controller => {
                     }
                 } else if (message.intent === 'create_request') {
                     console.dir(message);
-                    await bot.beginDialog('create_request');
-                    let convo = new BotkitConversation('create_request', controller);
-                    convo.addQuestion('Please Enter the Account Name u want to create request for', [
+                    if (existingConn) {
+                        let existingConn = await connFactory.getConnection(teamResponse.team.id, controller);
+                        
+                        await bot.beginDialog('create_request');
+                        let convo = new BotkitConversation('create_request', controller);
+                        if (Account == '') {
+                            convo.addAction(getAccount);
+                        } else {
+                            console.log(Account);
+                            getAccounts(existingConn,Account);
+                        }
+                    } else if (!existingConn) {
+                        const authUrl = connFactory.getAuthUrl(message.team);
+                        await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
+                    } 
+                    convo.addQuestion(message.text, [
                         {
                             default: true,
                             handler: async function(response, convo, bot) {
-                                var teamResponse = await bot.api.team.info();
-                                let existingConn = await connFactory.getConnection(teamResponse.team.id, controller);
-                                if (existingConn) {
-                                    console.log('instance url----' + existingConn.instanceUrl);
-                                }
                                 console.log('nlp response----');
                                 console.log(response);
-                                console.log(response);
-                                bot.say('url' + existingConn.instanceUrl);
                             }
                         }
-                    ], 'reconnect', 'default');
+                    ], 'account', 'getAccount');
+                    convo.addQuestion(message.text, [
+                        {
+                            default: true,
+                            handler: async function(response, convo, bot) {
+                                console.log('nlp response----');
+                                console.log(response);
+                            }
+                        }
+                    ], 'reconnect', 'getRefType');
                 } else {
                     bot.say("Hello");
                 }

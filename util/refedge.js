@@ -8,5 +8,17 @@ module.exports = {
                 logger.log(err);
             }
         });
+    },
+    getAccounts: (conn, accName) => {
+        conn.apex.get('/rebot', accName, (err, res) => {
+
+            if (err) {
+                logger.log(err);
+            }
+            if (res) {
+                logger.log(res);
+            }
+        });
     }
+
 };

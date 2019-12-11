@@ -18,7 +18,7 @@ module.exports = controller => {
                 bot.say('url' + existingConn.instanceUrl);
             }
         }
-    ], 'reconnect', 'default');
+    ], 'reconnect', 'retry');
 
     controller.addDialog(convo);
 }
