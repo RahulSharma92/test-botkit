@@ -38,38 +38,20 @@ module.exports = controller => {
                     }
                 } else if (message.intent === 'create_request') {
                     console.dir(message);
+                    console.dir(message.context);
                     let existingConn = await connFactory.getConnection(message.team, controller);
                     if (existingConn) {
                         console.log('existingConn*****');
                         console.log(message.entities);
                         console.log('*******entities');
-                        let convo = new BotkitConversation('create_request', controller);
-                        convo.addQuestion(message.text, [
-                            {
-                                default: true,
-                                handler: async function(response, convo, bot) {
-                                    console.log('nlp response----');
-                                    console.log(response);
-                                }
-                            }
-                        ], 'account', 'getAccount');
-                        convo.addQuestion(message.text, [
-                            {
-                                default: true,
-                                handler: async function(response, convo, bot) {
-                                    console.log('nlp response----');
-                                    console.log(response);
-                                }
-                            }
-                        ], 'reconnect', 'getRefType');
-                        controller.addDialog(convo);
-
                         if (message.entities.Account == '') {
-                            await bot.beginDialog('create_request');
-                            await convo.gotoThread('getAccount');
+                            await bot.reply(message, message.text);
                         } else {
                             console.log(message.entities.Account);
-                            getAccounts(existingConn,message.entities.Account);
+                            var accounts = getAccounts(existingConn,message.entities.Account);
+                            if (accounts == null) {
+                                await bot.reply(message, 'No Active reference program member found by name:' + message.entities.Account);
+                            }
                         }
                     } else if (!existingConn) {
                         const authUrl = connFactory.getAuthUrl(message.team);

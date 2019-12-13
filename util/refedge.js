@@ -10,15 +10,25 @@ module.exports = {
         });
     },
     getAccounts: (conn, accName) => {
-        conn.apex.get('/rebot', accName, (err, res) => {
+        console.log('accName :: ' + accName);
+        if (accName == '' || accName == null) {
+            return 'false';
+        } else {
+            conn.apex.get('/rebot/' + accName , accName, (err, res) => {
 
-            if (err) {
-                logger.log(err);
-            }
-            if (res) {
-                logger.log(res);
-            }
-        });
+                if (err) {
+                    logger.log(err);
+                }
+                if (res) {
+                    console.dir(res);
+                    if (res == 'false') {
+                        return null;
+                    }
+                    logger.log(res);
+                }
+                return res;
+            });
+        }
     }
 
 };
