@@ -25,7 +25,7 @@ module.exports = {
                         return null;
                     } else {
                         res = JSON.parse(res);
-                        console.log(m);
+                        console.log(res);
                         Object.keys(res).forEach(function(k){
                             console.log(k + ' - ' + res[k]);
                             var entry = {
@@ -37,6 +37,8 @@ module.exports = {
                             }
                             val.push(entry);
                         });
+                        console.log('---------******');
+                        console.log(val);
                         return val;
                     }
                 }
