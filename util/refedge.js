@@ -25,6 +25,7 @@ module.exports = {
                         return null;
                     } else {
                         res = JSON.parse(res);
+                        console.log(m);
                         Object.keys(res).forEach(function(k){
                             console.log(k + ' - ' + res[k]);
                             var entry = {
