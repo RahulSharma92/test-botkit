@@ -15,16 +15,29 @@ module.exports = {
             return 'false';
         } else {
             conn.apex.get('/rebot/' + accName , accName, (err, res) => {
-
+                var val = [];
                 if (err) {
                     logger.log(err);
                 }
                 if (res) {
-                    console.dir(res);
+                    
                     if (res == 'false') {
                         return null;
+                    } else {
+                        res = JSON.parse(res);
+                        Object.keys(res).forEach(function(k){
+                            console.log(k + ' - ' + res[k]);
+                            var entry = {
+                                "text": {
+                                    "type": "plain_text",
+                                    "text": res[k]
+                                },
+                                "value": k
+                            }
+                            val.push(entry);
+                        });
+                        return val;
                     }
-                    logger.log(res);
                 }
                 return res;
             });

@@ -37,20 +37,44 @@ module.exports = controller => {
                         await bot.beginDialog('sf_auth');
                     }
                 } else if (message.intent === 'create_request') {
-                    console.dir(message);
+                    console.log('************message.context--------------')
                     console.dir(message.context);
                     let existingConn = await connFactory.getConnection(message.team, controller);
+                    
                     if (existingConn) {
-                        console.log('existingConn*****');
-                        console.log(message.entities);
-                        console.log('*******entities');
+                        
                         if (message.entities.Account == '') {
                             await bot.reply(message, message.text);
                         } else {
-                            console.log(message.entities.Account);
                             var accounts = getAccounts(existingConn,message.entities.Account);
+                            console.log(accounts);
                             if (accounts == null) {
                                 await bot.reply(message, 'No Active reference program member found by name:' + message.entities.Account);
+                            } else if (accounts.size() > 1) {
+                                const content = {
+                                    "blocks" : [
+                                  {
+                                    "type": "section",
+                                    "block_id": "section678",
+                                    "text": {
+                                      "type": "mrkdwn",
+                                      "text": "Please select an account from the dropdown list"
+                                    },
+                                    "accessory": {
+                                      "action_id": "text1234",
+                                      "type": "static_select",
+                                      "placeholder": {
+                                        "type": "plain_text",
+                                        "text": "Select an item"
+                                      },
+                                      "options": accounts
+                                    }
+                                  }
+                                ]};
+                                
+                                bot.reply(message, content);
+                            } else {
+                                await bot.reply(message, message.text);
                             }
                         }
                     } else if (!existingConn) {
