@@ -37,8 +37,6 @@ module.exports = controller => {
                         await bot.beginDialog('sf_auth');
                     }
                 } else if (message.intent === 'create_request') {
-                    console.log('************message.context--------------')
-                    console.dir(message.context);
                     let existingConn = await connFactory.getConnection(message.team, controller);
                     
                     if (existingConn) {
@@ -47,10 +45,11 @@ module.exports = controller => {
                             await bot.reply(message, message.text);
                         } else { 
                             let accounts = await getAccounts(existingConn,message.entities.Account);
-                            console.log(accounts);
+                            console.log('3 After GetAccounts ' + accounts);
                             if (accounts == null) {
                                 await bot.reply(message, 'No Active reference program member found by name:' + message.entities.Account);
                             } else if (Object.keys(accounts).length > 1) {
+                                console.log('4 After After GetAccounts ' + accounts);
                                 const content = {
                                     "blocks" : [
                                   {

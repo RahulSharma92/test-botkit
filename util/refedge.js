@@ -10,7 +10,7 @@ module.exports = {
         });
     },
     getAccounts: async (conn, accName) => {
-        console.log('accName :: ' + accName);
+        console.log('1 initial accName :: ' + accName);
         if (accName == '' || accName == null) {
             return 'false';
         } else {
@@ -21,11 +21,11 @@ module.exports = {
                 }
                 if (res) {
                     if (res == 'false') {
+                        console.log('2 null');
                         return null;
                     } else {
                         res = JSON.parse(res);
                         Object.keys(res).forEach(function(k){
-                            console.log(k + ' - ' + res[k]);
                             var entry = {
                                 "text": {
                                     "type": "plain_text",
@@ -35,7 +35,7 @@ module.exports = {
                             }
                             val.push(entry);
                         });
-                        console.log('---------******');
+                        console.log('2 ---------******');
                         console.log(val);
                         return val;
                     }
