@@ -46,36 +46,37 @@ module.exports = controller => {
                         if (message.entities.Account == '') {
                             await bot.reply(message, message.text);
                         } else {
-                            var accounts = getAccounts(existingConn,message.entities.Account);
-                            console.log(accounts);
-                            if (accounts == null) {
-                                await bot.reply(message, 'No Active reference program member found by name:' + message.entities.Account);
-                            } else if (accounts.size() > 1) {
-                                const content = {
-                                    "blocks" : [
-                                  {
-                                    "type": "section",
-                                    "block_id": "section678",
-                                    "text": {
-                                      "type": "mrkdwn",
-                                      "text": "Please select an account from the dropdown list"
-                                    },
-                                    "accessory": {
-                                      "action_id": "text1234",
-                                      "type": "static_select",
-                                      "placeholder": {
-                                        "type": "plain_text",
-                                        "text": "Select an item"
-                                      },
-                                      "options": accounts
+                            getAccounts(existingConn,message.entities.Account).then(function(accounts) {
+                                console.log(accounts);
+                                if (accounts == null) {
+                                    await bot.reply(message, 'No Active reference program member found by name:' + message.entities.Account);
+                                } else if (accounts.size() > 1) {
+                                    const content = {
+                                        "blocks" : [
+                                    {
+                                        "type": "section",
+                                        "block_id": "section678",
+                                        "text": {
+                                        "type": "mrkdwn",
+                                        "text": "Please select an account from the dropdown list"
+                                        },
+                                        "accessory": {
+                                        "action_id": "text1234",
+                                        "type": "static_select",
+                                        "placeholder": {
+                                            "type": "plain_text",
+                                            "text": "Select an item"
+                                        },
+                                        "options": accounts
+                                        }
                                     }
-                                  }
-                                ]};
-                                
-                                bot.reply(message, content);
-                            } else {
-                                await bot.reply(message, message.text);
-                            }
+                                    ]};
+                                    
+                                    bot.reply(message, content);
+                                } else {
+                                    await bot.reply(message, message.text);
+                                }
+                            });
                         }
                     } else if (!existingConn) {
                         const authUrl = connFactory.getAuthUrl(message.team);
