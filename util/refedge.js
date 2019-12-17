@@ -21,8 +21,8 @@ module.exports = {
                 } else  if (response) {
                     if (response == 'false') {
                         console.log('2 null');
-                        return null;
                     } else {
+                        response = JSON.parse(response);
                         Object.keys(response).forEach(function(k){
                             var entry = {
                                 "text": {
