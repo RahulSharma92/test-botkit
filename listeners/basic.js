@@ -25,7 +25,12 @@ module.exports = controller => {
 
             try {
                 console.log('nlp response----');
-                console.log(message.intent, message.entities, message.fulfillment);
+                console.log('message.intent');
+                console.log(message.intent)
+                console.log('message.entities');
+                console.log(message.entities);
+                console.log('message.fulfillment');
+                console.log(message.fulfillment);
 
                 if (message.intent === 'connect_to_sf') {
                     let existingConn = await connFactory.getConnection(message.team, controller);
@@ -45,7 +50,8 @@ module.exports = controller => {
                             await bot.reply(message, message.text);
                         } else { 
                             let accounts = await getAccounts(existingConn,message.entities.Account);
-                            console.log('4 After GetAccounts ' + accounts);
+                            console.log('4 After GetAccounts ');
+                            console.dir(accounts);
                             if (accounts == null) {
                                 await bot.reply(message, 'No Active reference program member found by name:' + message.entities.Account);
                             } else if (Object.keys(accounts).length > 1) {
@@ -88,6 +94,11 @@ module.exports = controller => {
             }
         }
     );
+    controller.hears('interactive', 'direct_message', function(bot, message) {
+        console.log('interactive message');
+        console.dir(message);
+        bot.reply(message, message.text);
+    });
 
     controller.on('oauth_success', async authData => {
 
