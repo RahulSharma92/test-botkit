@@ -45,7 +45,7 @@ module.exports = controller => {
                         
                         if (message.entities.Account == '') {
                             await bot.reply(message, message.text);
-                        } else {
+                        } else { 
                             let accounts = await getAccounts(existingConn,message.entities.Account);
                             console.log(accounts);
                             if (accounts == null) {
