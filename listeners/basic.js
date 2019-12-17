@@ -45,11 +45,11 @@ module.exports = controller => {
                             await bot.reply(message, message.text);
                         } else { 
                             let accounts = await getAccounts(existingConn,message.entities.Account);
-                            console.log('3 After GetAccounts ' + accounts);
+                            console.log('4 After GetAccounts ' + accounts);
                             if (accounts == null) {
                                 await bot.reply(message, 'No Active reference program member found by name:' + message.entities.Account);
                             } else if (Object.keys(accounts).length > 1) {
-                                console.log('4 After After GetAccounts ' + accounts);
+                                console.log('5 After After GetAccounts ' + accounts);
                                 const content = {
                                     "blocks" : [
                                   {

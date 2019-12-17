@@ -15,35 +15,31 @@ module.exports = {
             return 'false';
         } else {
             var val = [];
-            var response = conn.apex.get('/rebot/' + accName , accName, (err, res) => {
+            await conn.apex.get('/rebot/' + accName , accName, (err, response) => {
                 if (err) {
                     logger.log(err);
+                } else  if (response) {
+                    if (response == 'false') {
+                        console.log('2 null');
+                        return null;
+                    } else {
+                        Object.keys(response).forEach(function(k){
+                            var entry = {
+                                "text": {
+                                    "type": "plain_text",
+                                    "text": response[k]
+                                },
+                                "value": k
+                            }
+                            val.push(entry);
+                        });
+                        console.log('2 ---------******');
+                        console.log(val);
+                    }
                 }
-                return res;
             });
-            console.log(response);
-            
-            if (response) {
-                if (response == 'false') {
-                    console.log('2 null');
-                    return null;
-                } else {
-                    response = JSON.parse(response);
-                    Object.keys(response).forEach(function(k){
-                        var entry = {
-                            "text": {
-                                "type": "plain_text",
-                                "text": response[k]
-                            },
-                            "value": k
-                        }
-                        val.push(entry);
-                    });
-                    console.log('2 ---------******');
-                    console.log(val);
-                    return val;
-                }
-            }
+            console.log('3 ---------******');
+            return val;
         }
     }
 
