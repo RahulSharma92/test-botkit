@@ -103,6 +103,15 @@ module.exports = controller => {
             logger.log(err);
         }
     });
+    controller.on('message_actions', async function(bot, message) {
+        try {
+            console.log('message_actions');
+            console.dir(message);
+            await bot.reply(message, message.text);
+        } catch (err) {
+            logger.log(err);
+        }
+    });
     controller.on('interactive_message_callback',async function(bot, message) {
 
         console.log('interactive_message_callback');
