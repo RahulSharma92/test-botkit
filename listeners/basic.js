@@ -25,6 +25,7 @@ module.exports = controller => {
 
             try {
                 console.log('nlp response----');
+                console.dir(message)
                 console.log('message.intent');
                 console.log(message.intent)
                 console.log('message.entities');
@@ -76,8 +77,7 @@ module.exports = controller => {
                                     }
                                   }
                                 ]};
-                                
-                                bot.reply(message, content);
+                                await bot.reply(message, content);
                             } else {
                                 await bot.reply(message, message.text);
                             }
@@ -94,14 +94,17 @@ module.exports = controller => {
             }
         }
     );
-    controller.hears('interactive', 'direct_message', function(bot, message) {
+    controller.on('block_actions', function(bot, message) {
         try {
             console.log('interactive message');
             console.dir(message);
-            bot.reply(message, message.text);
+            await bot.reply(message, message.text);
         } catch (err) {
             logger.log(err);
         }
+    });
+    controller.on('interactive', 'direct_message', function(bot, message) {
+        
     });
 
     controller.on('oauth_success', async authData => {
