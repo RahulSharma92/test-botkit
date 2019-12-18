@@ -94,7 +94,7 @@ module.exports = controller => {
             }
         }
     );
-    controller.on('block_actions', function(bot, message) {
+    controller.on('block_actions', async function(bot, message) {
         try {
             console.log('interactive message');
             console.dir(message);
@@ -102,9 +102,6 @@ module.exports = controller => {
         } catch (err) {
             logger.log(err);
         }
-    });
-    controller.on('interactive', 'direct_message', function(bot, message) {
-        
     });
 
     controller.on('oauth_success', async authData => {
