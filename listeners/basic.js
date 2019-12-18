@@ -95,9 +95,13 @@ module.exports = controller => {
         }
     );
     controller.hears('interactive', 'direct_message', function(bot, message) {
-        console.log('interactive message');
-        console.dir(message);
-        bot.reply(message, message.text);
+        try {
+            console.log('interactive message');
+            console.dir(message);
+            bot.reply(message, message.text);
+        } catch (err) {
+            logger.log(err);
+        }
     });
 
     controller.on('oauth_success', async authData => {
