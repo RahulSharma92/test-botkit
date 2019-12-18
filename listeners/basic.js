@@ -96,12 +96,19 @@ module.exports = controller => {
     );
     controller.on('block_actions', async function(bot, message) {
         try {
-            console.log('interactive message');
+            console.log('block_actions');
             console.dir(message);
             await bot.reply(message, message.text);
         } catch (err) {
             logger.log(err);
         }
+    });
+    controller.on('interactive_message_callback',async function(bot, message) {
+
+        console.log('interactive_message_callback');
+        console.dir(message);
+        await bot.reply(message, message.text);
+    
     });
 
     controller.on('oauth_success', async authData => {
