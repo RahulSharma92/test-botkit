@@ -113,15 +113,6 @@ module.exports = controller => {
             logger.log(err);
         }
     });
-    controller.on('accountSelect', async function(bot, message) {
-        try {
-            console.log('accountSelect');
-            console.dir(message);
-            await bot.reply(message, message.text);
-        } catch (err) {
-            logger.log(err);
-        }
-    });
 
     controller.on('interactive_message_callback',async function(bot, message) {
 
