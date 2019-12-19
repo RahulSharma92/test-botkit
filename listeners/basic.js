@@ -94,6 +94,25 @@ module.exports = controller => {
             }
         }
     );
+    controller.on('block_actions', async function(bot, message) {
+        try {
+            console.log('block_actions');
+            console.dir(message);
+            await bot.reply(message, message.text);
+        } catch (err) {
+            logger.log(err);
+        }
+    });
+
+    controller.on('static_select', async(bot, message) {
+        try {
+            console.log('static_select');
+            console.dir(message);
+            await bot.reply(message, message.text);
+        } catch (err) {
+            logger.log(err);
+        }
+    });
     controller.on('accountSelect', async function(bot, message) {
         try {
             console.log('accountSelect');
@@ -107,6 +126,13 @@ module.exports = controller => {
     controller.on('interactive_message_callback',async function(bot, message) {
 
         console.log('interactive_message_callback');
+        console.dir(message);
+        await bot.reply(message, message.text);
+    
+    });
+    controller.on('interactive_message',async function(bot, message) {
+
+        console.log('interactive_message');
         console.dir(message);
         await bot.reply(message, message.text);
     
