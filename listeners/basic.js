@@ -18,7 +18,15 @@ module.exports = controller => {
     controller.addDialog(convo);*/
 
     
+    controller.on('message',async function(bot, message) {
 
+        if (message.action != null) {
+            for (const action of message.actions) {
+                console.log(action);
+            }   
+        }
+    
+    });
     controller.on(
         'direct_message',
         async (bot, message) => {
@@ -94,23 +102,16 @@ module.exports = controller => {
             }
         }
     );
-    controller.on('block_actions', async function(bot, message) {
-        try {
-            console.log('block_actions');
-            console.dir(message);
-            await bot.reply(message, message.text);
-        } catch (err) {
-            logger.log(err);
-        }
+    controller.on('block_actions', async(bot, message) => {
+        console.log('block_actions');
+        await controller.trigger(message.channelData.actions[0].type, bot, message)
     });
-
-    controller.on('interactive_message_callback',async function(bot, message) {
-
-        console.log('interactive_message_callback');
+    controller.on('static_select', async(bot, message) => { 
+        console.log('static_select');
         console.dir(message);
-        await bot.reply(message, message.text);
-    
+        await bot.reply(message, message.text); 
     });
+    
     controller.on('interactive_message',async function(bot, message) {
 
         console.log('interactive_message');
