@@ -104,16 +104,6 @@ module.exports = controller => {
         }
     });
 
-    controller.on('static_select', async(bot, message) {
-        try {
-            console.log('static_select');
-            console.dir(message);
-            await bot.reply(message, message.text);
-        } catch (err) {
-            logger.log(err);
-        }
-    });
-
     controller.on('interactive_message_callback',async function(bot, message) {
 
         console.log('interactive_message_callback');
