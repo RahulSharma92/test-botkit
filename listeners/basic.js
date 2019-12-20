@@ -19,7 +19,7 @@ module.exports = controller => {
 
     
     controller.on('message',async function(bot, message) {
-
+        console.log(message.action);
         if (message.action != null) {
             for (const action of message.actions) {
                 console.log(action);
@@ -102,7 +102,7 @@ module.exports = controller => {
             }
         }
     );
-    controller.on('block_actions', async(bot, message) => {
+    controller.on('section', async(bot, message) => {
         console.log('block_actions');
         await controller.trigger(message.channelData.actions[0].type, bot, message)
     });
