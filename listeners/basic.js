@@ -19,7 +19,8 @@ module.exports = controller => {
 
     
     controller.on('message',async function(bot, message) {
-        console.log(message.action);
+        console.log('message');
+        console.dir(message);
         if (message.action != null) {
             for (const action of message.actions) {
                 console.log(action);
@@ -103,8 +104,9 @@ module.exports = controller => {
         }
     );
     controller.on('section', async(bot, message) => {
-        console.log('block_actions');
-        await controller.trigger(message.channelData.actions[0].type, bot, message)
+        console.log('section');
+        console.dir(message);
+        await bot.reply(message, 'Done');
     });
     controller.on('static_select', async(bot, message) => { 
         console.log('static_select');
