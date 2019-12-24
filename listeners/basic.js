@@ -22,7 +22,7 @@ module.exports = controller => {
         console.log('block_actions');
         console.dir(message);
         // Account selected
-        if (message.actions != null && message.actions.action_id == 'accountSelect') {
+        if (message.actions != null) {
             console.dir(message.outputContexts);
             await bot.reply(message, message.actions.selected_option + 'has been selected');
         }
@@ -86,7 +86,7 @@ module.exports = controller => {
                                 ]};
                                 await bot.reply(message, content);
                             } else if (Object.keys(accounts).length = 1) {
-                                let refs = await getRefs(existingConn,message.entities.Account);
+                                //let refs = await getRefs(existingConn,message.entities.Account);
                                 await bot.reply(message, message.fulfillment.text);
                             } else {
                                 await bot.reply(message, message.fulfillment.text);
