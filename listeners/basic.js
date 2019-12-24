@@ -18,16 +18,16 @@ module.exports = controller => {
     controller.addDialog(convo);*/
 
     
-    controller.on('message',async function(bot, message) {
-        console.log('message');
+    controller.on('block_actions',async function(bot, message) {
+        console.log('block_actions');
         console.dir(message);
-        if (message.action != null) {
-            for (const action of message.actions) {
-                console.log(action);
-            }   
+        // Account selected
+        if (message.actions != null && message.actions.action_id == 'accountSelect') {
+            console.dir(message.outputContexts);
+            await bot.reply(message, message.actions.selected_option + 'has been selected');
         }
-    
     });
+
     controller.on(
         'direct_message',
         async (bot, message) => {
@@ -57,15 +57,13 @@ module.exports = controller => {
                     if (existingConn) {
                         
                         if (message.entities.Account == '') {
-                            await bot.reply(message, message.text);
+                            await bot.reply(message, message.fulfillment.text);
                         } else { 
                             let accounts = await getAccounts(existingConn,message.entities.Account);
-                            console.log('4 After GetAccounts ');
-                            console.dir(accounts);
+                            
                             if (accounts == null) {
                                 await bot.reply(message, 'No Active reference program member found by name:' + message.entities.Account);
                             } else if (Object.keys(accounts).length > 1) {
-                                console.log('5 After After GetAccounts ' + accounts);
                                 const content = {
                                     "blocks" : [
                                   {
@@ -87,8 +85,11 @@ module.exports = controller => {
                                   }
                                 ]};
                                 await bot.reply(message, content);
+                            } else if (Object.keys(accounts).length = 1) {
+                                let refs = await getRefs(existingConn,message.entities.Account);
+                                await bot.reply(message, message.fulfillment.text);
                             } else {
-                                await bot.reply(message, message.text);
+                                await bot.reply(message, message.fulfillment.text);
                             }
                         }
                     } else if (!existingConn) {
@@ -103,24 +104,6 @@ module.exports = controller => {
             }
         }
     );
-    controller.on('section', async(bot, message) => {
-        console.log('section');
-        console.dir(message);
-        await bot.reply(message, 'Done');
-    });
-    controller.on('static_select', async(bot, message) => { 
-        console.log('static_select');
-        console.dir(message);
-        await bot.reply(message, message.text); 
-    });
-    
-    controller.on('interactive_message',async function(bot, message) {
-
-        console.log('interactive_message');
-        console.dir(message);
-        await bot.reply(message, message.text);
-    
-    });
 
     controller.on('oauth_success', async authData => {
 

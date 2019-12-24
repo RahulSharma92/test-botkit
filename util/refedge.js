@@ -10,7 +10,6 @@ module.exports = {
         });
     },
     getAccounts: async (conn, accName) => {
-        console.log('1 initial accName :: ' + accName);
         if (accName == '' || accName == null) {
             return 'false';
         } else {
@@ -19,9 +18,7 @@ module.exports = {
                 if (err) {
                     logger.log(err);
                 } else  if (response) {
-                    if (response == 'false') {
-                        console.log('2 null');
-                    } else {
+                    if (response != 'false') {
                         response = JSON.parse(response);
                         Object.keys(response).forEach(function(k){
                             var entry = {
@@ -33,12 +30,36 @@ module.exports = {
                             }
                             val.push(entry);
                         });
-                        console.log('2 ---------******');
-                        console.log(val);
                     }
                 }
             });
-            console.log('3 ---------******');
+            return val;
+        }
+    },
+    getRefs: async (conn, refName) => {
+        if (refName == '' || refName == null) {
+            return 'false';
+        } else {
+            var val = [];
+            await conn.apex.get('/rebot/' + refName , refName, (err, response) => {
+                if (err) {
+                    logger.log(err);
+                } else  if (response) {
+                    if (response != 'false') {
+                        response = JSON.parse(response);
+                        Object.keys(response).forEach(function(k){
+                            var entry = {
+                                "text": {
+                                    "type": "plain_text",
+                                    "text": response[k]
+                                },
+                                "value": k
+                            }
+                            val.push(entry);
+                        });
+                    }
+                }
+            });
             return val;
         }
     }
