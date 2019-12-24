@@ -35,7 +35,7 @@ controller.middleware.receive.use(dialogflowMiddleware.receive);
 controller.ready(() => {
     controller.loadModules(__dirname + '/dialogs');
     controller.loadModules(__dirname + '/listeners');
-    Console.log('----------------Ready-----------------');
+    console.log('----------------Ready-----------------');
     authRouter(controller);
     sfAuthRouter(controller);
     sfMsgRouter(controller);
