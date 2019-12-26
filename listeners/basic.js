@@ -20,12 +20,12 @@ module.exports = controller => {
     
     controller.on('block_actions',async function(bot, message) {
         console.log('block_actions');
-        console.dir(message.team);
+        console.dir(message);
         // Account selected
         let existingConn = await connFactory.getConnection(message.team.id, controller);
         if (existingConn && message.actions != null) {
-            console.dir(message.actions[0].selected_option + 'has been selected');
-            let requestURL = await getRequestURL(existingConn,message.actions[0].selected_option);
+            console.dir(message.actions[0].selected_option);
+            let requestURL = await getRequestURL(existingConn,message.actions[0].selected_option.value);
             await bot.reply(message, `click this link to create the request\n<${requestURL}|CreateRequest>`);
         } else {
             const authUrl = connFactory.getAuthUrl(message.team);
