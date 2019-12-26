@@ -1,6 +1,6 @@
 const connFactory = require('../util/connection-factory');
 const logger = require('../util/logger');
-const { getAccounts } = require('../util/refedge');
+const { getAccounts, getRequestURL} = require('../util/refedge');
 const { BotkitConversation } = require('botkit');
 
 const { checkTeamMigration } = require('../listeners/middleware/migration-filter');
@@ -24,8 +24,8 @@ module.exports = controller => {
         // Account selected
         if (message.actions != null) {
             console.dir(message.outputContexts);
-            console.log(message.actions.selected_option + 'has been selected');
-            let requestURL = await getRequestURL(message.actions.selected_option);
+            console.log(message.actions[0].selected_option + 'has been selected');
+            let requestURL = await getRequestURL(message.actions[0].selected_option);
             await bot.reply(message, `click this link to create the request\n<${requestURL}|CreateRequest>`);
         }
     });
