@@ -41,10 +41,11 @@ module.exports = {
             return 'false';
         } else {
             let val = '';
-            await conn.apex.get('/rebot/LINK_URL' , (err, response) => {
+            await conn.apex.get('/rebot/' + 'LINK_URL' ,'LINK_URL', (err, response) => {
                 if (err) {
                     logger.log(err);
                 } else  if (response) {
+                    logger.log(err);
                     if (response != 'false') {
                         val = response.replace('@@', accId);
                     }
