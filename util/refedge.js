@@ -13,7 +13,7 @@ module.exports = {
         if (accName == '' || accName == null) {
             return 'false';
         } else {
-            var val = [];
+            let val = [];
             await conn.apex.get('/rebot/' + accName , accName, (err, response) => {
                 if (err) {
                     logger.log(err);
@@ -36,32 +36,21 @@ module.exports = {
             return val;
         }
     },
-    getRefs: async (conn, refName) => {
-        if (refName == '' || refName == null) {
+    getRequestURL: async (accId) => {
+        if (accId == '' || accId == null) {
             return 'false';
         } else {
-            var val = [];
-            await conn.apex.get('/rebot/' + refName , refName, (err, response) => {
+            let val = '';
+            await conn.apex.get('/rebot/LINK_URL' , (err, response) => {
                 if (err) {
                     logger.log(err);
                 } else  if (response) {
                     if (response != 'false') {
-                        response = JSON.parse(response);
-                        Object.keys(response).forEach(function(k){
-                            var entry = {
-                                "text": {
-                                    "type": "plain_text",
-                                    "text": response[k]
-                                },
-                                "value": k
-                            }
-                            val.push(entry);
-                        });
+                        val = response.replace('@@', accId);
                     }
                 }
             });
             return val;
         }
     }
-
 };

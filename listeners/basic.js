@@ -24,7 +24,9 @@ module.exports = controller => {
         // Account selected
         if (message.actions != null) {
             console.dir(message.outputContexts);
-            await bot.reply(message, message.actions.selected_option + 'has been selected');
+            console.log(message.actions.selected_option + 'has been selected');
+            let requestURL = await getRequestURL(message.actions.selected_option);
+            await bot.reply(message, `click this link to create the request\n<${requestURL}|CreateRequest>`);
         }
     });
 
@@ -61,8 +63,8 @@ module.exports = controller => {
                         } else { 
                             let accounts = await getAccounts(existingConn,message.entities.Account);
                             
-                            if (accounts == null) {
-                                await bot.reply(message, 'No Active reference program member found by name:' + message.entities.Account);
+                            if (accounts == null || Object.keys(accounts).length == 0) {
+                                await bot.reply(message, 'No Active Reference program member found by name:' + message.entities.Account + '. Please check the spelling or Activate the Account.');
                             } else if (Object.keys(accounts).length > 1) {
                                 const content = {
                                     "blocks" : [
@@ -86,8 +88,8 @@ module.exports = controller => {
                                 ]};
                                 await bot.reply(message, content);
                             } else if (Object.keys(accounts).length = 1) {
-                                //let refs = await getRefs(existingConn,message.entities.Account);
-                                await bot.reply(message, message.fulfillment.text);
+                                let requestURL = await getRequestURL(existingConn,message.entities.Account);
+                                await bot.reply(message, `click this link to create the request\n<${requestURL}|CreateRequest>`);
                             } else {
                                 await bot.reply(message, message.fulfillment.text);
                             }
