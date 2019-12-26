@@ -20,10 +20,11 @@ module.exports = controller => {
     
     controller.on('block_actions',async function(bot, message) {
         console.log('block_actions');
+        console.dir(message);
         // Account selected
         let existingConn = await connFactory.getConnection(message.team, controller);
-        if (message.actions != null) {
-            console.log(message.actions[0].selected_option + 'has been selected');
+        if (existingConn && message.actions != null) {
+            console.dir(message.actions[0].selected_option + 'has been selected');
             let requestURL = await getRequestURL(existingConn,message.actions[0].selected_option);
             await bot.reply(message, `click this link to create the request\n<${requestURL}|CreateRequest>`);
         } else {
@@ -38,16 +39,10 @@ module.exports = controller => {
 
             try {
                 console.log('nlp response----');
-                console.dir(message)
-                console.log('message.intent');
-                console.log(message.intent)
-                console.log('message.entities');
-                console.log(message.entities);
-                console.log('message.fulfillment');
-                console.log(message.fulfillment);
+                console.dir(message.team)
 
                 if (message.intent === 'connect_to_sf') {
-                    let existingConn = await connFactory.getConnection(message.team, controller);
+                    let existingConn = await connFactory.getConnection(message.team.id, controller);
 
                     if (!existingConn) {
                         const authUrl = connFactory.getAuthUrl(message.team);
