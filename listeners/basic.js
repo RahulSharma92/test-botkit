@@ -22,7 +22,7 @@ module.exports = controller => {
         console.log('block_actions');
         // Account selected
         let existingConn = await connFactory.getConnection(message.team, controller);
-        if (existingConn && message.actions != null) {
+        if (message.actions != null) {
             console.log(message.actions[0].selected_option + 'has been selected');
             let requestURL = await getRequestURL(existingConn,message.actions[0].selected_option);
             await bot.reply(message, `click this link to create the request\n<${requestURL}|CreateRequest>`);
