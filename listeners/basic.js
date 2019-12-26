@@ -22,11 +22,17 @@ module.exports = controller => {
         console.log('block_actions');
         console.dir(message);
         // Account selected
-        if (message.actions != null) {
-            console.dir(message.outputContexts);
-            console.log(message.actions[0].selected_option + 'has been selected');
-            let requestURL = await getRequestURL(message.actions[0].selected_option);
-            await bot.reply(message, `click this link to create the request\n<${requestURL}|CreateRequest>`);
+        let existingConn = await connFactory.getConnection(message.team, controller);
+
+        if (!existingConn) {
+            const authUrl = connFactory.getAuthUrl(message.team);
+            await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
+        } else {
+            if (message.actions != null) {
+                console.log(message.actions[0].selected_option + 'has been selected');
+                let requestURL = await getRequestURL(existingConn,message.actions[0].selected_option);
+                await bot.reply(message, `click this link to create the request\n<${requestURL}|CreateRequest>`);
+            }
         }
     });
 

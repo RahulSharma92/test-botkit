@@ -36,7 +36,7 @@ module.exports = {
             return val;
         }
     },
-    getRequestURL: async (accId) => {
+    getRequestURL: async (conn, accId) => {
         if (accId == '' || accId == null) {
             return 'false';
         } else {
