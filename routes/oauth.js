@@ -7,7 +7,11 @@ module.exports = controller => {
     controller.webserver.get('/oauth', async (req, res) => {
 
         try {
+            console.log('-----/oauth/req-----')
+            console.dir(req)
             const authData = await controller.adapter.validateOauthCode(req.query.code);
+            console.log('-----/authData/-----')
+            console.dir(req.query)
             controller.trigger('oauth_success', authData);
             res.redirect(`https://slack.com/app_redirect?app=${process.env.SLACK_APP_ID}`);
         } catch (err) {

@@ -26,7 +26,7 @@ module.exports = controller => {
         if (existingConn && message.actions != null) {
             console.dir(message.actions[0].selected_option);
             let requestURL = await getRequestURL(existingConn,message.actions[0].selected_option.value);
-            await bot.reply(message, `click this link to create the request\n<${requestURL}|CreateRequest>`);
+            await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
         } else {
             const authUrl = connFactory.getAuthUrl(message.team);
             await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
@@ -86,7 +86,7 @@ module.exports = controller => {
                                 await bot.reply(message, content);
                             } else if (Object.keys(accounts).length = 1) {
                                 let requestURL = await getRequestURL(existingConn,message.entities.Account);
-                                await bot.reply(message, `click this link to create the request\n<${requestURL}|CreateRequest>`);
+                                await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
                             } else {
                                 await bot.reply(message, message.fulfillment.text);
                             }
@@ -105,7 +105,9 @@ module.exports = controller => {
     );
 
     controller.on('oauth_success', async authData => {
-
+        console.log('******************-----/oauth_success/-----******************');
+        console.log('-----/authData/-----')
+        console.dir(authData)
         try {
             let existingTeam = await controller.plugins.database.teams.get(authData.team_id);
             let isNew = false;
@@ -125,9 +127,13 @@ module.exports = controller => {
                 created_by: authData.user_id
             };
             await controller.plugins.database.teams.save(existingTeam);
+            console.log('-----/existingTeam/-----');
+            console.dir(existingTeam);
 
             if (isNew) {
                 let bot = await controller.spawn(authData.team_id);
+                console.log('-----/bot/-----');
+                console.dir(bot);
                 controller.trigger('create_channel', bot, authData);
                 controller.trigger('onboard', bot, authData.user_id);
             }
@@ -138,11 +144,14 @@ module.exports = controller => {
 
     controller.on('onboard', async (bot, userId) => {
         await bot.startPrivateConversation(userId);
+        console.log('******************-----/onboard/-----******************');
+        console.log('-----/userId/-----');
+        console.log(userId);
         await bot.say('Hello, I\'m REbot.');
     });
 
     controller.on('create_channel', async (bot, authData) => {
-
+        console.log('******************-----/create_channel/-----******************');
         try {
             let result = await bot.api.channels.join({
                 token: authData.access_token,
@@ -153,6 +162,8 @@ module.exports = controller => {
                 name: result.channel.name,
                 team_id: authData.team_id
             };
+            console.log('-----/crpTeamChannel/-----');
+            console.dir(crpTeamChannel);
             await controller.plugins.database.channels.save(crpTeamChannel);
         } catch (err) {
             console.log('error setting up crp_team channel:', err);
