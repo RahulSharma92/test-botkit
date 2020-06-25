@@ -38,8 +38,10 @@ module.exports = controller => {
         async (bot, message) => {
 
             try {
-                console.log('nlp response----');
-                console.dir(message)
+                console.log('nlp response----message ***** ');
+                console.dir(message);
+                console.log('----message.fulfillment---------');
+                console.dir(message.fulfillment);
 
                 if (message.intent === 'connect_to_sf') {
                     let existingConn = await connFactory.getConnection(message.team, controller);
@@ -52,12 +54,13 @@ module.exports = controller => {
                     }
                 } else if (message.intent === 'create_request') {
                     let existingConn = await connFactory.getConnection(message.team, controller);
-                    
                     if (existingConn) {
-                        
+                        message.contexts.set('PURPOSE', message.fulfillment.outputContexts);
+
                         if (message.entities.Account == '') {
                             await bot.reply(message, message.fulfillment.text);
                         } else { 
+                            message.contexts.set('ACCOUNT', message.fulfillment.outputContexts);
                             let accounts = await getAccounts(existingConn,message.entities.Account);
                             
                             if (accounts == null || Object.keys(accounts).length == 0) {
@@ -85,7 +88,7 @@ module.exports = controller => {
                                 ]};
                                 await bot.reply(message, content);
                             } else if (Object.keys(accounts).length = 1) {
-                                let requestURL = await getRequestURL(existingConn,message.entities.Account);
+                                let requestURL = await getRequestURL(existingConn,accounts[Object.keys(accounts)[0]].value);
                                 await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
                             } else {
                                 await bot.reply(message, message.fulfillment.text);
@@ -95,6 +98,39 @@ module.exports = controller => {
                         const authUrl = connFactory.getAuthUrl(message.team);
                         await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
                     } 
+                } else if (message.contexts.get('PURPOSE') == 'create_request') {
+                    let accounts = await getAccounts(existingConn,message);
+                            
+                    if (accounts == null || Object.keys(accounts).length == 0) {
+                        await bot.reply(message, 'No Active Reference program member found by name:' + message.entities.Account + '. Please check the spelling or Activate the Account.');
+                    } else if (Object.keys(accounts).length > 1) {
+                        const content = {
+                            "blocks" : [
+                            {
+                            "type": "section",
+                            "block_id": "section678",
+                            "text": {
+                                "type": "mrkdwn",
+                                "text": "Please select an account from the dropdown list"
+                            },
+                            "accessory": {
+                                "action_id": "accountSelect",
+                                "type": "static_select",
+                                "placeholder": {
+                                "type": "plain_text",
+                                "text": "Select an item"
+                                },
+                                "options": accounts
+                            }
+                            }
+                        ]};
+                        await bot.reply(message, content);
+                    } else if (Object.keys(accounts).length = 1) {
+                        let requestURL = await getRequestURL(existingConn,accounts[Object.keys(accounts)[0]].value);
+                        await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
+                    } else {
+                        await bot.reply(message, message.fulfillment.text);
+                    }
                 } else {
                     bot.say("Hello");
                 }
