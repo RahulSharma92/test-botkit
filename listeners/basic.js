@@ -41,7 +41,9 @@ module.exports = controller => {
                 console.log('message ***** ');
                 console.dir(message);
                 console.log('----message.fulfillment---------');
-                console.dir(message.fulfillment);
+                console.dir(message.fulfillment.text);
+                console.log('----message.nlpResponse.queryResult.outputContexts---------');
+                console.dir(message.nlpResponse.queryResult.outputContexts);
 
                 if (message.intent === 'connect_to_sf') {
                     let existingConn = await connFactory.getConnection(message.team, controller);
@@ -55,12 +57,12 @@ module.exports = controller => {
                 } else if (message.intent === 'create_request') {
                     let existingConn = await connFactory.getConnection(message.team, controller);
                     if (existingConn) {
-                        message.contexts.set('PURPOSE', message.fulfillment.outputContexts);
+                        message.context.set('PURPOSE', message.intent);
 
                         if (message.entities.Account == '') {
                             await bot.reply(message, message.fulfillment.text);
                         } else { 
-                            message.contexts.set('ACCOUNT', message.fulfillment.outputContexts);
+                            message.context.set('ACCOUNT', message.entities.Account);
                             let accounts = await getAccounts(existingConn,message.entities.Account);
                             
                             if (accounts == null || Object.keys(accounts).length == 0) {
@@ -99,7 +101,7 @@ module.exports = controller => {
                         await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
                     } 
                 } else if (message.contexts.get('PURPOSE') == 'create_request') {
-                    let accounts = await getAccounts(existingConn,message);
+                    let accounts = await getAccounts(existingConn,message.text);
                             
                     if (accounts == null || Object.keys(accounts).length == 0) {
                         await bot.reply(message, 'No Active Reference program member found by name:' + message.entities.Account + '. Please check the spelling or Activate the Account.');
