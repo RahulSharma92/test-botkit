@@ -38,7 +38,7 @@ module.exports = controller => {
         async (bot, message) => {
 
             try {
-                console.log('nlp response----message ***** ');
+                console.log('message ***** ');
                 console.dir(message);
                 console.log('----message.fulfillment---------');
                 console.dir(message.fulfillment);

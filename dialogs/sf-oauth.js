@@ -23,7 +23,7 @@ module.exports = controller => {
         {
             pattern: '^(yes|yea|yup|yep|ya|sure|ok|y|yeah|yah)',
             handler: async function(response, convo, bot) {
-                console.log('nlp response----');
+                console.log('response----');
                 console.log(response);
                 var teamResponse = await bot.api.team.info();
                 const authUrl = connFactory.getAuthUrl(teamResponse.team.id);
@@ -35,7 +35,7 @@ module.exports = controller => {
         {
             pattern: '^(no|nah|nope|n)',
             handler: async function(response, convo, bot) {
-                console.log('nlp response----');
+                console.log('response----');
                 console.log(response);
                 await convo.gotoThread('no_thread');
             }
@@ -43,7 +43,7 @@ module.exports = controller => {
         {
             default: true,
             handler: async function(response, convo, bot) {
-                console.log('nlp response----');
+                console.log('response----');
                 console.log(response);
                 await convo.gotoThread('bad_response');
             }
