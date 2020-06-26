@@ -40,8 +40,6 @@ module.exports = controller => {
             try {
                 console.log('message ***** ');
                 console.dir(message);
-                console.log('----message.fulfillment---------');
-                console.dir(message.fulfillment.text);
                 console.log('----message.nlpResponse.queryResult.outputContexts---------');
                 console.dir(message.nlpResponse.queryResult.outputContexts);
 
@@ -57,12 +55,10 @@ module.exports = controller => {
                 } else if (message.intent === 'create_request') {
                     let existingConn = await connFactory.getConnection(message.team, controller);
                     if (existingConn) {
-                        message.context.set('PURPOSE', message.intent);
-
+                        
                         if (message.entities.Account == '') {
                             await bot.reply(message, message.fulfillment.text);
                         } else { 
-                            message.context.set('ACCOUNT', message.entities.Account);
                             let accounts = await getAccounts(existingConn,message.entities.Account);
                             
                             if (accounts == null || Object.keys(accounts).length == 0) {
@@ -100,36 +96,46 @@ module.exports = controller => {
                         const authUrl = connFactory.getAuthUrl(message.team);
                         await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
                     } 
-                } else if (message.contexts.get('PURPOSE') == 'create_request') {
-                    let accounts = await getAccounts(existingConn,message.text);
-                            
-                    if (accounts == null || Object.keys(accounts).length == 0) {
-                        await bot.reply(message, 'No Active Reference program member found by name:' + message.entities.Account + '. Please check the spelling or Activate the Account.');
-                    } else if (Object.keys(accounts).length > 1) {
-                        const content = {
-                            "blocks" : [
-                            {
-                            "type": "section",
-                            "block_id": "section678",
-                            "text": {
-                                "type": "mrkdwn",
-                                "text": "Please select an account from the dropdown list"
-                            },
-                            "accessory": {
-                                "action_id": "accountSelect",
-                                "type": "static_select",
-                                "placeholder": {
-                                "type": "plain_text",
-                                "text": "Select an item"
+                } else if (message.nlpResponse != null && message.nlpResponse.queryResult != null && message.nlpResponse.queryResult.outputContexts != null && message.nlpResponse.queryResult.outputContexts.length > 0) {
+                    let isCR = false;
+                    for (var val of message.nlpResponse.queryResult.outputContexts) {
+                        if (val.name.includes('create_request')) {
+                            isCR = true;
+                            break;
+                        }
+                    }
+                    
+                    if (isCR) {
+                        let accounts = await getAccounts(existingConn,message.text);
+                                
+                        if (accounts == null || Object.keys(accounts).length == 0) {
+                            await bot.reply(message, 'No Active Reference program member found by name:' + message.entities.Account + '. Please check the spelling or Activate the Account.');
+                        } else if (Object.keys(accounts).length > 1) {
+                            const content = {
+                                "blocks" : [
+                                {
+                                "type": "section",
+                                "block_id": "section678",
+                                "text": {
+                                    "type": "mrkdwn",
+                                    "text": "Please select an account from the dropdown list"
                                 },
-                                "options": accounts
-                            }
-                            }
-                        ]};
-                        await bot.reply(message, content);
-                    } else if (Object.keys(accounts).length = 1) {
-                        let requestURL = await getRequestURL(existingConn,accounts[Object.keys(accounts)[0]].value);
-                        await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
+                                "accessory": {
+                                    "action_id": "accountSelect",
+                                    "type": "static_select",
+                                    "placeholder": {
+                                    "type": "plain_text",
+                                    "text": "Select an item"
+                                    },
+                                    "options": accounts
+                                }
+                                }
+                            ]};
+                            await bot.reply(message, content);
+                        } else if (Object.keys(accounts).length = 1) {
+                            let requestURL = await getRequestURL(existingConn,accounts[Object.keys(accounts)[0]].value);
+                            await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
+                        } 
                     } else {
                         await bot.reply(message, message.fulfillment.text);
                     }
