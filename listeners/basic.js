@@ -99,12 +99,14 @@ module.exports = controller => {
                 } else if (message.nlpResponse != null && message.nlpResponse.queryResult != null && message.nlpResponse.queryResult.outputContexts != null && message.nlpResponse.queryResult.outputContexts.length > 0) {
                     let isCR = false;
                     for (var val of message.nlpResponse.queryResult.outputContexts) {
-                        if (val.name.includes('create_request')) {
+                        console.log(val);
+                        console.dir(val);
+                        /*if (val.name.includes('create_request')) {
                             isCR = true;
                             break;
-                        }
+                        }*/
                     }
-                    
+
                     if (isCR) {
                         let accounts = await getAccounts(existingConn,message.text);
                                 
