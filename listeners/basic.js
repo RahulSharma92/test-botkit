@@ -55,15 +55,16 @@ module.exports = controller => {
                 } else if (message.intent === 'create_request') {
                     let existingConn = await connFactory.getConnection(message.team, controller);
                     if (existingConn) {
-                        
+                        console.log('58');
                         if (message.entities.Account == '') {
                             await bot.reply(message, message.fulfillment.text);
                         } else { 
                             let accounts = await getAccounts(existingConn,message.entities.Account);
-                            
+                            console.log('accounts');
                             if (accounts == null || Object.keys(accounts).length == 0) {
                                 await bot.reply(message, 'No Active Reference program member found by name:' + message.entities.Account + '. Please check the spelling or Activate the Account.');
                             } else if (Object.keys(accounts).length > 1) {
+                                console.log('content');
                                 const content = {
                                     "blocks" : [
                                   {
@@ -98,6 +99,7 @@ module.exports = controller => {
                     } 
                 } else if (message.nlpResponse != null && message.nlpResponse.queryResult != null && message.nlpResponse.queryResult.outputContexts != null && message.nlpResponse.queryResult.outputContexts.length > 0) {
                     let isCR = false;
+                    console.log('message.nlpResponse');
                     for (var val of message.nlpResponse.queryResult.outputContexts) {
                         console.log(val);
                         console.dir(val);
