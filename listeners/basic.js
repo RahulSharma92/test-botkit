@@ -85,6 +85,7 @@ module.exports = controller => {
                                     }
                                   }
                                 ]};
+                                console.dir(content);
                                 await bot.reply(message, content);
                             } else if (Object.keys(accounts).length = 1) {
                                 let requestURL = await getRequestURL(existingConn,accounts[Object.keys(accounts)[0]].value);
