@@ -153,6 +153,20 @@ module.exports = controller => {
         }
     );
 
+    controller.on(
+        'slash_command',
+        async (bot, message) => {
+
+            try {
+                console.log('nlp response----slash_command ***** ');
+                console.dir(message);
+                bot.replyPublic(message,'we got the payload');
+            } catch (err) {
+                logger.log(err);
+            }
+        }
+    );
+
     controller.on('oauth_success', async authData => {
         console.log('******************-----/oauth_success/-----******************');
         console.log('-----/authData/-----')
