@@ -42,8 +42,7 @@ module.exports = controller => {
                 console.dir(message);
                 console.log('----message.nlpResponse.queryResult.outputContexts---------');
                 console.dir(message.nlpResponse.queryResult.outputContexts);
-                for
-
+                
                 if (message.intent === 'connect_to_sf') {
                     let existingConn = await connFactory.getConnection(message.team, controller);
 
