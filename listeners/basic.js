@@ -1,6 +1,6 @@
 const connFactory = require('../util/connection-factory');
 const logger = require('../util/logger');
-const { getAccounts, getRequestURL} = require('../util/refedge');
+const { getAccounts, getRequestURL, getRefTypes} = require('../util/refedge');
 const { BotkitConversation } = require('botkit');
 
 const { checkTeamMigration } = require('../listeners/middleware/migration-filter');
