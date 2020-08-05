@@ -161,55 +161,95 @@ module.exports = controller => {
                 let existingConn = await connFactory.getConnection(message.team, controller);
                     if (existingConn) {
                         let refTypes = await getRefTypes(existingConn);
+                        console.log('refTypes');
+                        console.dir(refTypes);
                         console.log('nlp response----slash_command ***** ');
                         console.dir(message);
                         const content = {
-                            "type": "modal",
-                            "submit": {
-                                "type": "plain_text",
-                                "text": "Submit",
-                                "emoji": true
-                            },
-                            "close": {
-                                "type": "plain_text",
-                                "text": "Cancel",
-                                "emoji": true
-                            },
                             "title": {
                                 "type": "plain_text",
-                                "text": "Find Reference",
-                                "emoji": true
+                                "text": "Modal Title"
+                            },
+                            "submit": {
+                                "type": "plain_text",
+                                "text": "Submit"
                             },
                             "blocks": [
                                 {
-                                    "type": "section",
-                                    "text": {
+                                    "type": "input",
+                                    "element": {
+                                        "type": "plain_text_input",
+                                        "action_id": "title",
+                                        "placeholder": {
+                                            "type": "plain_text",
+                                            "text": "What do you want to ask of the world?"
+                                        }
+                                    },
+                                    "label": {
                                         "type": "plain_text",
-                                        "text": "Ref Search.",
-                                        "emoji": true
+                                        "text": "Title"
                                     }
-                                },
-                                {
-                                    "type": "divider"
                                 },
                                 {
                                     "type": "input",
-                                    "label": {
-                                        "type": "plain_text",
-                                        "text": "Select Ref Types",
-                                        "emoji": true
-                                    },
                                     "element": {
-                                        "type": "multi_static_select",
+                                        "type": "multi_channels_select",
+                                        "action_id": "channels",
                                         "placeholder": {
                                             "type": "plain_text",
-                                            "text": "Select RefTypes",
-                                            "emoji": true
-                                        },
-                                        "options": refTypes
+                                            "text": "Where should the poll be sent?"
+                                        }
+                                    },
+                                    "label": {
+                                        "type": "plain_text",
+                                        "text": "Channel(s)"
                                     }
+                                },
+                                {
+                                    "type": "input",
+                                    "element": {
+                                        "type": "plain_text_input",
+                                        "action_id": "option_1",
+                                        "placeholder": {
+                                            "type": "plain_text",
+                                            "text": "First option"
+                                        }
+                                    },
+                                    "label": {
+                                        "type": "plain_text",
+                                        "text": "Option 1"
+                                    }
+                                },
+                                {
+                                    "type": "input",
+                                    "element": {
+                                        "type": "plain_text_input",
+                                        "action_id": "option_2",
+                                        "placeholder": {
+                                            "type": "plain_text",
+                                            "text": "How many options do they need, really?"
+                                        }
+                                    },
+                                    "label": {
+                                        "type": "plain_text",
+                                        "text": "Option 2"
+                                    }
+                                },
+                                {
+                                    "type": "actions",
+                                    "elements": [
+                                        {
+                                            "type": "button",
+                                            "action_id": "add_option",
+                                            "text": {
+                                                "type": "plain_text",
+                                                "text": "Add another option  "
+                                            }
+                                        }
+                                    ]
                                 }
-                            ]
+                            ],
+                            "type": "modal"
                         }
                         console.dir(content);
                         bot.api.views.open(message.token,message.trigger_id,content);
