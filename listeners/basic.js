@@ -42,7 +42,7 @@ module.exports = controller => {
                 console.dir(message);
                 console.log('----message.nlpResponse.queryResult.outputContexts---------');
                 console.dir(message.nlpResponse.queryResult.outputContexts);
-                
+
                 if (message.intent === 'connect_to_sf') {
                     let existingConn = await connFactory.getConnection(message.team, controller);
 
@@ -57,9 +57,9 @@ module.exports = controller => {
                     if (existingConn) {
                         console.log('58');
                         if (message.entities.Account == '') {
-                            await bot.reply(message, message.fulfillment.text);
                             await bot.startConversation(message, function(err, convo) {
                                 convo.ask(message.fulfillment.text, [], 'account');
+                                convo.ask("Select a Ref Type", [], 'refType');
                                 console.log('***convo***')
                                 console.dir(convo);
                             });
