@@ -165,122 +165,76 @@ module.exports = controller => {
                         console.dir(refTypes);
                         console.log('nlp response----slash_command ***** ');
                         console.dir(message);
-                        const content = {
-                            "title": {
-                                "type": "plain_text",
-                                "text": "Modal Title"
-                            },
-                            "submit": {
-                                "type": "plain_text",
-                                "text": "Submit"
-                            },
-                            "blocks": [
-                                {
-                                    "type": "input",
-                                    "element": {
-                                        "type": "plain_text_input",
-                                        "action_id": "title",
-                                        "placeholder": {
-                                            "type": "plain_text",
-                                            "text": "What do you want to ask of the world?"
-                                        }
-                                    },
-                                    "label": {
-                                        "type": "plain_text",
-                                        "text": "Title"
-                                    }
-                                },
-                                {
-                                    "type": "input",
-                                    "element": {
-                                        "type": "multi_channels_select",
-                                        "action_id": "channels",
-                                        "placeholder": {
-                                            "type": "plain_text",
-                                            "text": "Where should the poll be sent?"
-                                        }
-                                    },
-                                    "label": {
-                                        "type": "plain_text",
-                                        "text": "Channel(s)"
-                                    }
-                                },
-                                {
-                                    "type": "input",
-                                    "element": {
-                                        "type": "plain_text_input",
-                                        "action_id": "option_1",
-                                        "placeholder": {
-                                            "type": "plain_text",
-                                            "text": "First option"
-                                        }
-                                    },
-                                    "label": {
-                                        "type": "plain_text",
-                                        "text": "Option 1"
-                                    }
-                                },
-                                {
-                                    "type": "input",
-                                    "element": {
-                                        "type": "plain_text_input",
-                                        "action_id": "option_2",
-                                        "placeholder": {
-                                            "type": "plain_text",
-                                            "text": "How many options do they need, really?"
-                                        }
-                                    },
-                                    "label": {
-                                        "type": "plain_text",
-                                        "text": "Option 2"
-                                    }
-                                },
-                                {
-                                    "type": "actions",
-                                    "elements": [
-                                        {
-                                            "type": "button",
-                                            "action_id": "add_option",
-                                            "text": {
-                                                "type": "plain_text",
-                                                "text": "Add another option  "
-                                            }
-                                        }
-                                    ]
-                                }
-                            ],
-                            "type": "modal"
-                        }
-                        console.dir(content);
                         const result = await bot.api.views.open({
                             trigger_id: message.trigger_id,
                             view: {
-                              type: 'modal',
-                              callback_id: 'view_identifier',
-                              title: {
-                                type: 'plain_text',
-                                text: 'Modal title'
-                              },
-                              submit: {
-                                type: 'plain_text',
-                                text: 'Submit'
-                              },
-                              blocks: [
-                                {
-                                  type: 'input',
-                                  label: {
-                                    type: 'plain_text',
-                                    text: 'Input label'
-                                  },
-                                  element: {
-                                    type: 'plain_text_input',
-                                    action_id: 'value_indentifier'
-                                  }
-                                }
-                              ]
+                                "type": "modal",
+                                "submit": {
+                                    "type": "plain_text",
+                                    "text": "Submit",
+                                    "emoji": true
+                                },
+                                "close": {
+                                    "type": "plain_text",
+                                    "text": "Cancel",
+                                    "emoji": true
+                                },
+                                "title": {
+                                    "type": "plain_text",
+                                    "text": "Find Reference",
+                                    "emoji": true
+                                },
+                                "blocks": [
+                                    {
+                                        "type": "section",
+                                        "text": {
+                                            "type": "plain_text",
+                                            "text": "Ref Search.",
+                                            "emoji": true
+                                        }
+                                    },
+                                    {
+                                        "type": "divider"
+                                    },
+                                    {
+                                        "type": "input",
+                                        "label": {
+                                            "type": "plain_text",
+                                            "text": "Select Ref Types",
+                                            "emoji": true
+                                        },
+                                        "element": {
+                                            "type": "multi_static_select",
+                                            "placeholder": {
+                                                "type": "plain_text",
+                                                "text": "Select RefTypes",
+                                                "emoji": true
+                                            },
+                                            "options": refTypes
+                                        }
+                                    },
+                                    {
+                                        "type": "input",
+                                        "label": {
+                                            "type": "plain_text",
+                                            "text": "Deadline",
+                                            "emoji": true
+                                        },
+                                        "element": 
+                                            {
+                                                "type": "datepicker",
+                                                "initial_date": "1990-04-28",
+                                                "placeholder": {
+                                                    "type": "plain_text",
+                                                    "text": "Select a Deadline",
+                                                    "emoji": true
+                                                }
+                                            }
+                                    },
+                                    
+                                ]
                             }
                           });
-                          console.dir(result);
                        
                     } else if (!existingConn) {
                         const authUrl = connFactory.getAuthUrl(message.team);
