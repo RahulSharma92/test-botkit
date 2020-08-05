@@ -200,23 +200,6 @@ module.exports = controller => {
                                         "type": "input",
                                         "label": {
                                             "type": "plain_text",
-                                            "text": "Select Ref Types",
-                                            "emoji": true
-                                        },
-                                        "element": {
-                                            "type": "multi_static_select",
-                                            "placeholder": {
-                                                "type": "plain_text",
-                                                "text": "Select RefTypes",
-                                                "emoji": true
-                                            },
-                                            "options": refTypes
-                                        }
-                                    },
-                                    {
-                                        "type": "input",
-                                        "label": {
-                                            "type": "plain_text",
                                             "text": "Deadline",
                                             "emoji": true
                                         },
