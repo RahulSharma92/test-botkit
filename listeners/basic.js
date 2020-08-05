@@ -57,12 +57,7 @@ module.exports = controller => {
                     if (existingConn) {
                         console.log('58');
                         if (message.entities.Account == '') {
-                            await bot.startConversation(message, function(err, convo) {
-                                convo.ask(message.fulfillment.text, [], 'account');
-                                convo.ask("Select a Ref Type", [], 'refType');
-                                console.log('***convo***')
-                                console.dir(convo);
-                            });
+                            await bot.reply(message, message.fulfillment.text);
                         } else { 
                             let accounts = await getAccounts(existingConn,message.entities.Account);
                             console.log('accounts');
@@ -70,7 +65,7 @@ module.exports = controller => {
                                 await bot.reply(message, 'No Active Reference program member found by name:' + message.entities.Account + '. Please check the spelling or Activate the Account.');
                             } else if (Object.keys(accounts).length > 1) {
                                 console.log('content');
-                                const content = {
+                                /*const content = {
                                     "blocks" : [
                                   {
                                     "type": "section",
@@ -81,15 +76,63 @@ module.exports = controller => {
                                     },
                                     "accessory": {
                                       "action_id": "accountSelect",
-                                      "type": "static_select",
+                                      "type": "multi_static_select",
                                       "placeholder": {
                                         "type": "plain_text",
-                                        "text": "Select an item"
+                                        "text": "Select items"
                                       },
                                       "options": accounts
                                     }
                                   }
-                                ]};
+                                ]};*/
+                                const content = {
+                                    "type": "modal",
+                                    "submit": {
+                                        "type": "plain_text",
+                                        "text": "Submit",
+                                        "emoji": true
+                                    },
+                                    "close": {
+                                        "type": "plain_text",
+                                        "text": "Cancel",
+                                        "emoji": true
+                                    },
+                                    "title": {
+                                        "type": "plain_text",
+                                        "text": "Find Reference",
+                                        "emoji": true
+                                    },
+                                    "blocks": [
+                                        {
+                                            "type": "section",
+                                            "text": {
+                                                "type": "plain_text",
+                                                "text": "Ref Search.",
+                                                "emoji": true
+                                            }
+                                        },
+                                        {
+                                            "type": "divider"
+                                        },
+                                        {
+                                            "type": "input",
+                                            "label": {
+                                                "type": "plain_text",
+                                                "text": "Select Ref Types",
+                                                "emoji": true
+                                            },
+                                            "element": {
+                                                "type": "multi_static_select",
+                                                "placeholder": {
+                                                    "type": "plain_text",
+                                                    "text": "Select RefTypes",
+                                                    "emoji": true
+                                                },
+                                                "options": accounts
+                                            }
+                                        }
+                                    ]
+                                }
                                 console.dir(content);
                                 await bot.reply(message, content);
                             } else if (Object.keys(accounts).length = 1) {
