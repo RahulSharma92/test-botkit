@@ -9,6 +9,30 @@ module.exports = {
             }
         });
     },
+    getRefTypes: async (conn) => {
+        let val = [];
+        await conn.apex.get('/rebot/REF_TYPE', 'REF_TYPE' , (err, response) => {
+            if (err) {
+                logger.log(err);
+            } else  if (response) {
+                if (response != 'false') {
+                    response = JSON.parse(response);
+                    Object.keys(response).forEach(function(k){
+                        var entry = {
+                            "text": {
+                                "type": "plain_text",
+                                "text": response[k]
+                            },
+                            "value": k
+                        }
+                        val.push(entry);
+                    });
+                }
+            }
+        });
+        return val;
+    },
+    
     getAccounts: async (conn, accName) => {
         if (accName == '' || accName == null) {
             return 'false';

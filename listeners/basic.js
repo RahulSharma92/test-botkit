@@ -158,58 +158,65 @@ module.exports = controller => {
         async (bot, message) => {
 
             try {
-                console.log('nlp response----slash_command ***** ');
-                console.dir(message);
-                const content = {
-                    "type": "modal",
-                    "submit": {
-                        "type": "plain_text",
-                        "text": "Submit",
-                        "emoji": true
-                    },
-                    "close": {
-                        "type": "plain_text",
-                        "text": "Cancel",
-                        "emoji": true
-                    },
-                    "title": {
-                        "type": "plain_text",
-                        "text": "Find Reference",
-                        "emoji": true
-                    },
-                    "blocks": [
-                        {
-                            "type": "section",
-                            "text": {
+                let existingConn = await connFactory.getConnection(message.team, controller);
+                    if (existingConn) {
+                        let refTypes = await getRefTypes(existingConn);
+                        console.log('nlp response----slash_command ***** ');
+                        console.dir(message);
+                        const content = {
+                            "type": "modal",
+                            "submit": {
                                 "type": "plain_text",
-                                "text": "Ref Search.",
-                                "emoji": true
-                            }
-                        },
-                        {
-                            "type": "divider"
-                        },
-                        {
-                            "type": "input",
-                            "label": {
-                                "type": "plain_text",
-                                "text": "Select Ref Types",
+                                "text": "Submit",
                                 "emoji": true
                             },
-                            "element": {
-                                "type": "multi_static_select",
-                                "placeholder": {
-                                    "type": "plain_text",
-                                    "text": "Select RefTypes",
-                                    "emoji": true
+                            "close": {
+                                "type": "plain_text",
+                                "text": "Cancel",
+                                "emoji": true
+                            },
+                            "title": {
+                                "type": "plain_text",
+                                "text": "Find Reference",
+                                "emoji": true
+                            },
+                            "blocks": [
+                                {
+                                    "type": "section",
+                                    "text": {
+                                        "type": "plain_text",
+                                        "text": "Ref Search.",
+                                        "emoji": true
+                                    }
                                 },
-                                "options": accounts
-                            }
+                                {
+                                    "type": "divider"
+                                },
+                                {
+                                    "type": "input",
+                                    "label": {
+                                        "type": "plain_text",
+                                        "text": "Select Ref Types",
+                                        "emoji": true
+                                    },
+                                    "element": {
+                                        "type": "multi_static_select",
+                                        "placeholder": {
+                                            "type": "plain_text",
+                                            "text": "Select RefTypes",
+                                            "emoji": true
+                                        },
+                                        "options": refTypes
+                                    }
+                                }
+                            ]
                         }
-                    ]
-                }
-                console.dir(content);
-                await bot.replyPublic(message, content);
+                        console.dir(content);
+                        await bot.replyPublic(message, content);
+                    } else if (!existingConn) {
+                        const authUrl = connFactory.getAuthUrl(message.team);
+                        await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
+                    } 
             } catch (err) {
                 logger.log(err);
             }
