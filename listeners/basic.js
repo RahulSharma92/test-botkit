@@ -230,8 +230,7 @@ module.exports = controller => {
                                                     "emoji": true
                                                 }
                                             }
-                                    },
-                                    
+                                    }
                                 ]
                             }
                           });
