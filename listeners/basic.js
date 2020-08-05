@@ -252,7 +252,36 @@ module.exports = controller => {
                             "type": "modal"
                         }
                         console.dir(content);
-                        bot.api.views.open(message.token,message.trigger_id,content);
+                        const result = await bot.api.views.open({
+                            token: message.token,
+                            trigger_id: message.trigger_id,
+                            view: {
+                              type: 'modal',
+                              callback_id: 'view_identifier',
+                              title: {
+                                type: 'plain_text',
+                                text: 'Modal title'
+                              },
+                              submit: {
+                                type: 'plain_text',
+                                text: 'Submit'
+                              },
+                              blocks: [
+                                {
+                                  type: 'input',
+                                  label: {
+                                    type: 'plain_text',
+                                    text: 'Input label'
+                                  },
+                                  element: {
+                                    type: 'plain_text_input',
+                                    action_id: 'value_indentifier'
+                                  }
+                                }
+                              ]
+                            }
+                          });
+                          console.dir(result);
                        
                     } else if (!existingConn) {
                         const authUrl = connFactory.getAuthUrl(message.team);
