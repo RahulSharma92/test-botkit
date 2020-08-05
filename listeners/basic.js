@@ -212,7 +212,7 @@ module.exports = controller => {
                             ]
                         }
                         console.dir(content);
-                        bot.views.open(message.token,message.trigger_id,content);
+                        bot.api.views.open(message.token,message.trigger_id,content);
                        
                     } else if (!existingConn) {
                         const authUrl = connFactory.getAuthUrl(message.team);
