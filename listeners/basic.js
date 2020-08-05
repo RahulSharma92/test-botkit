@@ -212,7 +212,8 @@ module.exports = controller => {
                             ]
                         }
                         console.dir(content);
-                        await bot.replyPublic(message, content);
+                        bot.views.open(message.token,message.trigger_id,content);
+                       
                     } else if (!existingConn) {
                         const authUrl = connFactory.getAuthUrl(message.team);
                         await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
