@@ -253,7 +253,6 @@ module.exports = controller => {
                         }
                         console.dir(content);
                         const result = await bot.api.views.open({
-                            token: bot.token,
                             trigger_id: message.trigger_id,
                             view: {
                               type: 'modal',
