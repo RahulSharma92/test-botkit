@@ -9,14 +9,17 @@ module.exports = {
             }
         });
     },
-    getRefTypes: async (conn) => {
+    getRefTypes: async (conn,user_id) => {
         let val = [];
-        await conn.apex.get('/rebot/REF_TYPE', 'REF_TYPE' , (err, response) => {
+        const userProfile = bot.api.users.profile.get({
+            user : user_id
+        });
+        console.log('userProfile');
+        console.dir(userProfile);
+        await conn.apex.get('/rebot/REF_TYPE', userProfile.profile.email , (err, response) => {
             if (err) {
                 logger.log(err);
             } else  if (response) {
-                console.log('response REF_TYPE');
-                console.dir(response);
                 if (response != 'false') {
                     response = JSON.parse(response);
                     Object.keys(response).forEach(function(k){

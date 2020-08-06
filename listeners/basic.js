@@ -21,6 +21,7 @@ module.exports = controller => {
     controller.on('block_actions',async function(bot, message) {
         console.log('block_actions');
         console.dir(message);
+        console.dir(message.actions);
         // Account selected
         let existingConn = await connFactory.getConnection(message.team.id, controller);
         if (existingConn && message.actions != null && message.actions[0] == 'accountSelect') {
@@ -160,7 +161,7 @@ module.exports = controller => {
             try {
                 let existingConn = await connFactory.getConnection(message.team, controller);
                     if (existingConn) {
-                        let refTypes = await getRefTypes(existingConn);
+                        let refTypes = await getRefTypes(existingConn,message.user_id);
                         console.log('refTypes');
                         console.dir(refTypes);
                         console.log('nlp response----slash_command ***** ');
@@ -218,10 +219,36 @@ module.exports = controller => {
                                         "elements": [
                                             {
                                                 "type": "button",
-                                                "action_id": "add_option",
+                                                "action_id": "account_search",
                                                 "text": {
                                                     "type": "plain_text",
-                                                    "text": "Add another option  "
+                                                    "text": "Account"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "actions",
+                                        "elements": [
+                                            {
+                                                "type": "button",
+                                                "action_id": "content_search",
+                                                "text": {
+                                                    "type": "plain_text",
+                                                    "text": "Content"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "actions",
+                                        "elements": [
+                                            {
+                                                "type": "button",
+                                                "action_id": "request",
+                                                "text": {
+                                                    "type": "plain_text",
+                                                    "text": "Request"
                                                 }
                                             }
                                         ]
