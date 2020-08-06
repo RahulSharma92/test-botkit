@@ -166,10 +166,7 @@ module.exports = controller => {
                 console.log('----slash_command ***** bot');
                 console.dir(bot);
                     if (existingConn) {
-                        const userProfile = await bot.api.users.info({
-                            token : message.token,
-                            user : message.user_id
-                        });
+                        const userProfile = bot.api.users.profile;
                         let refTypes = await getRefTypes(existingConn,userProfile);
                         console.log('refTypes');
                         console.dir(refTypes);
