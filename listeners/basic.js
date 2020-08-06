@@ -161,8 +161,10 @@ module.exports = controller => {
             try {
                 let existingConn = await connFactory.getConnection(message.team, controller);
                 console.log(message.user_id);
-                console.log('----slash_command ***** ');
+                console.log('----slash_command ***** message');
                 console.dir(message);
+                console.log('----slash_command ***** bot');
+                console.dir(bot);
                     if (existingConn) {
                         const userProfile = await bot.api.users.info({
                             token : message.token,

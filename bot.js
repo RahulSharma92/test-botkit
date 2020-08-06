@@ -15,7 +15,7 @@ const adapter = new SlackAdapter({
     clientSigningSecret: process.env.SLACK_SIGNING_SECRET,
     clientId: process.env.SLACK_CLIENT_ID,
     clientSecret: process.env.SLACK_CLIENT_SECRET,
-    scopes: ['bot', 'team:read', 'users:read', 'users:read.email', 'channels:write'],
+    scopes: ['bot', 'team:read', 'users:read','users.profile:read', 'users:read.email', 'channels:write'],
     redirectUri: process.env.SLACK_REDIRECT_URI,
     getTokenForTeam: getTokenForTeam,
     getBotUserByTeam: getBotUserByTeam
