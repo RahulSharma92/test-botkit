@@ -161,7 +161,7 @@ module.exports = controller => {
             try {
                 let existingConn = await connFactory.getConnection(message.team, controller);
                     if (existingConn) {
-                        const userProfile = bot.api.users.profile.get({
+                        const userProfile = await bot.api.users.profile.get({
                             user : message.user_id
                         });
                         let refTypes = await getRefTypes(existingConn,userProfile);
