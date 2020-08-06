@@ -9,11 +9,8 @@ module.exports = {
             }
         });
     },
-    getRefTypes: async (conn,user_id) => {
+    getRefTypes: async (conn,userProfile) => {
         let val = [];
-        const userProfile = bot.api.users.profile.get({
-            user : user_id
-        });
         console.log('userProfile');
         console.dir(userProfile);
         await conn.apex.get('/rebot/REF_TYPE', userProfile.profile.email , (err, response) => {
