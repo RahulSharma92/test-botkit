@@ -160,6 +160,9 @@ module.exports = controller => {
 
             try {
                 let existingConn = await connFactory.getConnection(message.team, controller);
+                console.log(message.user_id);
+                console.log('----slash_command ***** ');
+                console.dir(message);
                     if (existingConn) {
                         const userProfile = await bot.api.users.profile.get({
                             user : message.user_id
@@ -167,8 +170,7 @@ module.exports = controller => {
                         let refTypes = await getRefTypes(existingConn,userProfile);
                         console.log('refTypes');
                         console.dir(refTypes);
-                        console.log('nlp response----slash_command ***** ');
-                        console.dir(message);
+                        
                         const result = await bot.api.views.open({
                             trigger_id: message.trigger_id,
                             view: {
