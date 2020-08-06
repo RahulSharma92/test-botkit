@@ -23,7 +23,7 @@ module.exports = controller => {
         console.dir(message);
         // Account selected
         let existingConn = await connFactory.getConnection(message.team.id, controller);
-        if (existingConn && message.actions != null) {
+        if (existingConn && message.actions != null && message.actions[0] == 'accountSelect') {
             console.dir(message.actions[0].selected_option);
             let requestURL = await getRequestURL(existingConn,message.actions[0].selected_option.value);
             await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
@@ -195,6 +195,36 @@ module.exports = controller => {
                                     },
                                     {
                                         "type": "divider"
+                                    },
+                                    {
+                                        "type": "input",
+                                        "label": {
+                                            "type": "plain_text",
+                                            "text": "Select Ref Types",
+                                            "emoji": true
+                                        },
+                                        "element": {
+                                            "type": "multi_static_select",
+                                            "placeholder": {
+                                                "type": "plain_text",
+                                                "text": "Select RefTypes",
+                                                "emoji": true
+                                            },
+                                            "options": refTypes
+                                        }
+                                    },
+                                    {
+                                        "type": "actions",
+                                        "elements": [
+                                            {
+                                                "type": "button",
+                                                "action_id": "add_option",
+                                                "text": {
+                                                    "type": "plain_text",
+                                                    "text": "Add another option  "
+                                                }
+                                            }
+                                        ]
                                     },
                                     {
                                         "type": "input",

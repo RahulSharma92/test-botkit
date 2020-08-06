@@ -15,6 +15,8 @@ module.exports = {
             if (err) {
                 logger.log(err);
             } else  if (response) {
+                console.log('response REF_TYPE');
+                console.dir(response);
                 if (response != 'false') {
                     response = JSON.parse(response);
                     Object.keys(response).forEach(function(k){
