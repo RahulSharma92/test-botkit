@@ -13,7 +13,7 @@ module.exports = {
         let val = [];
         console.log('userProfile');
         console.dir(userProfile);
-        await conn.apex.get('/rebot/REF_TYPE', userProfile.user.profile.email , (err, response) => {
+        await conn.apex.get('/rebot/REF_TYPE::userProfile.user.profile.email', (err, response) => {
             if (err) {
                 logger.log(err);
             } else  if (response) {
