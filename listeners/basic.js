@@ -35,6 +35,7 @@ module.exports = controller => {
         } else if (existingConn && message.actions != null && message.actions[0].action_id == 'request') {
             console.log('request');
             const result = await bot.api.views.update({
+                view_id:message.container.view_id,
                 view: {
                     "type": "modal",
                     "submit": {
@@ -224,10 +225,9 @@ module.exports = controller => {
                             trigger_id: message.trigger_id,
                             view: {
                                 "type": "modal",
-                                "callback_id": "modal-identifier",
                                 "title": {
                                     "type": "plain_text",
-                                    "text": "Just a modal"
+                                    "text": "Select Action"
                                 },
                                 "blocks": [
                                     {
@@ -285,6 +285,27 @@ module.exports = controller => {
                         const authUrl = connFactory.getAuthUrl(message.team);
                         await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
                     } 
+            } catch (err) {
+                logger.log(err);
+            }
+        }
+    );
+    controller.on(
+        'view_submission',
+        async (bot, message) => {
+
+            try {
+                let existingConn = await connFactory.getConnection(message.team, controller);
+                console.log('view_submission');
+                console.dir(message);
+                if (existingConn) {
+                    console.log('-----------view_submission message.state -----------');
+                    console.dir(message.state);
+                    
+                } else if (!existingConn) {
+                    const authUrl = connFactory.getAuthUrl(message.team);
+                    await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
+                } 
             } catch (err) {
                 logger.log(err);
             }
