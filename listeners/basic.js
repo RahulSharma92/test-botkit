@@ -328,8 +328,7 @@ module.exports = controller => {
                                 errors: { "restaurant-name": errorStr}
                             });
                         } else if (Object.keys(accounts).length > 1) {
-                            const result = await bot.api.views.update({
-                                view_id:message.view.id,
+                            const result = await bot.api.views.open({
                                 view: {
                                     "type": "modal",
                                     "submit": {
