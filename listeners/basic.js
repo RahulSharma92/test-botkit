@@ -20,8 +20,6 @@ module.exports = controller => {
     
     controller.on('block_actions',async function(bot, message) {
         console.log('block_actions');
-        console.dir(message);
-        console.dir(message.actions);
         // Account selected
         let existingConn = await connFactory.getConnection(message.team.id, controller);
         if (existingConn && message.actions != null && message.actions[0].action_id == 'content_search') {
@@ -57,7 +55,13 @@ module.exports = controller => {
                         {
                             "type": "input",
                             "element": {
-                                "type": "plain_text_input"
+                                "type": "plain_text_input",
+                                "action_id": "account_name",
+                                "placeholder": {
+                                    "type": "plain_text",
+                                    "text": "Active Reference Account"
+                                },
+                                "multiline": false
                             },
                             "label": {
                                 "type": "plain_text",
@@ -68,8 +72,6 @@ module.exports = controller => {
                     ]
                 }
             });
-            console.log('result');
-            console.dir(result);
         } else if (existingConn && message.actions != null && message.actions[0].action_id == 'accountSelect') {
             console.log('73 : accountSelect');
             let requestURL = await getRequestURL(existingConn,message.actions[0].selected_option.value);
@@ -295,8 +297,10 @@ module.exports = controller => {
         async (bot, message) => {
 
             try {
-                console.log('-----------view_submission message.state -----------');
-                console.dir(message.view.state);
+                console.log('-----------view_submission message.state.values -----------');
+                console.dir(message.view.state.values);
+                console.log('-----------view_submission message.state.blocks -----------');
+                console.dir(message.view.state.blocks);
                 console.log('view_submission');
                 console.dir(message);
                 
