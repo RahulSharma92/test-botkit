@@ -329,7 +329,7 @@ module.exports = controller => {
                             });
                         } else if (Object.keys(accounts).length > 1) {
                             const result = await bot.api.views.update({
-                                view_id:message.container.view_id,
+                                view_id:message.view.id,
                                 view: {
                                     "type": "modal",
                                     "private_metadata" : message.view.private_metadata,
