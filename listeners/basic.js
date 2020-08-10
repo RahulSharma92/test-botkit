@@ -35,7 +35,6 @@ module.exports = controller => {
                 view_id:message.container.view_id,
                 view: {
                     "type": "modal",
-                    "response_url_enabled": true,
                     "private_metadata" : "test",
                     "submit": {
                         "type": "plain_text",
