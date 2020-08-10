@@ -213,8 +213,6 @@ module.exports = controller => {
                 console.log(message.user_id);
                 console.log('----slash_command ***** message');
                 console.dir(message);
-                console.log('----slash_command ***** bot');
-                console.dir(bot);
                 if (existingConn) {
                     const result = await bot.api.views.open({
                         trigger_id: message.trigger_id,
@@ -274,8 +272,6 @@ module.exports = controller => {
                             ]
                         }
                     });
-                    console.log('result');
-                    console.dir(result);
                     
                 } else if (!existingConn) {
                     const authUrl = connFactory.getAuthUrl(message.team);
@@ -291,12 +287,11 @@ module.exports = controller => {
         async (bot, message) => {
 
             try {
-                let existingConn = await connFactory.getConnection(message.team, controller);
-
-                if (!existingConn) {
+                
+                /*if (!existingConn) {
                     const authUrl = connFactory.getAuthUrl(message.team);
                     await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
-                } else {
+                } else {*/
                     console.log('-----------view_submission message.state.values -----------');
                     console.dir(message.view.state.values);
                     console.log('-----------view_submission message.blocks -----------');
@@ -316,6 +311,8 @@ module.exports = controller => {
                             errors: { "restaurant-name": "Please enter an Account Name." }
                         });
                     } else {
+                        let existingConn = await connFactory.getConnection(message.team, controller);
+
                         let accounts = await getAccounts(existingConn,accName,userProfile);
                         const userProfile = await bot.api.users.info({
                             token : bot.api.token,
@@ -391,16 +388,12 @@ module.exports = controller => {
                                     ]
                                 }
                             });
-                        } else if (Object.keys(accounts).length = 1) {
-                            let requestURL = await getRequestURL(existingConn,accounts[Object.keys(accounts)[0]].value);
-                            await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
-                        } else {
-                            await bot.reply(message, message.fulfillment.text);
-                        }
+                        } 
+                        console.log('392');
                     }
-                }
                 
             } catch (err) {
+                console.log('396');
                 logger.log(err);
             }
         }
