@@ -295,10 +295,11 @@ module.exports = controller => {
         async (bot, message) => {
 
             try {
-                console.log('view_submission');
-                console.dir(message);
                 console.log('-----------view_submission message.state -----------');
                 console.dir(message.view.state);
+                console.log('view_submission');
+                console.dir(message);
+                
             } catch (err) {
                 logger.log(err);
             }
