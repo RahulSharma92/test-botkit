@@ -24,18 +24,17 @@ module.exports = controller => {
         console.dir(message.actions);
         // Account selected
         let existingConn = await connFactory.getConnection(message.team.id, controller);
-        if (existingConn && message.actions != null && message.actions[0] == 'content_search') {
-            console.dir(message.actions[0].selected_option);
+        if (existingConn && message.actions != null && message.actions[0].action_id == 'content_search') {
+            console.log('28 : content_search');
             let requestURL = await getRequestURL(existingConn,message.actions[0].selected_option.value);
             await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
-        } else if (existingConn && message.actions != null && message.actions[0] == 'account_search') {
-            console.dir(message.actions[0].selected_option);
+        } else if (existingConn && message.actions != null && message.actions[0].action_id == 'account_search') {
+            console.log('32 : account_search');
             let requestURL = await getRequestURL(existingConn,message.actions[0].selected_option.value);
             await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
-        } else if (existingConn && message.actions != null && message.actions[0] == 'request') {
-            console.dir(message.actions[0].selected_option);
+        } else if (existingConn && message.actions != null && message.actions[0].action_id == 'request') {
+            console.log('request');
             const result = await bot.api.views.update({
-                trigger_id: message.trigger_id,
                 view: {
                     "type": "modal",
                     "submit": {
@@ -70,11 +69,12 @@ module.exports = controller => {
             });
             console.log('result');
             console.dir(result);
-        } else if (existingConn && message.actions != null && message.actions[0] == 'accountSelect') {
-            console.dir(message.actions[0].selected_option);
+        } else if (existingConn && message.actions != null && message.actions[0].action_id == 'accountSelect') {
+            console.log('73 : accountSelect');
             let requestURL = await getRequestURL(existingConn,message.actions[0].selected_option.value);
             await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
         } else {
+            console.log('77');
             const authUrl = connFactory.getAuthUrl(message.team);
             await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
         }
