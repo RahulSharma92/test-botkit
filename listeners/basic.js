@@ -304,7 +304,7 @@ module.exports = controller => {
                         }
                     }
                     console.log('accName = ' + accName);
-                    console.dir(message);
+                    console.dir(accName);
                     if (accName == "") {
                         return Promise.resolve({
                             response_action: "errors",
@@ -312,12 +312,12 @@ module.exports = controller => {
                         });
                     } else {
                         let existingConn = await connFactory.getConnection(message.team, controller);
-
-                        let accounts = await getAccounts(existingConn,accName,userProfile);
                         const userProfile = await bot.api.users.info({
                             token : bot.api.token,
                             user : message.user_id
                         });
+                        let accounts = await getAccounts(existingConn,accName,userProfile);
+                        
                         let refTypes = await getRefTypes(existingConn,userProfile);
                         console.log('refTypes');
                         console.dir(refTypes);
