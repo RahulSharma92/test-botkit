@@ -320,6 +320,7 @@ module.exports = controller => {
                         console.dir(refTypes);
                         let opps = [];
                         console.log('accounts');
+                        console.dir(accounts);
                         if (accounts == null || Object.keys(accounts).length == 0) {
                             const errorStr = "No Active Reference program member found by name:" + accName + ". Please check the spelling or Activate the Account." ;
                             return Promise.resolve({
@@ -360,7 +361,7 @@ module.exports = controller => {
                                                 "type": "static_select",
                                                 "placeholder": {
                                                 "type": "plain_text",
-                                                "text": "Select an item"
+                                                "text": "Select an account"
                                                 },
                                                 "options": accounts
                                             }
@@ -377,7 +378,7 @@ module.exports = controller => {
                                                 "type": "static_select",
                                                 "placeholder": {
                                                 "type": "plain_text",
-                                                "text": "Select an item"
+                                                "text": "Select a type"
                                                 },
                                                 "options": refTypes
                                             }
@@ -385,8 +386,10 @@ module.exports = controller => {
                                     ]
                                 }
                             });
-                        } 
-                        console.log('392');
+                            console.dir(result);
+                        } else {
+                            console.log('392');
+                        }
                     }
                 
             } catch (err) {
