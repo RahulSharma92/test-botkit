@@ -293,7 +293,7 @@ module.exports = controller => {
                     await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
                 } else {*/
                     console.log('-----------view_submission message -----------');
-                    console.dir(message.message);
+                    console.dir(message);
                     let accName = "";
                     for (let key in message.view.state.values) {
                         if (message.view.state.values[key] != undefined && message.view.state.values[key].account_name != undefined && message.view.state.values[key].account_name != "") {
@@ -308,7 +308,7 @@ module.exports = controller => {
                             errors: { "restaurant-name": "Please enter an Account Name." }
                         });
                     } else {
-                        let existingConn = await connFactory.getConnection(message.team, controller);
+                        let existingConn = await connFactory.getConnection(message.team.id, controller);
                         const userProfile = await bot.api.users.info({
                             token : bot.api.token,
                             user : message.user
