@@ -35,6 +35,7 @@ module.exports = controller => {
                 view_id:message.container.view_id,
                 view: {
                     "type": "modal",
+                    "notify_on_close" : true,
                     "private_metadata" : "test",
                     "submit": {
                         "type": "plain_text",
@@ -218,6 +219,7 @@ module.exports = controller => {
                         trigger_id: message.trigger_id,
                         view: {
                             "type": "modal",
+                            "notify_on_close" : true,
                             "private_metadata" : "test2",
                             "title": {
                                 "type": "plain_text",
@@ -282,6 +284,14 @@ module.exports = controller => {
             }
         }
     );
+    
+    controller.on(
+        'view_closed',
+        async (bot, message) => {
+            console.log('-----------view_closed message -----------');
+            console.dir(message);
+    });
+
     controller.on(
         'view_submission',
         async (bot, message) => {
@@ -313,6 +323,7 @@ module.exports = controller => {
                             view_id:message.view.id,
                             view: {
                                 "type": "modal",
+                                "notify_on_close" : true,
                                 "private_metadata" : "test",
                                 "submit": {
                                     "type": "plain_text",
@@ -351,6 +362,7 @@ module.exports = controller => {
                                 ]
                             }
                         });
+                        console.dir(result);
                     }
                         /*const userProfile = await bot.api.users.info({
                             token : bot.api.token,
