@@ -316,8 +316,8 @@ module.exports = controller => {
                         let accounts = await getAccounts(existingConn,accName,userProfile);
                         
                         //let refTypes = await getRefTypes(existingConn,userProfile);
-                        console.log('refTypes');
-                        console.dir(refTypes);
+                        //console.log('refTypes');
+                        //console.dir(refTypes);
                         let opps = [];
                         console.log('accounts');
                         console.dir(accounts);
