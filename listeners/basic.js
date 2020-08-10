@@ -36,7 +36,9 @@ module.exports = controller => {
                 view: {
                     "type": "modal",
                     "response_url_enabled": true,
-                    "private_metadata" : message.view.private_metadata,
+                    "private_metadata" : {
+                        "test" : true
+                    },
                     "submit": {
                         "type": "plain_text",
                         "text": "Submit",
@@ -221,6 +223,9 @@ module.exports = controller => {
                         trigger_id: message.trigger_id,
                         view: {
                             "type": "modal",
+                            "private_metadata" : {
+                                "test" : false
+                            },
                             "title": {
                                 "type": "plain_text",
                                 "text": "Select Action"
@@ -385,28 +390,9 @@ module.exports = controller => {
                                                 "type": "plain_text",
                                                 "text": "Select an item"
                                                 },
-                                                "options": message.private_metadata.refTypes 
-                                            }
-                                        },
-                                        {
-                                            "type": "section",
-                                            "block_id": "blkaccount",
-                                            "text": {
-                                                "type": "mrkdwn",
-                                                "text": "Please select an opp from the dropdown list"
-                                            },
-                                            "accessory": {
-                                                "action_id": "oppSelect",
-                                                "type": "static_select",
-                                                "placeholder": {
-                                                "type": "plain_text",
-                                                "text": "Select an item"
-                                                },
-                                                "options": message.private_metadata.opps 
+                                                "options": refTypes
                                             }
                                         }
-
-
                                     ]
                                 }
                             });
