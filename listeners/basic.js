@@ -332,15 +332,9 @@ module.exports = controller => {
                                 view_id:message.view.id,
                                 view: {
                                     "type": "modal",
-                                    "private_metadata" : message.view.private_metadata,
                                     "submit": {
                                         "type": "plain_text",
                                         "text": "Submit",
-                                        "emoji": true
-                                    },
-                                    "close": {
-                                        "type": "plain_text",
-                                        "text": "Cancel",
                                         "emoji": true
                                     },
                                     "title": {
@@ -368,7 +362,7 @@ module.exports = controller => {
                                         },
                                         {
                                             "type": "section",
-                                            "block_id": "blkaccount",
+                                            "block_id": "blkref",
                                             "text": {
                                                 "type": "mrkdwn",
                                                 "text": "Please select a reftype from the dropdown list"
