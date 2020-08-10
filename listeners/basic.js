@@ -292,19 +292,16 @@ module.exports = controller => {
                     const authUrl = connFactory.getAuthUrl(message.team);
                     await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
                 } else {*/
-                    console.log('-----------view_submission message.state.values -----------');
-                    console.dir(message.view.state.values);
-                    console.log('-----------view_submission message.blocks -----------');
-                    console.dir(message.view.blocks);
+                    console.log('-----------view_submission message -----------');
+                    console.dir(message.message);
                     let accName = "";
                     for (let key in message.view.state.values) {
                         if (message.view.state.values[key] != undefined && message.view.state.values[key].account_name != undefined && message.view.state.values[key].account_name != "") {
-                            accName = message.view.state.values[key].account_name;
+                            accName = message.view.state.values[key].account_name.value;
                             break;
                         }
                     }
                     console.log('accName = ' + accName);
-                    console.dir(accName);
                     if (accName == "") {
                         return Promise.resolve({
                             response_action: "errors",
@@ -314,7 +311,7 @@ module.exports = controller => {
                         let existingConn = await connFactory.getConnection(message.team, controller);
                         const userProfile = await bot.api.users.info({
                             token : bot.api.token,
-                            user : message.user_id
+                            user : message.user
                         });
                         let accounts = await getAccounts(existingConn,accName,userProfile);
                         
