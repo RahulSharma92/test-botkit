@@ -1,7 +1,6 @@
 const connFactory = require('../util/connection-factory');
 const logger = require('../util/logger');
 const { getAccounts, getRequestURL, getRefTypes} = require('../util/refedge');
-const { BotkitConversation } = require('botkit');
 
 const { checkTeamMigration } = require('../listeners/middleware/migration-filter');
 
@@ -36,6 +35,8 @@ module.exports = controller => {
                 view_id:message.container.view_id,
                 view: {
                     "type": "modal",
+                    "response_url_enabled": true,
+                    "private_metadata" : message.view.private_metadata,
                     "submit": {
                         "type": "plain_text",
                         "text": "Submit",
@@ -54,6 +55,7 @@ module.exports = controller => {
                     "blocks": [
                         {
                             "type": "input",
+                            "block_id" : "accblock",
                             "element": {
                                 "type": "plain_text_input",
                                 "action_id": "account_name",
@@ -151,7 +153,7 @@ module.exports = controller => {
                 } else if (message.nlpResponse != null && message.nlpResponse.queryResult != null && message.nlpResponse.queryResult.outputContexts != null && message.nlpResponse.queryResult.outputContexts.length > 0) {
                     let isCR = false;
                     console.log('message.nlpResponse');
-                    for (var val of message.nlpResponse.queryResult.outputContexts) {
+                    for (let val of message.nlpResponse.queryResult.outputContexts) {
                         console.log(val);
                         console.dir(val);
                         /*if (val.name.includes('create_request')) {
@@ -214,79 +216,71 @@ module.exports = controller => {
                 console.dir(message);
                 console.log('----slash_command ***** bot');
                 console.dir(bot);
-                    if (existingConn) {
-                        const userProfile = await bot.api.users.info({
-                            token : bot.api.token,
-                            user : message.user_id
-                        });
-                        let refTypes = await getRefTypes(existingConn,userProfile);
-                        console.log('refTypes');
-                        console.dir(refTypes);
-                        
-                        const result = await bot.api.views.open({
-                            trigger_id: message.trigger_id,
-                            view: {
-                                "type": "modal",
-                                "title": {
-                                    "type": "plain_text",
-                                    "text": "Select Action"
+                if (existingConn) {
+                    const result = await bot.api.views.open({
+                        trigger_id: message.trigger_id,
+                        view: {
+                            "type": "modal",
+                            "title": {
+                                "type": "plain_text",
+                                "text": "Select Action"
+                            },
+                            "blocks": [
+                                {
+                                    "type": "actions",
+                                    "elements": [
+                                        {
+                                            "type": "button",
+                                            "action_id" : "request",
+                                            "text": {
+                                                "type": "plain_text",
+                                                "text": "Create Request",
+                                                "emoji": true
+                                            },
+                                            "value": "request"
+                                        }
+                                    ]
                                 },
-                                "blocks": [
-                                    {
-                                        "type": "actions",
-                                        "elements": [
-                                            {
-                                                "type": "button",
-                                                "action_id" : "request",
-                                                "text": {
-                                                    "type": "plain_text",
-                                                    "text": "Create Request",
-                                                    "emoji": true
-                                                },
-                                                "value": "request"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "type": "actions",
-                                        "elements": [
-                                            {
-                                                "type": "button",
-                                                "action_id" : "account_search",
-                                                "text": {
-                                                    "type": "plain_text",
-                                                    "text": "Account Search",
-                                                    "emoji": true
-                                                },
-                                                "value": "account_search"
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "type": "actions",
-                                        "elements": [
-                                            {
-                                                "type": "button",
-                                                "action_id" : "content_search",
-                                                "text": {
-                                                    "type": "plain_text",
-                                                    "text": "Content Search",
-                                                    "emoji": true
-                                                },
-                                                "value": "content_search"
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        });
-                        console.log('result');
-                        console.dir(result);
-                       
-                    } else if (!existingConn) {
-                        const authUrl = connFactory.getAuthUrl(message.team);
-                        await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
-                    } 
+                                {
+                                    "type": "actions",
+                                    "elements": [
+                                        {
+                                            "type": "button",
+                                            "action_id" : "account_search",
+                                            "text": {
+                                                "type": "plain_text",
+                                                "text": "Account Search",
+                                                "emoji": true
+                                            },
+                                            "value": "account_search"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "actions",
+                                    "elements": [
+                                        {
+                                            "type": "button",
+                                            "action_id" : "content_search",
+                                            "text": {
+                                                "type": "plain_text",
+                                                "text": "Content Search",
+                                                "emoji": true
+                                            },
+                                            "value": "content_search"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    });
+                    console.log('result');
+                    console.dir(result);
+                    
+                } else if (!existingConn) {
+                    const authUrl = connFactory.getAuthUrl(message.team);
+                    await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
+                } 
             } catch (err) {
                 logger.log(err);
             }
@@ -297,12 +291,133 @@ module.exports = controller => {
         async (bot, message) => {
 
             try {
-                console.log('-----------view_submission message.state.values -----------');
-                console.dir(message.view.state.values);
-                console.log('-----------view_submission message.state.blocks -----------');
-                console.dir(message.view.state.blocks);
-                console.log('view_submission');
-                console.dir(message);
+                let existingConn = await connFactory.getConnection(message.team, controller);
+
+                if (!existingConn) {
+                    const authUrl = connFactory.getAuthUrl(message.team);
+                    await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
+                } else {
+                    console.log('-----------view_submission message.state.values -----------');
+                    console.dir(message.view.state.values);
+                    console.log('-----------view_submission message.blocks -----------');
+                    console.dir(message.view.blocks);
+                    let accName = "";
+                    for (let key in message.view.state.values) {
+                        if (message.view.state.values[key] != undefined && message.view.state.values[key].account_name != undefined && message.view.state.values[key].account_name != "") {
+                            accName = message.view.state.values[key].account_name;
+                            break;
+                        }
+                    }
+                    console.log('accName = ' + accName);
+                    console.dir(message);
+                    if (accName == "") {
+                        return Promise.resolve({
+                            response_action: "errors",
+                            errors: { "restaurant-name": "Please enter an Account Name." }
+                        });
+                    } else {
+                        let accounts = await getAccounts(existingConn,accName,userProfile);
+                        const userProfile = await bot.api.users.info({
+                            token : bot.api.token,
+                            user : message.user_id
+                        });
+                        let refTypes = await getRefTypes(existingConn,userProfile);
+                        console.log('refTypes');
+                        console.dir(refTypes);
+                        let opps = [];
+                        console.log('accounts');
+                        if (accounts == null || Object.keys(accounts).length == 0) {
+                            const errorStr = "No Active Reference program member found by name:" + accName + ". Please check the spelling or Activate the Account." ;
+                            return Promise.resolve({
+                                response_action: "errors",
+                                errors: { "restaurant-name": errorStr}
+                            });
+                        } else if (Object.keys(accounts).length > 1) {
+                            const result = await bot.api.views.update({
+                                view_id:message.container.view_id,
+                                view: {
+                                    "type": "modal",
+                                    "private_metadata" : message.view.private_metadata,
+                                    "submit": {
+                                        "type": "plain_text",
+                                        "text": "Submit",
+                                        "emoji": true
+                                    },
+                                    "close": {
+                                        "type": "plain_text",
+                                        "text": "Cancel",
+                                        "emoji": true
+                                    },
+                                    "title": {
+                                        "type": "plain_text",
+                                        "text": "Request",
+                                        "emoji": true
+                                    },
+                                    "blocks": [
+                                        {
+                                            "type": "section",
+                                            "block_id": "blkaccount",
+                                            "text": {
+                                                "type": "mrkdwn",
+                                                "text": "Please select an account from the dropdown list"
+                                            },
+                                            "accessory": {
+                                                "action_id": "accountSelect",
+                                                "type": "static_select",
+                                                "placeholder": {
+                                                "type": "plain_text",
+                                                "text": "Select an item"
+                                                },
+                                                "options": accounts
+                                            }
+                                        },
+                                        {
+                                            "type": "section",
+                                            "block_id": "blkaccount",
+                                            "text": {
+                                                "type": "mrkdwn",
+                                                "text": "Please select a reftype from the dropdown list"
+                                            },
+                                            "accessory": {
+                                                "action_id": "reftypeSelect",
+                                                "type": "static_select",
+                                                "placeholder": {
+                                                "type": "plain_text",
+                                                "text": "Select an item"
+                                                },
+                                                "options": message.private_metadata.refTypes 
+                                            }
+                                        },
+                                        {
+                                            "type": "section",
+                                            "block_id": "blkaccount",
+                                            "text": {
+                                                "type": "mrkdwn",
+                                                "text": "Please select an opp from the dropdown list"
+                                            },
+                                            "accessory": {
+                                                "action_id": "oppSelect",
+                                                "type": "static_select",
+                                                "placeholder": {
+                                                "type": "plain_text",
+                                                "text": "Select an item"
+                                                },
+                                                "options": message.private_metadata.opps 
+                                            }
+                                        }
+
+
+                                    ]
+                                }
+                            });
+                        } else if (Object.keys(accounts).length = 1) {
+                            let requestURL = await getRequestURL(existingConn,accounts[Object.keys(accounts)[0]].value);
+                            await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
+                        } else {
+                            await bot.reply(message, message.fulfillment.text);
+                        }
+                    }
+                }
                 
             } catch (err) {
                 logger.log(err);

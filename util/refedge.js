@@ -35,7 +35,7 @@ module.exports = {
         return val;
     },
     
-    getAccounts: async (conn, accName) => {
+    getAccounts: async (conn, accName,userProfile) => {
         if (accName == '' || accName == null) {
             return 'false';
         } else {
