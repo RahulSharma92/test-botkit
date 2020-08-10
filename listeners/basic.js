@@ -309,15 +309,58 @@ module.exports = controller => {
                             errors: { "restaurant-name": "Please enter an Account Name." }
                         });
                     } else {
-                        const userProfile = await bot.api.users.info({
+                        const result = await bot.api.views.update({
+                            view_id:message.view.id,
+                            view: {
+                                "type": "modal",
+                                "private_metadata" : "test",
+                                "submit": {
+                                    "type": "plain_text",
+                                    "text": "Submit",
+                                    "emoji": true
+                                },
+                                "close": {
+                                    "type": "plain_text",
+                                    "text": "Cancel",
+                                    "emoji": true
+                                },
+                                "title": {
+                                    "type": "plain_text",
+                                    "text": "Ref Type",
+                                    "emoji": true
+                                },
+                                "blocks": [
+                                    {
+                                        "type": "input",
+                                        "block_id" : "testaccblock",
+                                        "element": {
+                                            "type": "plain_text_input",
+                                            "action_id": "testaccount_name",
+                                            "placeholder": {
+                                                "type": "plain_text",
+                                                "text": "test Active Reference Account"
+                                            },
+                                            "multiline": false
+                                        },
+                                        "label": {
+                                            "type": "plain_text",
+                                            "text": "Account Name",
+                                            "emoji": true
+                                        }
+                                    }
+                                ]
+                            }
+                        });
+                    }
+                        /*const userProfile = await bot.api.users.info({
                             token : bot.api.token,
                             user : message.user
                         });
                         let accounts = await getAccounts(existingConn,accName,userProfile);
                         
-                        //let refTypes = await getRefTypes(existingConn,userProfile);
-                        //console.log('refTypes');
-                        //console.dir(refTypes);
+                        let refTypes = await getRefTypes(existingConn,userProfile);
+                        console.log('refTypes');
+                        console.dir(refTypes);
                         let opps = [];
                         console.log('accounts');
                         console.dir(accounts);
@@ -359,8 +402,7 @@ module.exports = controller => {
                                                 },
                                                 "options": accounts
                                             }
-                                        }
-                                        /*,
+                                        },
                                         {
                                             "type": "section",
                                             "block_id": "blkref",
@@ -377,7 +419,7 @@ module.exports = controller => {
                                                 },
                                                 "options": refTypes
                                             }
-                                        }*/
+                                        }
                                     ]
                                 }
                             });
@@ -385,7 +427,7 @@ module.exports = controller => {
                         } else {
                             console.log('392');
                         }
-                    }
+                    }*/
                 }
             } catch (err) {
                 console.log('396');
