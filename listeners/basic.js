@@ -319,7 +319,11 @@ module.exports = controller => {
                             errors: { "restaurant-name": "Please enter an Account Name." }
                         });
                     } else {
-                        const result = await bot.api.views.update({
+                        return Promise.resolve({
+                            response_action: "errors",
+                            errors: { "restaurant-name": "Please enter an Account Name." }
+                        });
+                        const result = await bot.api.views.push({
                             view_id:message.view.id,
                             view: {
                                 "type": "modal",
