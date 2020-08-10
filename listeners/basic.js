@@ -329,6 +329,7 @@ module.exports = controller => {
                             });
                         } else if (Object.keys(accounts).length > 1) {
                             const result = await bot.api.views.open({
+                                trigger_id: message.trigger_id,
                                 view: {
                                     "type": "modal",
                                     "submit": {
