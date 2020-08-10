@@ -50,7 +50,7 @@ module.exports = controller => {
                     },
                     "title": {
                         "type": "plain_text",
-                        "text": "Workplace check-in",
+                        "text": "Request",
                         "emoji": true
                     },
                     "blocks": [
@@ -295,17 +295,10 @@ module.exports = controller => {
         async (bot, message) => {
 
             try {
-                let existingConn = await connFactory.getConnection(message.team, controller);
                 console.log('view_submission');
                 console.dir(message);
-                if (existingConn) {
-                    console.log('-----------view_submission message.state -----------');
-                    console.dir(message.state);
-                    
-                } else if (!existingConn) {
-                    const authUrl = connFactory.getAuthUrl(message.team);
-                    await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
-                } 
+                console.log('-----------view_submission message.state -----------');
+                console.dir(message.view.state);
             } catch (err) {
                 logger.log(err);
             }
