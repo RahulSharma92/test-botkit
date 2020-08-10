@@ -287,11 +287,12 @@ module.exports = controller => {
         async (bot, message) => {
 
             try {
-                
-                /*if (!existingConn) {
+                let existingConn = await connFactory.getConnection(message.team.id, controller);
+                        
+                if (!existingConn) {
                     const authUrl = connFactory.getAuthUrl(message.team);
                     await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
-                } else {*/
+                } else {
                     console.log('-----------view_submission message -----------');
                     console.dir(message);
                     let accName = "";
@@ -308,14 +309,13 @@ module.exports = controller => {
                             errors: { "restaurant-name": "Please enter an Account Name." }
                         });
                     } else {
-                        let existingConn = await connFactory.getConnection(message.team.id, controller);
                         const userProfile = await bot.api.users.info({
                             token : bot.api.token,
                             user : message.user
                         });
                         let accounts = await getAccounts(existingConn,accName,userProfile);
                         
-                        let refTypes = await getRefTypes(existingConn,userProfile);
+                        //let refTypes = await getRefTypes(existingConn,userProfile);
                         console.log('refTypes');
                         console.dir(refTypes);
                         let opps = [];
@@ -328,7 +328,7 @@ module.exports = controller => {
                                 errors: { "restaurant-name": errorStr}
                             });
                         } else if (Object.keys(accounts).length > 1) {
-                            const result = await bot.api.views.open({
+                            const result = await bot.api.views.push({
                                 trigger_id: message.trigger_id,
                                 view: {
                                     "type": "modal",
@@ -359,7 +359,8 @@ module.exports = controller => {
                                                 },
                                                 "options": accounts
                                             }
-                                        },
+                                        }
+                                        /*,
                                         {
                                             "type": "section",
                                             "block_id": "blkref",
@@ -376,7 +377,7 @@ module.exports = controller => {
                                                 },
                                                 "options": refTypes
                                             }
-                                        }
+                                        }*/
                                     ]
                                 }
                             });
@@ -385,7 +386,7 @@ module.exports = controller => {
                             console.log('392');
                         }
                     }
-                
+                }
             } catch (err) {
                 console.log('396');
                 logger.log(err);
