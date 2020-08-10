@@ -24,7 +24,53 @@ module.exports = controller => {
         console.dir(message.actions);
         // Account selected
         let existingConn = await connFactory.getConnection(message.team.id, controller);
-        if (existingConn && message.actions != null && message.actions[0] == 'accountSelect') {
+        if (existingConn && message.actions != null && message.actions[0] == 'content_search') {
+            console.dir(message.actions[0].selected_option);
+            let requestURL = await getRequestURL(existingConn,message.actions[0].selected_option.value);
+            await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
+        } else if (existingConn && message.actions != null && message.actions[0] == 'account_search') {
+            console.dir(message.actions[0].selected_option);
+            let requestURL = await getRequestURL(existingConn,message.actions[0].selected_option.value);
+            await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
+        } else if (existingConn && message.actions != null && message.actions[0] == 'request') {
+            console.dir(message.actions[0].selected_option);
+            const result = await bot.api.views.update({
+                trigger_id: message.trigger_id,
+                view: {
+                    "type": "modal",
+                    "submit": {
+                        "type": "plain_text",
+                        "text": "Submit",
+                        "emoji": true
+                    },
+                    "close": {
+                        "type": "plain_text",
+                        "text": "Cancel",
+                        "emoji": true
+                    },
+                    "title": {
+                        "type": "plain_text",
+                        "text": "Workplace check-in",
+                        "emoji": true
+                    },
+                    "blocks": [
+                        {
+                            "type": "input",
+                            "element": {
+                                "type": "plain_text_input"
+                            },
+                            "label": {
+                                "type": "plain_text",
+                                "text": "Account Name",
+                                "emoji": true
+                            }
+                        }
+                    ]
+                }
+            });
+            console.log('result');
+            console.dir(result);
+        } else if (existingConn && message.actions != null && message.actions[0] == 'accountSelect') {
             console.dir(message.actions[0].selected_option);
             let requestURL = await getRequestURL(existingConn,message.actions[0].selected_option.value);
             await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
@@ -178,110 +224,62 @@ module.exports = controller => {
                             trigger_id: message.trigger_id,
                             view: {
                                 "type": "modal",
-                                "submit": {
-                                    "type": "plain_text",
-                                    "text": "Submit",
-                                    "emoji": true
-                                },
-                                "close": {
-                                    "type": "plain_text",
-                                    "text": "Cancel",
-                                    "emoji": true
-                                },
+                                "callback_id": "modal-identifier",
                                 "title": {
                                     "type": "plain_text",
-                                    "text": "Find Reference",
-                                    "emoji": true
+                                    "text": "Just a modal"
                                 },
                                 "blocks": [
                                     {
-                                        "type": "section",
-                                        "text": {
-                                            "type": "plain_text",
-                                            "text": "Ref Search.",
-                                            "emoji": true
-                                        }
-                                    },
-                                    {
-                                        "type": "divider"
-                                    },
-                                    {
-                                        "type": "input",
-                                        "label": {
-                                            "type": "plain_text",
-                                            "text": "Select Ref Types",
-                                            "emoji": true
-                                        },
-                                        "element": {
-                                            "type": "multi_static_select",
-                                            "placeholder": {
-                                                "type": "plain_text",
-                                                "text": "Select RefTypes",
-                                                "emoji": true
-                                            },
-                                            "options": refTypes
-                                        }
-                                    },
-                                    {
                                         "type": "actions",
                                         "elements": [
                                             {
                                                 "type": "button",
-                                                "action_id": "account_search",
+                                                "action_id" : "request",
                                                 "text": {
                                                     "type": "plain_text",
-                                                    "text": "Account"
-                                                }
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "type": "actions",
-                                        "elements": [
-                                            {
-                                                "type": "button",
-                                                "action_id": "content_search",
-                                                "text": {
-                                                    "type": "plain_text",
-                                                    "text": "Content"
-                                                }
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "type": "actions",
-                                        "elements": [
-                                            {
-                                                "type": "button",
-                                                "action_id": "request",
-                                                "text": {
-                                                    "type": "plain_text",
-                                                    "text": "Request"
-                                                }
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "type": "input",
-                                        "label": {
-                                            "type": "plain_text",
-                                            "text": "Deadline",
-                                            "emoji": true
-                                        },
-                                        "element": 
-                                            {
-                                                "type": "datepicker",
-                                                "initial_date": "1990-04-28",
-                                                "placeholder": {
-                                                    "type": "plain_text",
-                                                    "text": "Select a Deadline",
+                                                    "text": "Create Request",
                                                     "emoji": true
-                                                }
+                                                },
+                                                "value": "request"
                                             }
+                                        ]
+                                    },
+                                    {
+                                        "type": "actions",
+                                        "elements": [
+                                            {
+                                                "type": "button",
+                                                "action_id" : "account_search",
+                                                "text": {
+                                                    "type": "plain_text",
+                                                    "text": "Account Search",
+                                                    "emoji": true
+                                                },
+                                                "value": "account_search"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "actions",
+                                        "elements": [
+                                            {
+                                                "type": "button",
+                                                "action_id" : "content_search",
+                                                "text": {
+                                                    "type": "plain_text",
+                                                    "text": "Content Search",
+                                                    "emoji": true
+                                                },
+                                                "value": "content_search"
+                                            }
+                                        ]
                                     }
                                 ]
                             }
-                          });
+                        });
+                        console.log('result');
+                        console.dir(result);
                        
                     } else if (!existingConn) {
                         const authUrl = connFactory.getAuthUrl(message.team);
