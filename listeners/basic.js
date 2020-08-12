@@ -320,8 +320,8 @@ module.exports = controller => {
                         });
                     } else {
                         console.log('views');
-                        const result = await bot.api.views.push({
-                            trigger_id: message.trigger_id,
+                        const result = await bot.api.views.update({
+                            view_id: message.view.root_view_id,
                             view: {
                                 "type": "modal",
                                 "notify_on_close" : true,
