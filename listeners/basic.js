@@ -19,6 +19,7 @@ module.exports = controller => {
     
     controller.on('block_actions',async function(bot, message) {
         console.log('block_actions');
+        console.dir(message);
         // Account selected
         let existingConn = await connFactory.getConnection(message.team.id, controller);
         if (existingConn && message.actions != null && message.actions[0].action_id == 'content_search') {
@@ -36,6 +37,7 @@ module.exports = controller => {
                 view: {
                     "type": "modal",
                     "notify_on_close" : true,
+                    "callback_id" : "accountNameView",
                     "private_metadata" : "test",
                     "submit": {
                         "type": "plain_text",
@@ -88,7 +90,8 @@ module.exports = controller => {
     controller.on(
         'direct_message',
         async (bot, message) => {
-
+            console.log('direct_message');
+            console.dir(message);
             try {
                 console.log('message ***** ');
                 console.dir(message);
@@ -208,7 +211,6 @@ module.exports = controller => {
     controller.on(
         'slash_command',
         async (bot, message) => {
-
             try {
                 let existingConn = await connFactory.getConnection(message.team, controller);
                 console.log(message.user_id);
@@ -220,6 +222,7 @@ module.exports = controller => {
                         view: {
                             "type": "modal",
                             "notify_on_close" : true,
+                            
                             "private_metadata" : "test2",
                             "title": {
                                 "type": "plain_text",
@@ -295,6 +298,8 @@ module.exports = controller => {
     controller.on(
         'view_submission',
         async (bot, message) => {
+            console.log('view_submission');
+            console.dir(message);
 
             try {
                 let existingConn = await connFactory.getConnection(message.team.id, controller);
@@ -303,97 +308,154 @@ module.exports = controller => {
                     const authUrl = connFactory.getAuthUrl(message.team);
                     await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
                 } else {
-                    console.log('-----------view_submission message -----------');
-                    console.dir(message);
-                    let accName = "";
-                    for (let key in message.view.state.values) {
-                        if (message.view.state.values[key] != undefined && message.view.state.values[key].account_name != undefined && message.view.state.values[key].account_name != "") {
-                            accName = message.view.state.values[key].account_name.value;
-                            break;
+                    
+                    // When Account Name entered
+                    if (message.view.callback_id == 'accountNameView') {
+                        let accName = "";
+                        for (let key in message.view.state.values) {
+                            if (message.view.state.values[key] != undefined && message.view.state.values[key].account_name != undefined && message.view.state.values[key].account_name != "") {
+                                accName = message.view.state.values[key].account_name.value;
+                                break;
+                            }
                         }
-                    }
-                    console.log('accName = ' + accName);
-                    if (accName == "") {
-                        return Promise.resolve({
-                            response_action: "errors",
-                            errors: { "restaurant-name": "Please enter an Account Name." }
-                        });
-                    } else {
-                        const userProfile = await bot.api.users.info({
-                            token : bot.api.token,
-                            user : message.user
-                        });
-                        let accounts = await getAccounts(existingConn,accName,userProfile);
-                        
-                        let refTypes = await getRefTypes(existingConn,userProfile);
-                        console.log('refTypes');
-                        console.dir(refTypes);
-                        let opps = [];
-                        console.log('accounts');
-                        console.dir(accounts);
-                        if (accounts == null || Object.keys(accounts).length == 0) {
-                            const errorStr = "No Active Reference program member found by name:" + accName + ". Please check the spelling or Activate the Account." ;
-                            return Promise.resolve({
-                                response_action: "errors",
-                                errors: { "restaurant-name": errorStr}
-                            });
-                        } else if (Object.keys(accounts).length > 1) {
-                            const result = await bot.api.views.update({
-                                view_id: message.view.root_view_id,
-                                view: {
-                                    "type": "modal",
-                                    "submit": {
-                                        "type": "plain_text",
-                                        "text": "Submit",
-                                        "emoji": true
-                                    },
-                                    "title": {
-                                        "type": "plain_text",
-                                        "text": "Request",
-                                        "emoji": true
-                                    },
-                                    "blocks": [
-                                        {
-                                            "type": "section",
-                                            "block_id": "blkaccount",
-                                            "text": {
-                                                "type": "mrkdwn",
-                                                "text": "Please select an account from the dropdown list"
-                                            },
-                                            "accessory": {
-                                                "action_id": "accountSelect",
-                                                "type": "static_select",
-                                                "placeholder": {
-                                                "type": "plain_text",
-                                                "text": "Select an account"
-                                                },
-                                                "options": accounts
-                                            }
-                                        },
-                                        {
-                                            "type": "section",
-                                            "block_id": "blkref",
-                                            "text": {
-                                                "type": "mrkdwn",
-                                                "text": "Please select a reftype from the dropdown list"
-                                            },
-                                            "accessory": {
-                                                "action_id": "reftypeSelect",
-                                                "type": "static_select",
-                                                "placeholder": {
-                                                "type": "plain_text",
-                                                "text": "Select a type"
-                                                },
-                                                "options": refTypes
-                                            }
-                                        }
-                                    ]
+                        console.log('accName = ' + accName);
+                        if (accName == "") {
+                            bot.httpBody({
+                                response_action: 'errors',
+                                errors: {
+                                  "empty_account": 'Please enter an Account Name.'
                                 }
-                            });
-                            console.dir(result);
+                              });
                         } else {
-                            console.log('392');
+                            const userProfile = await bot.api.users.info({
+                                token : bot.api.token,
+                                user : message.user
+                            });
+                            let accounts = await getAccounts(existingConn,accName,userProfile);
+                            
+                            let refTypes = await getRefTypes(existingConn,userProfile);
+                            console.log('refTypes');
+                            console.dir(refTypes);
+                            let opps = [];
+                            console.log('accounts');
+                            console.dir(accounts);
+                            if (accounts == null || Object.keys(accounts).length == 0) {
+                                const errorStr = "No Active Reference program member found by name:" + accName + ". Please check the spelling or Activate the Account." ;
+                                bot.httpBody({
+                                    response_action: 'errors',
+                                    errors: {
+                                      "no_rbi": errorStr
+                                    }
+                                  });
+                                /*const result = await bot.api.views.push({
+                                    trigger_id: message.trigger_id,
+                                    view: {
+                                        "type": "modal",
+                                        "notify_on_close" : true,
+                                        "callback_id" : "accountNameView",
+                                        "private_metadata" : "test",
+                                        "submit": {
+                                            "type": "plain_text",
+                                            "text": "Submit",
+                                            "emoji": true
+                                        },
+                                        "close": {
+                                            "type": "plain_text",
+                                            "text": "Cancel",
+                                            "emoji": true
+                                        },
+                                        "title": {
+                                            "type": "plain_text",
+                                            "text": "Request",
+                                            "emoji": true
+                                        },
+                                        "blocks": [
+                                            {
+                                                "type": "input",
+                                                "block_id" : "accblock",
+                                                "element": {
+                                                    "type": "plain_text_input",
+                                                    "action_id": "account_name",
+                                                    "placeholder": {
+                                                        "type": "plain_text",
+                                                        "text": "Active Reference Account"
+                                                    },
+                                                    "multiline": false
+                                                },
+                                                "label": {
+                                                    "type": "plain_text",
+                                                    "text": "Account Name",
+                                                    "emoji": true
+                                                }
+                                            }
+                                        ]
+                                    }
+                                });*/
+                            } else if (Object.keys(accounts).length > 1) {
+                                const result = await bot.api.views.update({
+                                    view_id: message.view.root_view_id,
+                                    view: {
+                                        "type": "modal",
+                                        "callback_id" : "detailView",
+                                        "submit": {
+                                            "type": "plain_text",
+                                            "text": "Submit",
+                                            "emoji": true
+                                        },
+                                        "title": {
+                                            "type": "plain_text",
+                                            "text": "Request",
+                                            "emoji": true
+                                        },
+                                        "blocks": [
+                                            {
+                                                "type": "input",
+                                                "block_id": "accountselect",
+                                                "element": {
+                                                    "type": "static_select",
+                                                    "action_id": "accountSelect",
+                                                    "placeholder": {
+                                                        "type": "plain_text",
+                                                        "text": "Select an account",
+                                                        "emoji": true
+                                                    },
+                                                    "options": accounts
+                                                },
+                                                "label": {
+                                                    "type": "plain_text",
+                                                    "text": "Account",
+                                                    "emoji": true
+                                                }
+                                            },
+                                            {
+                                                "type": "input",
+                                                "block_id": "blkref",
+                                                "element": {
+                                                    "type": "static_select",
+                                                    "action_id": "reftypeSelect",
+                                                    "placeholder": {
+                                                        "type": "plain_text",
+                                                        "text": "Select a type",
+                                                        "emoji": true
+                                                    },
+                                                    "options": refTypes
+                                                },
+                                                "label": {
+                                                    "type": "plain_text",
+                                                    "text": "Referenceability Type",
+                                                    "emoji": true
+                                                }
+                                            }
+                                        ]
+                                    }
+                                });
+                                console.dir(result);
+                            } else {
+                                console.log('392');
+                            }
                         }
+                    } else if (message.view.callback_id == 'detailView') {
+
                     }
                 }
             } catch (err) {
@@ -402,6 +464,7 @@ module.exports = controller => {
             }
         }
     );
+    slackEvents.on('error', console.error);
 
     controller.on('oauth_success', async authData => {
         console.log('******************-----/oauth_success/-----******************');
