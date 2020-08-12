@@ -319,53 +319,7 @@ module.exports = controller => {
                             errors: { "restaurant-name": "Please enter an Account Name." }
                         });
                     } else {
-                        console.log('views');
-                        const result = await bot.api.views.update({
-                            view_id: message.view.root_view_id,
-                            view: {
-                                "type": "modal",
-                                "notify_on_close" : true,
-                                "private_metadata" : "test",
-                                "submit": {
-                                    "type": "plain_text",
-                                    "text": "Submit",
-                                    "emoji": true
-                                },
-                                "close": {
-                                    "type": "plain_text",
-                                    "text": "Cancel",
-                                    "emoji": true
-                                },
-                                "title": {
-                                    "type": "plain_text",
-                                    "text": "Ref Type",
-                                    "emoji": true
-                                },
-                                "blocks": [
-                                    {
-                                        "type": "input",
-                                        "block_id" : "testaccblock",
-                                        "element": {
-                                            "type": "plain_text_input",
-                                            "action_id": "testaccount_name",
-                                            "placeholder": {
-                                                "type": "plain_text",
-                                                "text": "test Active Reference Account"
-                                            },
-                                            "multiline": false
-                                        },
-                                        "label": {
-                                            "type": "plain_text",
-                                            "text": "Account Name",
-                                            "emoji": true
-                                        }
-                                    }
-                                ]
-                            }
-                        });
-                        console.dir(result);
-                    }
-                        /*const userProfile = await bot.api.users.info({
+                        const userProfile = await bot.api.users.info({
                             token : bot.api.token,
                             user : message.user
                         });
@@ -384,8 +338,8 @@ module.exports = controller => {
                                 errors: { "restaurant-name": errorStr}
                             });
                         } else if (Object.keys(accounts).length > 1) {
-                            const result = await bot.api.views.push({
-                                trigger_id: message.trigger_id,
+                            const result = await bot.api.views.update({
+                                view_id: message.view.root_view_id,
                                 view: {
                                     "type": "modal",
                                     "submit": {
@@ -440,7 +394,7 @@ module.exports = controller => {
                         } else {
                             console.log('392');
                         }
-                    }*/
+                    }
                 }
             } catch (err) {
                 console.log('396');
