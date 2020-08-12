@@ -31,8 +31,8 @@ module.exports = controller => {
             await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
         } else if (existingConn && message.actions != null && message.actions[0].action_id == 'request') {
             console.log('request');
-            const result = await bot.api.views.update({
-                view_id:message.container.view_id,
+            const result = await bot.api.views.push({
+                trigger_id: message.trigger_id,
                 view: {
                     "type": "modal",
                     "notify_on_close" : true,
@@ -319,12 +319,9 @@ module.exports = controller => {
                             errors: { "restaurant-name": "Please enter an Account Name." }
                         });
                     } else {
-                        return Promise.resolve({
-                            response_action: "errors",
-                            errors: { "restaurant-name": "Please enter an Account Name." }
-                        });
+                        console.log('views');
                         const result = await bot.api.views.push({
-                            view_id:message.view.id,
+                            trigger_id: message.trigger_id,
                             view: {
                                 "type": "modal",
                                 "notify_on_close" : true,
