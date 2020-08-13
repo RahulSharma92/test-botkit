@@ -632,23 +632,6 @@ module.exports = controller => {
                                                     "text": "Account",
                                                     "emoji": true
                                                 }
-                                            },{
-                                                "type": "input",
-                                                "block_id": "blkdeadline",
-                                                "element": {
-                                                    "type": "datepicker",
-                                                    "initial_date": datetime,
-                                                    "placeholder": {
-                                                        "type": "plain_text",
-                                                        "text": "Select a date",
-                                                        "emoji": true
-                                                    }
-                                                },
-                                                "label": {
-                                                    "type": "plain_text",
-                                                    "text": "Deadline",
-                                                    "emoji": true
-                                                }
                                             }
                                         ]
                                     }
