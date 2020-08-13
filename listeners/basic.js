@@ -22,14 +22,220 @@ module.exports = controller => {
         console.dir(message);
         // Account selected
         let existingConn = await connFactory.getConnection(message.team.id, controller);
+
         if (existingConn && message.actions != null && message.actions[0].action_id == 'content_search') {
             console.log('28 : content_search');
             let requestURL = await getRequestURL(existingConn,message.actions[0].selected_option.value);
             await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
+
         } else if (existingConn && message.actions != null && message.actions[0].action_id == 'account_search') {
             console.log('32 : account_search');
             let requestURL = await getRequestURL(existingConn,message.actions[0].selected_option.value);
             await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
+
+        } else if (existingConn && message.actions != null && message.actions[0].action_id == 'account_select') {
+            let accountselected = message.actions[0].selected_option;
+            let metadata = {'acc' : accountselected.value};
+            const userProfile = await bot.api.users.info({
+                token : bot.api.token,
+                user : message.user
+            });
+            let refTypes = await getRefTypes(existingConn,userProfile);
+            const result = await bot.api.views.update({
+                trigger_id: message.trigger_id,
+                view: {
+                    "type": "modal",
+                    "notify_on_close" : true,
+                    "callback_id" : "accountNameView",
+                    "private_metadata" : JSON.stringify(metadata),
+                    "submit": {
+                        "type": "plain_text",
+                        "text": "Submit",
+                        "emoji": true
+                    },
+                    "close": {
+                        "type": "plain_text",
+                        "text": "Cancel",
+                        "emoji": true
+                    },
+                    "title": {
+                        "type": "plain_text",
+                        "text": "Request",
+                        "emoji": true
+                    },
+                    "blocks": [
+                        {
+                            "type": "section",
+                            "text": {
+                                "type": "mrkdwn",
+                                "text": "*Account* : " + accountselected.text.text
+                            }
+                        },
+                        {
+                            "type": "input",
+                            "block_id": "blkref",
+                            "element": {
+                                "type": "static_select",
+                                "action_id": "reftype_select",
+                                "placeholder": {
+                                    "type": "plain_text",
+                                    "text": "Select a type",
+                                    "emoji": true
+                                },
+                                "options": refTypes
+                            },
+                            "label": {
+                                "type": "plain_text",
+                                "text": "Referenceability Type",
+                                "emoji": true
+                            }
+                        }
+                    ]
+                }
+            });
+        } else if (existingConn && message.actions != null && message.actions[0].action_id == 'reftype_select') {
+            const refselected = message.actions[0].selected_option;
+            let private_metadata = JSON.parse(message.view.private_metadata);
+            let refselectemeta = {'ref' : refselected.value,'acc' : private_metadata.acc};
+            const result = await bot.api.views.update({
+                trigger_id: message.trigger_id,
+                view: {
+                    "type": "modal",
+                    "notify_on_close" : true,
+                    "callback_id" : "accountNameView",
+                    "private_metadata" : JSON.stringify(refselectemeta),
+                    "submit": {
+                        "type": "plain_text",
+                        "text": "Submit",
+                        "emoji": true
+                    },
+                    "close": {
+                        "type": "plain_text",
+                        "text": "Cancel",
+                        "emoji": true
+                    },
+                    "title": {
+                        "type": "plain_text",
+                        "text": "Request",
+                        "emoji": true
+                    },
+                    "blocks": [
+                        {
+                            "type": "section",
+                            "text": {
+                                "type": "mrkdwn",
+                                "text": "*Account* : " + accountselected.text.text
+                            }
+                        },
+                        {
+                            "type": "section",
+                            "text": {
+                                "type": "mrkdwn",
+                                "text": "*Type* : " + refselected.text.text
+                            }
+                        },{
+                            "type": "input",
+                            "block_id": "blkdeadline",
+                            "element": {
+                                "type": "datepicker",
+                                "action_id": "select_deadline",
+                                "initial_date": datetime,
+                                "placeholder": {
+                                    "type": "plain_text",
+                                    "text": "Select a date",
+                                    "emoji": true
+                                }
+                            },
+                            "label": {
+                                "type": "plain_text",
+                                "text": "Deadline",
+                                "emoji": true
+                            }
+                        }
+                    ]
+                }
+            });
+        } else if (existingConn && message.actions != null && message.actions[0].action_id == 'select_deadline') {
+            const dateselected = message.actions[0].selected_date;
+            
+            let refselected = JSON.parse(message.view.private_metadata).ref;
+            
+            if (refselected.indexOf('@@') > -1) {
+                let days = refselected.split('@@')[1];
+                var todayDate = new Date();
+                todayDate.setDate(todayDate.getDate() + days);
+                
+                if (dateselected < todayDate ) {
+                    const dateString = todayDate.getDate() + "-" + todayDate.getMonth() + "-" + todayDate.getFullYear;
+                    const result = await bot.api.views.update({
+                        trigger_id: message.trigger_id,
+                        view: {
+                            "type": "modal",
+                            "notify_on_close" : true,
+                            "callback_id" : "accountNameView",
+                            "private_metadata" : message.view.private_metadata,
+                            "submit": {
+                                "type": "plain_text",
+                                "text": "Submit",
+                                "emoji": true
+                            },
+                            "close": {
+                                "type": "plain_text",
+                                "text": "Cancel",
+                                "emoji": true
+                            },
+                            "title": {
+                                "type": "plain_text",
+                                "text": "Request",
+                                "emoji": true
+                            },
+                            "blocks": [
+                                {
+                                    "type": "section",
+                                    "text": {
+                                        "type": "mrkdwn",
+                                        "text": "*Account* : " + accountselected.text.text
+                                    }
+                                },
+                                {
+                                    "type": "section",
+                                    "text": {
+                                        "type": "mrkdwn",
+                                        "text": "*Type* : " + refselected.text.text
+                                    }
+                                },
+                                {
+                                    "type": "section",
+                                    "text": {
+                                        "type": "mrkdwn",
+                                        "text": "Date Invalid"
+                                    }
+                                },
+                                {
+                                    "type": "input",
+                                    "block_id": "blkdeadline",
+                                    "element": {
+                                        "type": "datepicker",
+                                        "action_id": "select_deadline",
+                                        "initial_date": datetime,
+                                        "placeholder": {
+                                            "type": "plain_text",
+                                            "text": "Select a date(Date should be greater than " + dateString + ")",
+                                            "emoji": true
+                                        }
+                                    },
+                                    "label": {
+                                        "type": "plain_text",
+                                        "text": "Deadline",
+                                        "emoji": true
+                                    }
+                                }
+                            ]
+                        }
+                    });
+                }
+            }
+        
         } else if (existingConn && message.actions != null && message.actions[0].action_id == 'request') {
             console.log('request');
             const result = await bot.api.views.push({
@@ -76,10 +282,12 @@ module.exports = controller => {
                     ]
                 }
             });
+        
         } else if (existingConn && message.actions != null && message.actions[0].action_id == 'accountSelect') {
             console.log('73 : accountSelect');
             let requestURL = await getRequestURL(existingConn,message.actions[0].selected_option.value);
             await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
+        
         } else {
             console.log('77');
             const authUrl = connFactory.getAuthUrl(message.team);
@@ -332,22 +540,12 @@ module.exports = controller => {
                                 user : message.user
                             });
                             let accounts = await getAccounts(existingConn,accName,userProfile);
-                            
-                            let refTypes = await getRefTypes(existingConn,userProfile);
-                            console.log('refTypes');
-                            console.dir(refTypes);
-                            let opps = [];
                             console.log('accounts');
                             console.dir(accounts);
                             if (accounts == null || Object.keys(accounts).length == 0) {
-                                const errorStr = "No Active Reference program member found by name:" + accName + ". Please check the spelling or Activate the Account." ;
-                                bot.httpBody({
-                                    response_action: 'errors',
-                                    errors: {
-                                      "no_rbi": errorStr
-                                    }
-                                  });
-                                /*const result = await bot.api.views.push({
+                                console.log('errors');
+                                const errorStr = "*No Active Reference program member found by name:" + accName + ".\n Please check the spelling or Activate the Account.*" ;
+                                const result = await bot.api.views.push({
                                     trigger_id: message.trigger_id,
                                     view: {
                                         "type": "modal",
@@ -371,6 +569,13 @@ module.exports = controller => {
                                         },
                                         "blocks": [
                                             {
+                                                "type": "section",
+                                                "text": {
+                                                    "type": "mrkdwn",
+                                                    "text": errorStr
+                                                }
+                                            },
+                                            {
                                                 "type": "input",
                                                 "block_id" : "accblock",
                                                 "element": {
@@ -390,8 +595,9 @@ module.exports = controller => {
                                             }
                                         ]
                                     }
-                                });*/
+                                });
                             } else if (Object.keys(accounts).length > 1) {
+                                var datetime = new Date();
                                 const result = await bot.api.views.update({
                                     view_id: message.view.root_view_id,
                                     view: {
@@ -410,10 +616,10 @@ module.exports = controller => {
                                         "blocks": [
                                             {
                                                 "type": "input",
-                                                "block_id": "accountselect",
+                                                "block_id": "account_select",
                                                 "element": {
                                                     "type": "static_select",
-                                                    "action_id": "accountSelect",
+                                                    "action_id": "account_select",
                                                     "placeholder": {
                                                         "type": "plain_text",
                                                         "text": "Select an account",
@@ -426,23 +632,21 @@ module.exports = controller => {
                                                     "text": "Account",
                                                     "emoji": true
                                                 }
-                                            },
-                                            {
+                                            },{
                                                 "type": "input",
-                                                "block_id": "blkref",
+                                                "block_id": "blkdeadline",
                                                 "element": {
-                                                    "type": "static_select",
-                                                    "action_id": "reftypeSelect",
+                                                    "type": "datepicker",
+                                                    "initial_date": datetime,
                                                     "placeholder": {
                                                         "type": "plain_text",
-                                                        "text": "Select a type",
+                                                        "text": "Select a date",
                                                         "emoji": true
-                                                    },
-                                                    "options": refTypes
+                                                    }
                                                 },
                                                 "label": {
                                                     "type": "plain_text",
-                                                    "text": "Referenceability Type",
+                                                    "text": "Deadline",
                                                     "emoji": true
                                                 }
                                             }
@@ -464,7 +668,7 @@ module.exports = controller => {
             }
         }
     );
-    slackEvents.on('error', console.error);
+    controller.on('error', console.error);
 
     controller.on('oauth_success', async authData => {
         console.log('******************-----/oauth_success/-----******************');
