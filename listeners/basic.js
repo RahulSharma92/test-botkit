@@ -430,7 +430,7 @@ module.exports = controller => {
                         view: {
                             "type": "modal",
                             "notify_on_close" : true,
-                            
+                            "callback_id" : "detailView",
                             "private_metadata" : "test2",
                             "title": {
                                 "type": "plain_text",
@@ -598,8 +598,9 @@ module.exports = controller => {
                                 });
                             } else if (Object.keys(accounts).length > 1) {
                                 var datetime = new Date();
-                                const result = await bot.api.views.update({
-                                    view_id: message.view.root_view_id,
+                                
+                                const result = awaitbot.api.views.push({
+                                    trigger_id: message.trigger_id,
                                     view: {
                                         "type": "modal",
                                         "callback_id" : "detailView",
@@ -616,7 +617,7 @@ module.exports = controller => {
                                         "blocks": [
                                             {
                                                 "type": "input",
-                                                "block_id": "blkaccount_select",
+                                                "block_id": "account_select",
                                                 "element": {
                                                     "type": "static_select",
                                                     "action_id": "account_select",
