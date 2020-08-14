@@ -599,7 +599,7 @@ module.exports = controller => {
                             } else if (Object.keys(accounts).length > 1) {
                                 var datetime = new Date();
                                 
-                                const result = awaitbot.api.views.push({
+                                const result = await bot.api.views.push({
                                     trigger_id: message.trigger_id,
                                     view: {
                                         "type": "modal",
