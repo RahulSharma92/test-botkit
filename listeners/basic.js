@@ -603,8 +603,6 @@ module.exports = controller => {
                                     view: {
                                         "type": "modal",
                                         "notify_on_close" : true,
-                                        
-                                        "private_metadata" : "test2",
                                         "title": {
                                             "type": "plain_text",
                                             "text": "Select Account"
