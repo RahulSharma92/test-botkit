@@ -602,10 +602,16 @@ module.exports = controller => {
                                     view_id: message.view.root_view_id,
                                     view: {
                                         "type": "modal",
-                                        "notify_on_close" : true,
+                                        "callback_id" : "detailView",
+                                        "submit": {
+                                            "type": "plain_text",
+                                            "text": "Submit",
+                                            "emoji": true
+                                        },
                                         "title": {
                                             "type": "plain_text",
-                                            "text": "Select Account"
+                                            "text": "Request",
+                                            "emoji": true
                                         },
                                         "blocks": [
                                             {
@@ -630,7 +636,6 @@ module.exports = controller => {
                                         ]
                                     }
                                 });
-                                
                                 console.dir(result);
                             } else {
                                 console.log('392');
