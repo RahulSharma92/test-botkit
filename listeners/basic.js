@@ -602,21 +602,17 @@ module.exports = controller => {
                                     view_id: message.view.root_view_id,
                                     view: {
                                         "type": "modal",
-                                        "callback_id" : "detailView",
-                                        "submit": {
-                                            "type": "plain_text",
-                                            "text": "Submit",
-                                            "emoji": true
-                                        },
+                                        "notify_on_close" : true,
+                                        
+                                        "private_metadata" : "test2",
                                         "title": {
                                             "type": "plain_text",
-                                            "text": "Request",
-                                            "emoji": true
+                                            "text": "Select Account"
                                         },
                                         "blocks": [
                                             {
                                                 "type": "input",
-                                                "block_id": "account_select",
+                                                "block_id": "blkaccount_select",
                                                 "element": {
                                                     "type": "static_select",
                                                     "action_id": "account_select",
@@ -636,6 +632,7 @@ module.exports = controller => {
                                         ]
                                     }
                                 });
+                                
                                 console.dir(result);
                             } else {
                                 console.log('392');
