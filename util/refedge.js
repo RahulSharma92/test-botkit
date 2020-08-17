@@ -11,6 +11,7 @@ module.exports = {
     },
     getRefTypes: async (conn,userProfile) => {
         let val = [];
+        //key should have mindays in format 'Id@@days'
         await conn.apex.get('/rebot/REF_TYPE::' + userProfile.user.profile.email, (err, response) => {
             if (err) {
                 logger.log(err);
