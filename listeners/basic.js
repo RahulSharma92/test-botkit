@@ -545,8 +545,8 @@ module.exports = controller => {
                             if (accounts == null || Object.keys(accounts).length == 0) {
                                 console.log('errors');
                                 const errorStr = "*No Active Reference program member found by name:" + accName + ".\n Please check the spelling or Activate the Account.*" ;
-                                const result = await bot.api.views.push({
-                                    trigger_id: message.trigger_id,
+                                const result = await bot.api.views.update({
+                                    view_id: message.view.root_view_id,
                                     view: {
                                         "type": "modal",
                                         "notify_on_close" : true,
@@ -616,6 +616,21 @@ module.exports = controller => {
                                             "emoji": true
                                         },
                                         "blocks": [
+                                            {
+                                                "type": "actions",
+                                                "elements": [
+                                                    {
+                                                        "type": "button",
+                                                        "action_id" : "requesttest",
+                                                        "text": {
+                                                            "type": "plain_text",
+                                                            "text": "Create Request",
+                                                            "emoji": true
+                                                        },
+                                                        "value": "request"
+                                                    }
+                                                ]
+                                            },
                                             {
                                                 "type": "input",
                                                 "block_id": "account_select",
