@@ -548,12 +548,11 @@ module.exports = controller => {
                                     view_id: message.view.root_view_id, 
                                     view: {
                                         "type": "modal",
-                                        "notify_on_close" : true,
-                                        "callback_id" : "detailView",
-                                        "private_metadata" : "test",
+                                        "callback_id": "detailView",
                                         "title": {
                                             "type": "plain_text",
-                                            "text": "Select Action"
+                                            "text": "Request",
+                                            "emoji": true
                                         },
                                         "blocks": [
                                             {
