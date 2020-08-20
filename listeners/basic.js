@@ -544,8 +544,82 @@ module.exports = controller => {
                                     user : message.user
                                 });
                                 let refTypes = await getRefTypes(existingConn,userProfile);
+                                
                                 const result = await bot.api.views.update({
-                                    view_id: message.view.root_view_id, 
+                                    view_id: message.view.id, 
+                                    view: {
+                                        "type": "modal",
+                                        "callback_id": "detailView",
+                                        "submit": {
+                                            "type": "plain_text",
+                                            "text": "Submit",
+                                            "emoji": true
+                                        },
+                                        "title": {
+                                            "type": "plain_text",
+                                            "text": "Request",
+                                            "emoji": true
+                                        },
+                                        "blocks": [
+                                            {
+                                                "type": "input",
+                                                "block_id": "blkaccount",
+                                                "element": {
+                                                    "type": "static_select",
+                                                    "placeholder": {
+                                                        "type": "plain_text",
+                                                        "text": "Select an item",
+                                                        "emoji": true
+                                                    },
+                                                    "options": accounts
+                                                },
+                                                "label": {
+                                                    "type": "plain_text",
+                                                    "text": "Account",
+                                                    "emoji": true
+                                                }
+                                            },
+                                            {
+                                                "type": "input",
+                                                "block_id": "blkref",
+                                                "element": {
+                                                    "type": "static_select",
+                                                    "action_id": "reftype_select",
+                                                    "placeholder": {
+                                                        "type": "plain_text",
+                                                        "text": "Select a type",
+                                                        "emoji": true
+                                                    },
+                                                    "options": refTypes
+                                                },
+                                                "label": {
+                                                    "type": "plain_text",
+                                                    "text": "Referenceability Type",
+                                                    "emoji": true
+                                                }
+                                            },
+                                            {
+                                                "type": "actions",
+                                                "elements": [
+                                                    {
+                                                        "type": "button",
+                                                        "action_id" : "get_deadline",
+                                                        "text": {
+                                                            "type": "plain_text",
+                                                            "text": "Submit Details",
+                                                            "emoji": true
+                                                        },
+                                                        "value": "request"
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                });
+                                console.log(message.view.id + '----root : ' + message.view.root_view_id);
+                                console.dir(result);
+                                const resultnext = await bot.api.views.push({
+                                    trigger_id: message.trigger_id, 
                                     view: {
                                         "type": "modal",
                                         "callback_id": "detailView",
@@ -616,7 +690,7 @@ module.exports = controller => {
                                     }
                                 });
                                 
-                                console.dir(result);
+                                console.dir(resultnext);
                             } else {
                                 console.log('392');
                             }
