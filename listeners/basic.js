@@ -14,7 +14,7 @@ module.exports = controller => {
         console.log(results);
         await bot.say('conversation complete!');
     });
-    controller.addDialog(convo);*/
+    controller.addDialog(convo);*/ 
 
     
     controller.on('block_actions',async function(bot, message) {
@@ -33,66 +33,6 @@ module.exports = controller => {
             let requestURL = await getRequestURL(existingConn,message.actions[0].selected_option.value);
             await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
 
-        } else if (existingConn && message.actions != null && message.actions[0].action_id == 'account_select') {
-            let accountselected = message.actions[0].selected_option;
-            let metadata = {'acc' : accountselected.value};
-            const userProfile = await bot.api.users.info({
-                token : bot.api.token,
-                user : message.user
-            });
-            let refTypes = await getRefTypes(existingConn,userProfile);
-            const result = await bot.api.views.update({
-                trigger_id: message.trigger_id,
-                view: {
-                    "type": "modal",
-                    "notify_on_close" : true,
-                    "callback_id" : "accountNameView",
-                    "private_metadata" : JSON.stringify(metadata),
-                    "submit": {
-                        "type": "plain_text",
-                        "text": "Submit",
-                        "emoji": true
-                    },
-                    "close": {
-                        "type": "plain_text",
-                        "text": "Cancel",
-                        "emoji": true
-                    },
-                    "title": {
-                        "type": "plain_text",
-                        "text": "Request",
-                        "emoji": true
-                    },
-                    "blocks": [
-                        {
-                            "type": "section",
-                            "text": {
-                                "type": "mrkdwn",
-                                "text": "*Account* : " + accountselected.text.text
-                            }
-                        },
-                        {
-                            "type": "input",
-                            "block_id": "blkref",
-                            "element": {
-                                "type": "static_select",
-                                "action_id": "reftype_select",
-                                "placeholder": {
-                                    "type": "plain_text",
-                                    "text": "Select a type",
-                                    "emoji": true
-                                },
-                                "options": refTypes
-                            },
-                            "label": {
-                                "type": "plain_text",
-                                "text": "Referenceability Type",
-                                "emoji": true
-                            }
-                        }
-                    ]
-                }
-            });
         } else if (existingConn && message.actions != null && message.actions[0].action_id == 'reftype_select') {
             const refselected = message.actions[0].selected_option;
             let private_metadata = JSON.parse(message.view.private_metadata);
@@ -382,21 +322,21 @@ module.exports = controller => {
                             const content = {
                                 "blocks" : [
                                 {
-                                "type": "section",
-                                "block_id": "section678",
-                                "text": {
-                                    "type": "mrkdwn",
-                                    "text": "Please select an account from the dropdown list"
-                                },
-                                "accessory": {
-                                    "action_id": "accountSelect",
-                                    "type": "static_select",
-                                    "placeholder": {
-                                    "type": "plain_text",
-                                    "text": "Select an item"
+                                    "type": "section",
+                                    "block_id": "section678",
+                                    "text": {
+                                        "type": "mrkdwn",
+                                        "text": "Please select an account from the dropdown list"
                                     },
-                                    "options": accounts
-                                }
+                                    "accessory": {
+                                        "action_id": "accountSelect",
+                                        "type": "static_select",
+                                        "placeholder": {
+                                            "type": "plain_text",
+                                            "text": "Select an item"
+                                            },
+                                        "options": accounts
+                                    }
                                 }
                             ]};
                             await bot.reply(message, content);
@@ -599,41 +539,26 @@ module.exports = controller => {
                             } else if (Object.keys(accounts).length > 1) {
                                 
                                 console.log('Got Accounts')
-                                
+                                const userProfile = await bot.api.users.info({
+                                    token : bot.api.token,
+                                    user : message.user
+                                });
+                                let refTypes = await getRefTypes(existingConn,userProfile);
                                 const result = await bot.api.views.update({
                                     view_id: message.view.root_view_id, 
                                     view: {
                                         "type": "modal",
-                                        "callback_id": "detailView",
-                                        "submit": {
-                                            "type": "plain_text",
-                                            "text": "Submit",
-                                            "emoji": true
-                                        },
+                                        "notify_on_close" : true,
+                                        "callback_id" : "detailView",
+                                        "private_metadata" : "test",
                                         "title": {
                                             "type": "plain_text",
-                                            "text": "Request",
-                                            "emoji": true
+                                            "text": "Select Action"
                                         },
                                         "blocks": [
                                             {
-                                                "type": "actions",
-                                                "elements": [
-                                                    {
-                                                        "type": "button",
-                                                        "action_id" : "requesttest",
-                                                        "text": {
-                                                            "type": "plain_text",
-                                                            "text": "Create Request",
-                                                            "emoji": true
-                                                        },
-                                                        "value": "request"
-                                                    }
-                                                ]
-                                            },
-                                            {
                                                 "type": "input",
-                                                "block_id": "account_select",
+                                                "block_id": "blkaccount",
                                                 "element": {
                                                     "type": "static_select",
                                                     "placeholder": {
@@ -648,10 +573,45 @@ module.exports = controller => {
                                                     "text": "Account",
                                                     "emoji": true
                                                 }
+                                            },
+                                            {
+                                                "type": "input",
+                                                "block_id": "blkref",
+                                                "element": {
+                                                    "type": "static_select",
+                                                    "action_id": "reftype_select",
+                                                    "placeholder": {
+                                                        "type": "plain_text",
+                                                        "text": "Select a type",
+                                                        "emoji": true
+                                                    },
+                                                    "options": refTypes
+                                                },
+                                                "label": {
+                                                    "type": "plain_text",
+                                                    "text": "Referenceability Type",
+                                                    "emoji": true
+                                                }
+                                            },
+                                            {
+                                                "type": "actions",
+                                                "elements": [
+                                                    {
+                                                        "type": "button",
+                                                        "action_id" : "get_deadline",
+                                                        "text": {
+                                                            "type": "plain_text",
+                                                            "text": "Submit Details",
+                                                            "emoji": true
+                                                        },
+                                                        "value": "request"
+                                                    }
+                                                ]
                                             }
                                         ]
                                     }
                                 });
+                                
                                 console.dir(result);
                             } else {
                                 console.log('392');
