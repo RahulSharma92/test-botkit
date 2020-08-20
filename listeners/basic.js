@@ -42,7 +42,6 @@ module.exports = controller => {
             });
             let refTypes = await getRefTypes(existingConn,userProfile);
             const result = await bot.api.views.update({
-                trigger_id: message.trigger_id,
                 view: {
                     "type": "modal",
                     "notify_on_close" : true,
@@ -98,7 +97,6 @@ module.exports = controller => {
             let private_metadata = JSON.parse(message.view.private_metadata);
             let refselectemeta = {'ref' : refselected.value,'acc' : private_metadata.acc};
             const result = await bot.api.views.update({
-                trigger_id: message.trigger_id,
                 view: {
                     "type": "modal",
                     "notify_on_close" : true,
@@ -168,7 +166,6 @@ module.exports = controller => {
                 if (dateselected < todayDate ) {
                     const dateString = todayDate.getDate() + "-" + todayDate.getMonth() + "-" + todayDate.getFullYear;
                     const result = await bot.api.views.update({
-                        trigger_id: message.trigger_id,
                         view: {
                             "type": "modal",
                             "notify_on_close" : true,
@@ -597,10 +594,10 @@ module.exports = controller => {
                                     }
                                 });
                             } else if (Object.keys(accounts).length > 1) {
-                                var datetime = new Date();
                                 
-                                const result = await bot.api.views.push({
-                                    trigger_id: message.trigger_id,
+                                console.log('Got Accounts');
+                                
+                                const result = await bot.api.views.update({
                                     view: {
                                         "type": "modal",
                                         "callback_id" : "detailView",
