@@ -543,7 +543,11 @@ module.exports = controller => {
                                     token : bot.api.token,
                                     user : message.user
                                 });
+                                console.log('Got userProfile')
+                                console.dir(userProfile);
                                 let refTypes = await getRefTypes(existingConn,userProfile);
+                                console.log('Got refTypes')
+                                console.dir(refTypes);
                                 const result = await bot.api.views.update({
                                     view_id: message.view.root_view_id, 
                                     view: {
