@@ -366,9 +366,9 @@ module.exports = controller => {
                         }
                     });
                     console.log('open view');
-                    console.dir(result.view);
+                    console.dir(result);
                     const result1 = await bot.api.views.push({
-                        trigger_id: message.trigger_id,
+                        trigger_id: result.trigger_id,
                         view: {
                             "type": "modal",
                             "notify_on_close" : true,
