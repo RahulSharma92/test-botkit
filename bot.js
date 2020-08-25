@@ -1,8 +1,6 @@
 require('dotenv').config();
 
 const { Botkit } = require('botkit');
-const { createMessageAdapter } = require('@slack/interactive-messages');
-const slackInteractions = createMessageAdapter(process.env.SLACK_SIGNING_SECRET);
 const { SlackAdapter, SlackMessageTypeMiddleware, SlackEventMiddleware } = require('botbuilder-adapter-slack');
 const dialogflowMiddleware = require('botkit-middleware-dialogflow')();
 
