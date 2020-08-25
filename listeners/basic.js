@@ -546,15 +546,11 @@ module.exports = controller => {
                                 let mapval = await getRefTypes(existingConn,userProfile);
                                 let refTypes = mapval.ref;
                                 let opps = mapval.opp;
-                                console.log('Got opps');
-                                console.dir(opps);
                                 console.log(message.view.id + '----root612 : ' + message.view.root_view_id + '--' + message.trigger_id);
                                 if (opps != null && opps.length > 0) {
                                     const resultnext = await bot.api.views.update({
                                         view: {
                                             "type": "modal",
-                                            "callback_id": "detailView",
-                                            "notify_on_close" : true,
                                             "submit": {
                                                 "type": "plain_text",
                                                 "text": "Submit",
