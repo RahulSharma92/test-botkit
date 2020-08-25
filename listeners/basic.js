@@ -551,7 +551,7 @@ module.exports = controller => {
                                 if (opps != null && opps.length > 0) {
                                     console.log('551');
                                     const resultnext = await bot.api.views.update({
-                                        view_id: message.view.id, 
+                                        view_id: message.previous_view_id, 
                                         view: {
                                             "type": "modal",
                                             "submit": {
@@ -628,7 +628,7 @@ module.exports = controller => {
                                 } else {
                                     console.log('628')
                                     const resultnext = await bot.api.views.update({
-                                        view_id: message.view.id, 
+                                        view_id: message.previous_view_id, 
                                         view: {
                                             "type": "modal",
                                             "callback_id": "detailView",
