@@ -730,7 +730,7 @@ module.exports = controller => {
                                         "type": "section",
                                         "text": {
                                             "type": "mrkdwn",
-                                            "text": "*Account* : " + accountselected.text.text
+                                            "text": "*Account* : " + accselected.text.text
                                         }
                                     },
                                     {
