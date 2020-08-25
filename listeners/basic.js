@@ -603,7 +603,7 @@ module.exports = controller => {
                                 let opps = mapval.opp;
                                 console.log('Got opps');
                                 console.dir(opps);
-                                const resultnext = await bot.api.views.push({
+                                const result = await bot.api.views.push({
                                     trigger_id: message.trigger_id, 
                                     view: {
                                         "type": "modal",
@@ -623,6 +623,7 @@ module.exports = controller => {
                                             {
                                                 "type": "input",
                                                 "block_id": "blkaccount",
+                                                "optional": true,
                                                 "element": {
                                                     "type": "static_select",
                                                     "placeholder": {
@@ -641,6 +642,7 @@ module.exports = controller => {
                                             {
                                                 "type": "input",
                                                 "block_id": "blkref",
+                                                "optional": true,
                                                 "element": {
                                                     "type": "static_select",
                                                     "action_id": "reftype_select",
@@ -662,8 +664,8 @@ module.exports = controller => {
                                 });
                                 console.log(message.view.id + '----root : ' + message.view.root_view_id);
                                 console.dir(result);
-                                const resultnext = await bot.api.views.push({
-                                    trigger_id: message.trigger_id, 
+                                const resultnext = await bot.api.views.update({
+                                    view_id: message.view.id, 
                                     view: {
                                         "type": "modal",
                                         "callback_id": "detailView",
@@ -715,6 +717,26 @@ module.exports = controller => {
                                                     "text": "Referenceability Type",
                                                     "emoji": true
                                                 }
+                                            },
+                                            {
+                                                "type": "input",
+                                                "optional": true,
+                                                "block_id": "blkref",
+                                                "element": {
+                                                    "type": "static_select",
+                                                    "action_id": "opp_select",
+                                                    "placeholder": {
+                                                        "type": "plain_text",
+                                                        "text": "Select an Opp",
+                                                        "emoji": true
+                                                    },
+                                                    "options": opps
+                                                },
+                                                "label": {
+                                                    "type": "plain_text",
+                                                    "text": "Opportunity",
+                                                    "emoji": true
+                                                }
                                             }
                                         ]
                                     }
@@ -728,8 +750,8 @@ module.exports = controller => {
                     } else if (message.view.callback_id == 'detailView') {
                         console.log('detailView');
                         console.dir(message.view.state.values);
-                        const result = await bot.api.views.push({
-                            trigger_id: message.trigger_id,
+                        const result = await bot.api.views.update({
+                            view_id: message.view.id, 
                             view: {
                                 "type": "modal",
                                 "notify_on_close" : true,
