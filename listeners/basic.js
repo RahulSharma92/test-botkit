@@ -23,12 +23,32 @@ module.exports = controller => {
     controller.on('view_submission', async(bot, message) => {
         console.log('VIEW SUBMISSION', message.view.state.values);
         bot.httpBody({
-          response_action: 'errors',
-          errors: {
-            "ticket-desc": 'I will never accept a value, you are doomed!'
-          }
-        })
-
+                response_action: 'push',
+                view: {
+                    "type": "modal",
+                    "notify_on_close" : true,
+                    "callback_id" : "accountNameView",
+                    "close": {
+                        "type": "plain_text",
+                        "text": "Cancel",
+                        "emoji": true
+                    },
+                    "title": {
+                        "type": "plain_text",
+                        "text": "Request",
+                        "emoji": true
+                    },
+                    "blocks": [
+                        {
+                            "type": "section",
+                            "text": {
+                                "type": "mrkdwn",
+                                "text": "*Account* : "
+                            }
+                        }
+                    ]
+                },
+            })
       });
     controller.on('interactive_message', function(bot, message) {
 
@@ -406,7 +426,324 @@ module.exports = controller => {
             console.dir(message);
     });
 
-    
+    /*controller.on(
+        'view_submission',
+        async (bot, message) => {
+            console.log('view_submission');
+            console.dir(message);
+
+            try {
+                let existingConn = await connFactory.getConnection(message.team.id, controller);
+                        
+                if (!existingConn) {
+                    const authUrl = connFactory.getAuthUrl(message.team);
+                    await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
+                } else {
+                    
+                    // When Account Name entered
+                    if (message.view.callback_id == 'accountNameView') {
+                        let accName = "";
+                        for (let key in message.view.state.values) {
+                            if (message.view.state.values[key] != undefined && message.view.state.values[key].account_name != undefined && message.view.state.values[key].account_name != "") {
+                                accName = message.view.state.values[key].account_name.value;
+                                break;
+                            }
+                        }
+                        console.log('accName = ' + accName);
+                        if (accName == "") {
+                            bot.httpBody({
+                                response_action: 'errors',
+                                errors: {
+                                  "empty_account": 'Please enter an Account Name.'
+                                }
+                              });
+                        } else {
+                            const userProfile = await bot.api.users.info({
+                                token : bot.api.token,
+                                user : message.user
+                            });
+                            let accounts = await getAccounts(existingConn,accName,userProfile);
+                            console.log('accounts');
+                            console.dir(accounts);
+                            if (accounts == null || Object.keys(accounts).length == 0) {
+                                console.log('errors');
+                                const errorStr = "*No Active Reference program member found by name:" + accName + ".\n Please check the spelling or Activate the Account.*" ;
+                                const result = await bot.api.views.update({
+                                    view_id: message.view.previous_view_id,
+                                    view: {
+                                        "type": "modal",
+                                        "notify_on_close" : true,
+                                        "callback_id" : "accountNameView",
+                                        "private_metadata" : "test",
+                                        "submit": {
+                                            "type": "plain_text",
+                                            "text": "Submit",
+                                            "emoji": true
+                                        },
+                                        "close": {
+                                            "type": "plain_text",
+                                            "text": "Cancel",
+                                            "emoji": true
+                                        },
+                                        "title": {
+                                            "type": "plain_text",
+                                            "text": "Request",
+                                            "emoji": true
+                                        },
+                                        "blocks": [
+                                            {
+                                                "type": "section",
+                                                "text": {
+                                                    "type": "mrkdwn",
+                                                    "text": errorStr
+                                                }
+                                            },
+                                            {
+                                                "type": "input",
+                                                "block_id" : "accblock",
+                                                "element": {
+                                                    "type": "plain_text_input",
+                                                    "action_id": "account_name",
+                                                    "placeholder": {
+                                                        "type": "plain_text",
+                                                        "text": "Active Reference Account"
+                                                    },
+                                                    "multiline": false
+                                                },
+                                                "label": {
+                                                    "type": "plain_text",
+                                                    "text": "Account Name",
+                                                    "emoji": true
+                                                }
+                                            }
+                                        ]
+                                    }
+                                });
+                                console.log('result 599');
+                                console.dir(result);
+                            } else if (Object.keys(accounts).length > 1) {
+                                const userProfile = await bot.api.users.info({
+                                    token : bot.api.token,
+                                    user : message.user
+                                });
+                                let mapval = await getRefTypes(existingConn,userProfile);
+                                let refTypes = mapval.ref;
+                                console.dir(mapval.opp);
+                                let opps = mapval.opp;
+                                console.log(message.view.id + '----root612 : ' + message.view.root_view_id + '--' + message.trigger_id);
+                                if (opps != null && opps.length > 0) {
+                                    console.log('551');
+                                    const resultnext = await bot.api.views.update({
+                                        view_id: message.view.previous_view_id, 
+                                        view: {
+                                            "type": "modal",
+                                            "submit": {
+                                                "type": "plain_text",
+                                                "text": "Submit",
+                                                "emoji": true
+                                            },
+                                            "title": {
+                                                "type": "plain_text",
+                                                "text": "Request",
+                                                "emoji": true
+                                            },
+                                            "blocks": [
+                                                {
+                                                    "type": "input",
+                                                    "block_id": "blkaccount",
+                                                    "element": {
+                                                        "type": "static_select",
+                                                        "action_id": "account_select",
+                                                        "placeholder": {
+                                                            "type": "plain_text",
+                                                            "text": "Select an item",
+                                                            "emoji": true
+                                                        },
+                                                        "options": accounts
+                                                    },
+                                                    "label": {
+                                                        "type": "plain_text",
+                                                        "text": "Account",
+                                                        "emoji": true
+                                                    }
+                                                },
+                                                {
+                                                    "type": "input",
+                                                    "block_id": "blkref",
+                                                    "element": {
+                                                        "type": "static_select",
+                                                        "action_id": "reftype_select",
+                                                        "placeholder": {
+                                                            "type": "plain_text",
+                                                            "text": "Select a type",
+                                                            "emoji": true
+                                                        },
+                                                        "options": refTypes
+                                                    },
+                                                    "label": {
+                                                        "type": "plain_text",
+                                                        "text": "Referenceability Type",
+                                                        "emoji": true
+                                                    }
+                                                },
+                                                {
+                                                    "type": "input",
+                                                    "optional": true,
+                                                    "block_id": "blkopp",
+                                                    "element": {
+                                                        "type": "static_select",
+                                                        "action_id": "opp_select",
+                                                        "placeholder": {
+                                                            "type": "plain_text",
+                                                            "text": "Select an Opp",
+                                                            "emoji": true
+                                                        },
+                                                        "options": opps
+                                                    },
+                                                    "label": {
+                                                        "type": "plain_text",
+                                                        "text": "Opportunity",
+                                                        "emoji": true
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    });
+                                } else {
+                                    console.log('628');
+                                    const resultnext = await bot.api.views.update({
+                                        view_id: message.view.previous_view_id, 
+                                        view: {
+                                            "type": "modal",
+                                            "callback_id": "detailView",
+                                            "submit": {
+                                                "type": "plain_text",
+                                                "text": "Submit",
+                                                "emoji": true
+                                            },
+                                            "title": {
+                                                "type": "plain_text",
+                                                "text": "Request",
+                                                "emoji": true
+                                            },
+                                            "blocks": [
+                                                {
+                                                    "type": "input",
+                                                    "block_id": "blkaccount",
+                                                    "element": {
+                                                        "type": "static_select",
+                                                        "action_id": "account_select",
+                                                        "placeholder": {
+                                                            "type": "plain_text",
+                                                            "text": "Select an item",
+                                                            "emoji": true
+                                                        },
+                                                        "options": accounts
+                                                    },
+                                                    "label": {
+                                                        "type": "plain_text",
+                                                        "text": "Account",
+                                                        "emoji": true
+                                                    }
+                                                },
+                                                {
+                                                    "type": "input",
+                                                    "block_id": "blkref",
+                                                    "element": {
+                                                        "type": "static_select",
+                                                        "action_id": "reftype_select",
+                                                        "placeholder": {
+                                                            "type": "plain_text",
+                                                            "text": "Select a type",
+                                                            "emoji": true
+                                                        },
+                                                        "options": refTypes
+                                                    },
+                                                    "label": {
+                                                        "type": "plain_text",
+                                                        "text": "Referenceability Type",
+                                                        "emoji": true
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    });
+                                }
+                            } else {
+                                
+                            }
+                        }
+                    } else if (message.view.callback_id == 'detailView') {
+                        console.log('detailView');
+                        const refselected = message.view.state.values.blkref.reftype_select.selected_option;
+                        const accselected = message.view.state.values.blkaccount.account_select.selected_option;
+                        let refselectemeta = {'ref' : refselected.value,'acc' : accselected.value};
+                        return {
+                            response_action: 'push',
+                            view: {
+                                "type": "modal",
+                                "notify_on_close" : true,
+                                "callback_id" : "accountNameView",
+                                "private_metadata" : JSON.stringify(refselectemeta),
+                                "submit": {
+                                    "type": "plain_text",
+                                    "text": "Submit",
+                                    "emoji": true
+                                },
+                                "close": {
+                                    "type": "plain_text",
+                                    "text": "Cancel",
+                                    "emoji": true
+                                },
+                                "title": {
+                                    "type": "plain_text",
+                                    "text": "Request",
+                                    "emoji": true
+                                },
+                                "blocks": [
+                                    {
+                                        "type": "section",
+                                        "text": {
+                                            "type": "mrkdwn",
+                                            "text": "*Account* : " + accselected.text.text
+                                        }
+                                    },
+                                    {
+                                        "type": "section",
+                                        "text": {
+                                            "type": "mrkdwn",
+                                            "text": "*Type* : " + refselected.text.text
+                                        }
+                                    },{
+                                        "type": "input",
+                                        "block_id": "blkdeadline",
+                                        "element": {
+                                            "type": "datepicker",
+                                            "action_id": "select_deadline",
+                                            "initial_date": datetime,
+                                            "placeholder": {
+                                                "type": "plain_text",
+                                                "text": "Select a date",
+                                                "emoji": true
+                                            }
+                                        },
+                                        "label": {
+                                            "type": "plain_text",
+                                            "text": "Deadline",
+                                            "emoji": true
+                                        }
+                                    }
+                                ]
+                            },
+                        };
+                    }
+                }
+            } catch (err) {
+                console.log('396');
+                logger.log(err);
+            }
+        }
+    );*/
     controller.on('error', console.error);
 
     controller.on('oauth_success', async authData => {
