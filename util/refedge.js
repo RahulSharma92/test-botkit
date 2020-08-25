@@ -19,7 +19,9 @@ module.exports = {
                 logger.log(err);
             } else  if (response) {
                 if (response != 'false') {
+                    console.log('------ ref Type Response-------');
                     response = JSON.parse(response);
+                    console.dir(response);
                     let oppList = JSON.parse(response['opp']);
                     let refList = JSON.parse(response['ref']);
                     oppList.forEach(function(oppWrapper){
