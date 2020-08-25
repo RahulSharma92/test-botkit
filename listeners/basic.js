@@ -603,15 +603,22 @@ module.exports = controller => {
                                 let opps = mapval.opp;
                                 console.log('Got opps');
                                 console.dir(opps);
+                                console.log(message.view.id + '----root : ' + message.view.root_view_id);
                                 const result = await bot.api.views.push({
-                                    trigger_id: message.trigger_id, 
+                                    trigger_id: message.trigger_id,
                                     view: {
                                         "type": "modal",
-                                        "callback_id": "detailView",
                                         "notify_on_close" : true,
+                                        "callback_id" : "accountNameView1",
+                                        "private_metadata" : "test",
                                         "submit": {
                                             "type": "plain_text",
                                             "text": "Submit",
+                                            "emoji": true
+                                        },
+                                        "close": {
+                                            "type": "plain_text",
+                                            "text": "Cancel",
                                             "emoji": true
                                         },
                                         "title": {
@@ -622,47 +629,25 @@ module.exports = controller => {
                                         "blocks": [
                                             {
                                                 "type": "input",
-                                                "block_id": "blkaccount",
-                                                "optional": true,
+                                                "block_id" : "accblock1",
                                                 "element": {
-                                                    "type": "static_select",
+                                                    "type": "plain_text_input",
+                                                    "action_id": "account_name1",
                                                     "placeholder": {
                                                         "type": "plain_text",
-                                                        "text": "Select an item",
-                                                        "emoji": true
+                                                        "text": "Active Reference Account"
                                                     },
-                                                    "options": accounts
+                                                    "multiline": false
                                                 },
                                                 "label": {
                                                     "type": "plain_text",
-                                                    "text": "Account",
-                                                    "emoji": true
-                                                }
-                                            },
-                                            {
-                                                "type": "input",
-                                                "block_id": "blkref",
-                                                "optional": true,
-                                                "element": {
-                                                    "type": "static_select",
-                                                    "action_id": "reftype_select",
-                                                    "placeholder": {
-                                                        "type": "plain_text",
-                                                        "text": "Select a type",
-                                                        "emoji": true
-                                                    },
-                                                    "options": refTypes
-                                                },
-                                                "label": {
-                                                    "type": "plain_text",
-                                                    "text": "Referenceability Type",
+                                                    "text": "Account Name",
                                                     "emoji": true
                                                 }
                                             }
                                         ]
                                     }
                                 });
-                                console.log(message.view.id + '----root : ' + message.view.root_view_id);
                                 console.dir(result);
                                 const resultnext = await bot.api.views.update({
                                     view_id: message.view.id, 
