@@ -15,7 +15,19 @@ module.exports = controller => {
         await bot.say('conversation complete!');
     });
     controller.addDialog(convo);*/ 
+    controller.on('interactive_message_callback', function(bot, message) {
 
+        console.log('interactive_message_callback');
+    
+    });
+    controller.on('interactive_message', function(bot, message) {
+
+        console.log('interactive_message');
+    
+    });
+    controller.on('custom_triggered_event', function(bot, trigger) {
+        console.log('custom_triggered_event');
+    })
     
     controller.on('block_actions',async function(bot, message) {
         console.log('block_actions');
@@ -636,70 +648,64 @@ module.exports = controller => {
                         const refselected = message.view.state.values.blkref.reftype_select.selected_option;
                         const accselected = message.view.state.values.blkaccount.account_select.selected_option;
                         let refselectemeta = {'ref' : refselected.value,'acc' : accselected.value};
-                        return doWork().then(() => {
-                            return {
-                                response_action: 'push',
-                                view: {
-                                    "type": "modal",
-                                    "notify_on_close" : true,
-                                    "callback_id" : "accountNameView",
-                                    "private_metadata" : JSON.stringify(refselectemeta),
-                                    "submit": {
-                                        "type": "plain_text",
-                                        "text": "Submit",
-                                        "emoji": true
+                        return {
+                            response_action: 'push',
+                            view: {
+                                "type": "modal",
+                                "notify_on_close" : true,
+                                "callback_id" : "accountNameView",
+                                "private_metadata" : JSON.stringify(refselectemeta),
+                                "submit": {
+                                    "type": "plain_text",
+                                    "text": "Submit",
+                                    "emoji": true
+                                },
+                                "close": {
+                                    "type": "plain_text",
+                                    "text": "Cancel",
+                                    "emoji": true
+                                },
+                                "title": {
+                                    "type": "plain_text",
+                                    "text": "Request",
+                                    "emoji": true
+                                },
+                                "blocks": [
+                                    {
+                                        "type": "section",
+                                        "text": {
+                                            "type": "mrkdwn",
+                                            "text": "*Account* : " + accselected.text.text
+                                        }
                                     },
-                                    "close": {
-                                        "type": "plain_text",
-                                        "text": "Cancel",
-                                        "emoji": true
-                                    },
-                                    "title": {
-                                        "type": "plain_text",
-                                        "text": "Request",
-                                        "emoji": true
-                                    },
-                                    "blocks": [
-                                        {
-                                            "type": "section",
-                                            "text": {
-                                                "type": "mrkdwn",
-                                                "text": "*Account* : " + accselected.text.text
-                                            }
-                                        },
-                                        {
-                                            "type": "section",
-                                            "text": {
-                                                "type": "mrkdwn",
-                                                "text": "*Type* : " + refselected.text.text
-                                            }
-                                        },{
-                                            "type": "input",
-                                            "block_id": "blkdeadline",
-                                            "element": {
-                                                "type": "datepicker",
-                                                "action_id": "select_deadline",
-                                                "initial_date": datetime,
-                                                "placeholder": {
-                                                    "type": "plain_text",
-                                                    "text": "Select a date",
-                                                    "emoji": true
-                                                }
-                                            },
-                                            "label": {
+                                    {
+                                        "type": "section",
+                                        "text": {
+                                            "type": "mrkdwn",
+                                            "text": "*Type* : " + refselected.text.text
+                                        }
+                                    },{
+                                        "type": "input",
+                                        "block_id": "blkdeadline",
+                                        "element": {
+                                            "type": "datepicker",
+                                            "action_id": "select_deadline",
+                                            "initial_date": datetime,
+                                            "placeholder": {
                                                 "type": "plain_text",
-                                                "text": "Deadline",
+                                                "text": "Select a date",
                                                 "emoji": true
                                             }
+                                        },
+                                        "label": {
+                                            "type": "plain_text",
+                                            "text": "Deadline",
+                                            "emoji": true
                                         }
-                                    ]
-                                },
-                            };
-                        }).catch((error) => {
-                            // Log the error. In your app, inform the user of a failure using a DM or some other area in Slack.
-                            console.log('700');
-                            logger.log(err);
-                        });
+                                    }
+                                ]
+                            },
+                        };
                     }
                 }
             } catch (err) {
