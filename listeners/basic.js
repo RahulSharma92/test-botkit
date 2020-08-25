@@ -603,11 +603,12 @@ module.exports = controller => {
                                 let opps = mapval.opp;
                                 console.log('Got opps');
                                 console.dir(opps);
-                                const result = await bot.api.views.update({
-                                    view_id: message.view.id, 
+                                const resultnext = await bot.api.views.push({
+                                    trigger_id: message.trigger_id, 
                                     view: {
                                         "type": "modal",
                                         "callback_id": "detailView",
+                                        "notify_on_close" : true,
                                         "submit": {
                                             "type": "plain_text",
                                             "text": "Submit",
@@ -620,19 +621,41 @@ module.exports = controller => {
                                         },
                                         "blocks": [
                                             {
-                                                "type": "actions",
-                                                "elements": [
-                                                    {
-                                                        "type": "button",
-                                                        "action_id" : "get_deadline",
-                                                        "text": {
-                                                            "type": "plain_text",
-                                                            "text": "Retry",
-                                                            "emoji": true
-                                                        },
-                                                        "value": "request"
-                                                    }
-                                                ]
+                                                "type": "input",
+                                                "block_id": "blkaccount",
+                                                "element": {
+                                                    "type": "static_select",
+                                                    "placeholder": {
+                                                        "type": "plain_text",
+                                                        "text": "Select an item",
+                                                        "emoji": true
+                                                    },
+                                                    "options": accounts
+                                                },
+                                                "label": {
+                                                    "type": "plain_text",
+                                                    "text": "Account",
+                                                    "emoji": true
+                                                }
+                                            },
+                                            {
+                                                "type": "input",
+                                                "block_id": "blkref",
+                                                "element": {
+                                                    "type": "static_select",
+                                                    "action_id": "reftype_select",
+                                                    "placeholder": {
+                                                        "type": "plain_text",
+                                                        "text": "Select a type",
+                                                        "emoji": true
+                                                    },
+                                                    "options": refTypes
+                                                },
+                                                "label": {
+                                                    "type": "plain_text",
+                                                    "text": "Referenceability Type",
+                                                    "emoji": true
+                                                }
                                             }
                                         ]
                                     }
