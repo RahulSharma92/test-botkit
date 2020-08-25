@@ -548,7 +548,9 @@ module.exports = controller => {
                                 let opps = mapval.opp;
                                 console.log(message.view.id + '----root612 : ' + message.view.root_view_id + '--' + message.trigger_id);
                                 if (opps != null && opps.length > 0) {
+                                    console.log('551');
                                     const resultnext = await bot.api.views.update({
+                                        view_id: message.view.id, 
                                         view: {
                                             "type": "modal",
                                             "submit": {
@@ -623,6 +625,7 @@ module.exports = controller => {
                                         }
                                     });
                                 } else {
+                                    console.log('628')
                                     const resultnext = await bot.api.views.update({
                                         view_id: message.view.id, 
                                         view: {
