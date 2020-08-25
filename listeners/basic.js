@@ -545,7 +545,8 @@ module.exports = controller => {
                                 });
                                 let mapval = await getRefTypes(existingConn,userProfile);
                                 let refTypes = mapval.ref;
-                                let opps = mapval.opp;
+                                console.dir(mapval.opp);
+                                let opps = [];
                                 console.log(message.view.id + '----root612 : ' + message.view.root_view_id + '--' + message.trigger_id);
                                 if (opps != null && opps.length > 0) {
                                     console.log('551');
@@ -631,7 +632,6 @@ module.exports = controller => {
                                         view: {
                                             "type": "modal",
                                             "callback_id": "detailView",
-                                            "notify_on_close" : true,
                                             "submit": {
                                                 "type": "plain_text",
                                                 "text": "Submit",
