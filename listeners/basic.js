@@ -605,7 +605,7 @@ module.exports = controller => {
                                                 {
                                                     "type": "input",
                                                     "optional": true,
-                                                    "block_id": "blkref",
+                                                    "block_id": "blkopp",
                                                     "element": {
                                                         "type": "static_select",
                                                         "action_id": "opp_select",
@@ -614,7 +614,7 @@ module.exports = controller => {
                                                             "text": "Select an Opp",
                                                             "emoji": true
                                                         },
-                                                        "options": refTypes
+                                                        "options": opps
                                                     },
                                                     "label": {
                                                         "type": "plain_text",
