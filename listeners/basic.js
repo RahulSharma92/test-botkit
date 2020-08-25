@@ -20,36 +20,6 @@ module.exports = controller => {
         console.log('interactive_message_callback');
     
     });
-    controller.on('view_submission', async(bot, message) => {
-        console.log('VIEW SUBMISSION', message.view.state.values);
-        bot.httpBody({
-                response_action: 'push',
-                view: {
-                    "type": "modal",
-                    "notify_on_close" : true,
-                    "callback_id" : "accountNameView",
-                    "close": {
-                        "type": "plain_text",
-                        "text": "Cancel",
-                        "emoji": true
-                    },
-                    "title": {
-                        "type": "plain_text",
-                        "text": "Request",
-                        "emoji": true
-                    },
-                    "blocks": [
-                        {
-                            "type": "section",
-                            "text": {
-                                "type": "mrkdwn",
-                                "text": "*Account* : "
-                            }
-                        }
-                    ]
-                },
-            })
-      });
     controller.on('interactive_message', function(bot, message) {
 
         console.log('interactive_message');
@@ -94,7 +64,7 @@ module.exports = controller => {
                         view: {
                             "type": "modal",
                             "notify_on_close" : true,
-                            "callback_id" : "accountNameView",
+                            "callback_id" : "deadlineView",
                             "private_metadata" : message.view.private_metadata,
                             "submit": {
                                 "type": "plain_text",
@@ -426,7 +396,7 @@ module.exports = controller => {
             console.dir(message);
     });
 
-    /*controller.on(
+    controller.on(
         'view_submission',
         async (bot, message) => {
             console.log('view_submission');
@@ -451,6 +421,7 @@ module.exports = controller => {
                         }
                         console.log('accName = ' + accName);
                         if (accName == "") {
+                            
                             bot.httpBody({
                                 response_action: 'errors',
                                 errors: {
@@ -468,60 +439,13 @@ module.exports = controller => {
                             if (accounts == null || Object.keys(accounts).length == 0) {
                                 console.log('errors');
                                 const errorStr = "*No Active Reference program member found by name:" + accName + ".\n Please check the spelling or Activate the Account.*" ;
-                                const result = await bot.api.views.update({
-                                    view_id: message.view.previous_view_id,
-                                    view: {
-                                        "type": "modal",
-                                        "notify_on_close" : true,
-                                        "callback_id" : "accountNameView",
-                                        "private_metadata" : "test",
-                                        "submit": {
-                                            "type": "plain_text",
-                                            "text": "Submit",
-                                            "emoji": true
-                                        },
-                                        "close": {
-                                            "type": "plain_text",
-                                            "text": "Cancel",
-                                            "emoji": true
-                                        },
-                                        "title": {
-                                            "type": "plain_text",
-                                            "text": "Request",
-                                            "emoji": true
-                                        },
-                                        "blocks": [
-                                            {
-                                                "type": "section",
-                                                "text": {
-                                                    "type": "mrkdwn",
-                                                    "text": errorStr
-                                                }
-                                            },
-                                            {
-                                                "type": "input",
-                                                "block_id" : "accblock",
-                                                "element": {
-                                                    "type": "plain_text_input",
-                                                    "action_id": "account_name",
-                                                    "placeholder": {
-                                                        "type": "plain_text",
-                                                        "text": "Active Reference Account"
-                                                    },
-                                                    "multiline": false
-                                                },
-                                                "label": {
-                                                    "type": "plain_text",
-                                                    "text": "Account Name",
-                                                    "emoji": true
-                                                }
-                                            }
-                                        ]
+                                bot.httpBody({
+                                    response_action: 'errors',
+                                    errors: {
+                                      "accblock": errorStr
                                     }
-                                });
-                                console.log('result 599');
-                                console.dir(result);
-                            } else if (Object.keys(accounts).length > 1) {
+                                  })
+                            }/* else if (Object.keys(accounts).length > 1) {
                                 const userProfile = await bot.api.users.info({
                                     token : bot.api.token,
                                     user : message.user
@@ -671,19 +595,19 @@ module.exports = controller => {
                                 }
                             } else {
                                 
-                            }
+                            }*/
                         }
                     } else if (message.view.callback_id == 'detailView') {
                         console.log('detailView');
                         const refselected = message.view.state.values.blkref.reftype_select.selected_option;
                         const accselected = message.view.state.values.blkaccount.account_select.selected_option;
                         let refselectemeta = {'ref' : refselected.value,'acc' : accselected.value};
-                        return {
+                        bot.httpBody({
                             response_action: 'push',
                             view: {
                                 "type": "modal",
                                 "notify_on_close" : true,
-                                "callback_id" : "accountNameView",
+                                "callback_id" : "deadlineView",
                                 "private_metadata" : JSON.stringify(refselectemeta),
                                 "submit": {
                                     "type": "plain_text",
@@ -734,8 +658,8 @@ module.exports = controller => {
                                         }
                                     }
                                 ]
-                            },
-                        };
+                            }
+                        });
                     }
                 }
             } catch (err) {
@@ -743,7 +667,7 @@ module.exports = controller => {
                 logger.log(err);
             }
         }
-    );*/
+    );
     controller.on('error', console.error);
 
     controller.on('oauth_success', async authData => {
