@@ -162,7 +162,7 @@ module.exports = controller => {
                     ]
                 }
             });
-        
+        console.dir(result.view);
         } else if (existingConn && message.actions != null && message.actions[0].action_id == 'accountSelect') {
             console.log('73 : accountSelect');
             let requestURL = await getRequestURL(existingConn,message.actions[0].selected_option.value);
@@ -631,7 +631,7 @@ module.exports = controller => {
                                         }
                                     });
                                 } else {
-                                    console.log('628')
+                                    console.log('628');
                                     const resultnext = await bot.api.views.update({
                                         view_id: message.view.previous_view_id, 
                                         view: {
@@ -653,6 +653,7 @@ module.exports = controller => {
                                                     "block_id": "blkaccount",
                                                     "element": {
                                                         "type": "static_select",
+                                                        "action_id": "account_select",
                                                         "placeholder": {
                                                             "type": "plain_text",
                                                             "text": "Select an item",
@@ -695,12 +696,7 @@ module.exports = controller => {
                         }
                     } else if (message.view.callback_id == 'detailView') {
                         console.log('detailView');
-                        console.dir(message.view.state.values);
-                        for (let key in message.view.state.values) {
-                            console.log('********' + key + '************');
-                            console.dir(message.view.state.values[key]);
-                        }
-                        const refselected = message.view.state.values.blkaccount.reftype_select.selected_option;
+                        const refselected = message.view.state.values.blkref.reftype_select.selected_option;
                         const accselected = message.view.state.values.blkaccount.account_select.selected_option;
                         let refselectemeta = {'ref' : refselected.value,'acc' : accselected.value};
                         const result = await bot.api.views.update({
