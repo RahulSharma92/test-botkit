@@ -20,6 +20,16 @@ module.exports = controller => {
         console.log('interactive_message_callback');
     
     });
+    controller.on('view_submission', async(bot, message) => {
+        console.log('VIEW SUBMISSION', message.view.state.values);
+        bot.httpBody({
+          response_action: 'errors',
+          errors: {
+            "ticket-desc": 'I will never accept a value, you are doomed!'
+          }
+        })
+
+      });
     controller.on('interactive_message', function(bot, message) {
 
         console.log('interactive_message');
@@ -27,7 +37,7 @@ module.exports = controller => {
     });
     controller.on('custom_triggered_event', function(bot, trigger) {
         console.log('custom_triggered_event');
-    })
+    });
     
     controller.on('block_actions',async function(bot, message) {
         console.log('block_actions');
