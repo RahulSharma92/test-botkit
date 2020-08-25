@@ -486,7 +486,7 @@ module.exports = controller => {
                                 console.log('errors');
                                 const errorStr = "*No Active Reference program member found by name:" + accName + ".\n Please check the spelling or Activate the Account.*" ;
                                 const result = await bot.api.views.update({
-                                    view_id: message.view.id,
+                                    view_id: message.view.previous_view_id,
                                     view: {
                                         "type": "modal",
                                         "notify_on_close" : true,
@@ -551,7 +551,6 @@ module.exports = controller => {
                                 console.log(message.view.id + '----root612 : ' + message.view.root_view_id + '--' + message.trigger_id);
                                 if (opps != null && opps.length > 0) {
                                     const resultnext = await bot.api.views.update({
-                                        view_id: message.view.id, 
                                         view: {
                                             "type": "modal",
                                             "callback_id": "detailView",
