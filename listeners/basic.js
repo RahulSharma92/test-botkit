@@ -365,7 +365,9 @@ module.exports = controller => {
                             ]
                         }
                     });
-                    result = await bot.api.views.push({
+                    console.log('open view');
+                    console.dir(result.view);
+                    const result1 = await bot.api.views.push({
                         trigger_id: message.trigger_id,
                         view: {
                             "type": "modal",
@@ -425,6 +427,8 @@ module.exports = controller => {
                             ]
                         }
                     });
+                    console.log('push view');
+                    console.dir(result1.view);
                     
                 } else if (!existingConn) {
                     const authUrl = connFactory.getAuthUrl(message.team);
@@ -546,7 +550,7 @@ module.exports = controller => {
                                 let mapval = await getRefTypes(existingConn,userProfile);
                                 let refTypes = mapval.ref;
                                 console.dir(mapval.opp);
-                                let opps = [];
+                                let opps = mapval.opp;
                                 console.log(message.view.id + '----root612 : ' + message.view.root_view_id + '--' + message.trigger_id);
                                 if (opps != null && opps.length > 0) {
                                     console.log('551');
@@ -570,6 +574,7 @@ module.exports = controller => {
                                                     "block_id": "blkaccount",
                                                     "element": {
                                                         "type": "static_select",
+                                                        "action_id": "account_select",
                                                         "placeholder": {
                                                             "type": "plain_text",
                                                             "text": "Select an item",
@@ -695,9 +700,9 @@ module.exports = controller => {
                             console.log('********' + key + '************');
                             console.dir(message.view.state.values[key]);
                         }
-                        const refselected = '';
-                        const accselected = '';
-                        let refselectemeta = {'ref' : refselected.value,'acc' : accselected};
+                        const refselected = message.view.state.values.blkaccount.reftype_select.selected_option;
+                        const accselected = message.view.state.values.blkaccount.account_select.selected_option;
+                        let refselectemeta = {'ref' : refselected.value,'acc' : accselected.value};
                         const result = await bot.api.views.update({
                             trigger_id: message.trigger_id,
                             view: {
@@ -725,14 +730,14 @@ module.exports = controller => {
                                         "type": "section",
                                         "text": {
                                             "type": "mrkdwn",
-                                            "text": "*Account* : " + accountselected
+                                            "text": "*Account* : " + accountselected.text.text
                                         }
                                     },
                                     {
                                         "type": "section",
                                         "text": {
                                             "type": "mrkdwn",
-                                            "text": "*Type* : " + refselected
+                                            "text": "*Type* : " + refselected.text.text
                                         }
                                     },{
                                         "type": "input",
