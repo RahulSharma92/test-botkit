@@ -34,67 +34,7 @@ module.exports = controller => {
             await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
 
         } else if (existingConn && message.actions != null && message.actions[0].action_id == 'reftype_select') {
-            const refselected = message.actions[0].selected_option;
-            let private_metadata = JSON.parse(message.view.private_metadata);
-            let refselectemeta = {'ref' : refselected.value,'acc' : private_metadata.acc};
-            const result = await bot.api.views.update({
-                trigger_id: message.trigger_id,
-                view: {
-                    "type": "modal",
-                    "notify_on_close" : true,
-                    "callback_id" : "accountNameView",
-                    "private_metadata" : JSON.stringify(refselectemeta),
-                    "submit": {
-                        "type": "plain_text",
-                        "text": "Submit",
-                        "emoji": true
-                    },
-                    "close": {
-                        "type": "plain_text",
-                        "text": "Cancel",
-                        "emoji": true
-                    },
-                    "title": {
-                        "type": "plain_text",
-                        "text": "Request",
-                        "emoji": true
-                    },
-                    "blocks": [
-                        {
-                            "type": "section",
-                            "text": {
-                                "type": "mrkdwn",
-                                "text": "*Account* : " + accountselected.text.text
-                            }
-                        },
-                        {
-                            "type": "section",
-                            "text": {
-                                "type": "mrkdwn",
-                                "text": "*Type* : " + refselected.text.text
-                            }
-                        },{
-                            "type": "input",
-                            "block_id": "blkdeadline",
-                            "element": {
-                                "type": "datepicker",
-                                "action_id": "select_deadline",
-                                "initial_date": datetime,
-                                "placeholder": {
-                                    "type": "plain_text",
-                                    "text": "Select a date",
-                                    "emoji": true
-                                }
-                            },
-                            "label": {
-                                "type": "plain_text",
-                                "text": "Deadline",
-                                "emoji": true
-                            }
-                        }
-                    ]
-                }
-            });
+            
         } else if (existingConn && message.actions != null && message.actions[0].action_id == 'select_deadline') {
             const dateselected = message.actions[0].selected_date;
             
@@ -545,59 +485,6 @@ module.exports = controller => {
                             if (accounts == null || Object.keys(accounts).length == 0) {
                                 console.log('errors');
                                 const errorStr = "*No Active Reference program member found by name:" + accName + ".\n Please check the spelling or Activate the Account.*" ;
-                                const resultNew = await bot.api.views.push({
-                                    trigger_id: message.trigger_id,
-                                    view: {
-                                        "type": "modal",
-                                        "notify_on_close" : true,
-                                        "callback_id" : "accountNameView",
-                                        "private_metadata" : "test",
-                                        "submit": {
-                                            "type": "plain_text",
-                                            "text": "Submit",
-                                            "emoji": true
-                                        },
-                                        "close": {
-                                            "type": "plain_text",
-                                            "text": "Cancel",
-                                            "emoji": true
-                                        },
-                                        "title": {
-                                            "type": "plain_text",
-                                            "text": "Request",
-                                            "emoji": true
-                                        },
-                                        "blocks": [
-                                            {
-                                                "type": "section",
-                                                "text": {
-                                                    "type": "mrkdwn",
-                                                    "text": errorStr
-                                                }
-                                            },
-                                            {
-                                                "type": "input",
-                                                "block_id" : "accblock",
-                                                "element": {
-                                                    "type": "plain_text_input",
-                                                    "action_id": "account_name",
-                                                    "placeholder": {
-                                                        "type": "plain_text",
-                                                        "text": "Active Reference Account"
-                                                    },
-                                                    "multiline": false
-                                                },
-                                                "label": {
-                                                    "type": "plain_text",
-                                                    "text": "Account Name",
-                                                    "emoji": true
-                                                }
-                                            }
-                                        ]
-                                    }
-                                });
-                                console.log('resultNew');
-                                console.dir(resultNew);
                                 const result = await bot.api.views.update({
                                     view_id: message.view.id,
                                     view: {
@@ -649,11 +536,9 @@ module.exports = controller => {
                                         ]
                                     }
                                 });
-                                console.log('result');
+                                console.log('result 599');
                                 console.dir(result);
                             } else if (Object.keys(accounts).length > 1) {
-                                
-                                console.log('Got Accounts')
                                 const userProfile = await bot.api.users.info({
                                     token : bot.api.token,
                                     user : message.user
@@ -663,131 +548,144 @@ module.exports = controller => {
                                 let opps = mapval.opp;
                                 console.log('Got opps');
                                 console.dir(opps);
-                                console.log(message.view.id + '----root : ' + message.view.root_view_id + '--' + message.trigger_id);
-                                const result = await bot.api.views.push({
-                                    trigger_id: message.trigger_id,
-                                    view: {
-                                        "type": "modal",
-                                        "notify_on_close" : true,
-                                        "callback_id" : "accountNameView1",
-                                        "private_metadata" : "test",
-                                        "submit": {
-                                            "type": "plain_text",
-                                            "text": "Submit",
-                                            "emoji": true
-                                        },
-                                        "close": {
-                                            "type": "plain_text",
-                                            "text": "Cancel",
-                                            "emoji": true
-                                        },
-                                        "title": {
-                                            "type": "plain_text",
-                                            "text": "Request",
-                                            "emoji": true
-                                        },
-                                        "blocks": [
-                                            {
-                                                "type": "input",
-                                                "block_id" : "accblock1",
-                                                "element": {
-                                                    "type": "plain_text_input",
-                                                    "action_id": "account_name1",
-                                                    "placeholder": {
-                                                        "type": "plain_text",
-                                                        "text": "Active Reference Account"
-                                                    },
-                                                    "multiline": false
-                                                },
-                                                "label": {
-                                                    "type": "plain_text",
-                                                    "text": "Account Name",
-                                                    "emoji": true
-                                                }
-                                            }
-                                        ]
-                                    }
-                                });
-                                console.dir(result);
-                                const resultnext = await bot.api.views.update({
-                                    view_id: message.view.id, 
-                                    view: {
-                                        "type": "modal",
-                                        "callback_id": "detailView",
-                                        "notify_on_close" : true,
-                                        "submit": {
-                                            "type": "plain_text",
-                                            "text": "Submit",
-                                            "emoji": true
-                                        },
-                                        "title": {
-                                            "type": "plain_text",
-                                            "text": "Request",
-                                            "emoji": true
-                                        },
-                                        "blocks": [
-                                            {
-                                                "type": "input",
-                                                "block_id": "blkaccount",
-                                                "element": {
-                                                    "type": "static_select",
-                                                    "placeholder": {
-                                                        "type": "plain_text",
-                                                        "text": "Select an item",
-                                                        "emoji": true
-                                                    },
-                                                    "options": accounts
-                                                },
-                                                "label": {
-                                                    "type": "plain_text",
-                                                    "text": "Account",
-                                                    "emoji": true
-                                                }
+                                console.log(message.view.id + '----root612 : ' + message.view.root_view_id + '--' + message.trigger_id);
+                                if (opps != null && opps.length > 0) {
+                                    const resultnext = await bot.api.views.update({
+                                        view_id: message.view.id, 
+                                        view: {
+                                            "type": "modal",
+                                            "callback_id": "detailView",
+                                            "notify_on_close" : true,
+                                            "submit": {
+                                                "type": "plain_text",
+                                                "text": "Submit",
+                                                "emoji": true
                                             },
-                                            {
-                                                "type": "input",
-                                                "block_id": "blkref",
-                                                "element": {
-                                                    "type": "static_select",
-                                                    "action_id": "reftype_select",
-                                                    "placeholder": {
-                                                        "type": "plain_text",
-                                                        "text": "Select a type",
-                                                        "emoji": true
-                                                    },
-                                                    "options": refTypes
-                                                },
-                                                "label": {
-                                                    "type": "plain_text",
-                                                    "text": "Referenceability Type",
-                                                    "emoji": true
-                                                }
+                                            "title": {
+                                                "type": "plain_text",
+                                                "text": "Request",
+                                                "emoji": true
                                             },
-                                            {
-                                                "type": "input",
-                                                "optional": true,
-                                                "block_id": "blkref",
-                                                "element": {
-                                                    "type": "static_select",
-                                                    "action_id": "opp_select",
-                                                    "placeholder": {
-                                                        "type": "plain_text",
-                                                        "text": "Select an Opp",
-                                                        "emoji": true
+                                            "blocks": [
+                                                {
+                                                    "type": "input",
+                                                    "block_id": "blkaccount",
+                                                    "element": {
+                                                        "type": "static_select",
+                                                        "placeholder": {
+                                                            "type": "plain_text",
+                                                            "text": "Select an item",
+                                                            "emoji": true
+                                                        },
+                                                        "options": accounts
                                                     },
-                                                    "options": opps
+                                                    "label": {
+                                                        "type": "plain_text",
+                                                        "text": "Account",
+                                                        "emoji": true
+                                                    }
                                                 },
-                                                "label": {
-                                                    "type": "plain_text",
-                                                    "text": "Opportunity",
-                                                    "emoji": true
+                                                {
+                                                    "type": "input",
+                                                    "block_id": "blkref",
+                                                    "element": {
+                                                        "type": "static_select",
+                                                        "action_id": "reftype_select",
+                                                        "placeholder": {
+                                                            "type": "plain_text",
+                                                            "text": "Select a type",
+                                                            "emoji": true
+                                                        },
+                                                        "options": refTypes
+                                                    },
+                                                    "label": {
+                                                        "type": "plain_text",
+                                                        "text": "Referenceability Type",
+                                                        "emoji": true
+                                                    }
+                                                },
+                                                {
+                                                    "type": "input",
+                                                    "optional": true,
+                                                    "block_id": "blkref",
+                                                    "element": {
+                                                        "type": "static_select",
+                                                        "action_id": "opp_select",
+                                                        "placeholder": {
+                                                            "type": "plain_text",
+                                                            "text": "Select an Opp",
+                                                            "emoji": true
+                                                        },
+                                                        "options": opps
+                                                    },
+                                                    "label": {
+                                                        "type": "plain_text",
+                                                        "text": "Opportunity",
+                                                        "emoji": true
+                                                    }
                                                 }
-                                            }
-                                        ]
-                                    }
-                                });
-                                
-                                console.dir(resultnext);
+                                            ]
+                                        }
+                                    });
+                                } else {
+                                    const resultnext = await bot.api.views.update({
+                                        view_id: message.view.id, 
+                                        view: {
+                                            "type": "modal",
+                                            "callback_id": "detailView",
+                                            "notify_on_close" : true,
+                                            "submit": {
+                                                "type": "plain_text",
+                                                "text": "Submit",
+                                                "emoji": true
+                                            },
+                                            "title": {
+                                                "type": "plain_text",
+                                                "text": "Request",
+                                                "emoji": true
+                                            },
+                                            "blocks": [
+                                                {
+                                                    "type": "input",
+                                                    "block_id": "blkaccount",
+                                                    "element": {
+                                                        "type": "static_select",
+                                                        "placeholder": {
+                                                            "type": "plain_text",
+                                                            "text": "Select an item",
+                                                            "emoji": true
+                                                        },
+                                                        "options": accounts
+                                                    },
+                                                    "label": {
+                                                        "type": "plain_text",
+                                                        "text": "Account",
+                                                        "emoji": true
+                                                    }
+                                                },
+                                                {
+                                                    "type": "input",
+                                                    "block_id": "blkref",
+                                                    "element": {
+                                                        "type": "static_select",
+                                                        "action_id": "reftype_select",
+                                                        "placeholder": {
+                                                            "type": "plain_text",
+                                                            "text": "Select a type",
+                                                            "emoji": true
+                                                        },
+                                                        "options": refTypes
+                                                    },
+                                                    "label": {
+                                                        "type": "plain_text",
+                                                        "text": "Referenceability Type",
+                                                        "emoji": true
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    });
+                                }
                             } else {
                                 
                             }
@@ -795,32 +693,67 @@ module.exports = controller => {
                     } else if (message.view.callback_id == 'detailView') {
                         console.log('detailView');
                         console.dir(message.view.state.values);
+                        for (let key in message.view.state.values) {
+                            console.log('********' + key + '************');
+                            console.dir(message.view.state.values[key]);
+                        }
+                        const refselected = '';
+                        const accselected = '';
+                        let refselectemeta = {'ref' : refselected.value,'acc' : accselected};
                         const result = await bot.api.views.update({
-                            view_id: message.view.id, 
+                            trigger_id: message.trigger_id,
                             view: {
                                 "type": "modal",
                                 "notify_on_close" : true,
-                                "callback_id" : "detailView",
-                                "private_metadata" : "test2",
+                                "callback_id" : "accountNameView",
+                                "private_metadata" : JSON.stringify(refselectemeta),
+                                "submit": {
+                                    "type": "plain_text",
+                                    "text": "Submit",
+                                    "emoji": true
+                                },
+                                "close": {
+                                    "type": "plain_text",
+                                    "text": "Cancel",
+                                    "emoji": true
+                                },
                                 "title": {
                                     "type": "plain_text",
-                                    "text": "Select Action"
+                                    "text": "Request",
+                                    "emoji": true
                                 },
                                 "blocks": [
                                     {
-                                        "type": "actions",
-                                        "elements": [
-                                            {
-                                                "type": "button",
-                                                "action_id" : "request",
-                                                "text": {
-                                                    "type": "plain_text",
-                                                    "text": "detailView",
-                                                    "emoji": true
-                                                },
-                                                "value": "request"
+                                        "type": "section",
+                                        "text": {
+                                            "type": "mrkdwn",
+                                            "text": "*Account* : " + accountselected
+                                        }
+                                    },
+                                    {
+                                        "type": "section",
+                                        "text": {
+                                            "type": "mrkdwn",
+                                            "text": "*Type* : " + refselected
+                                        }
+                                    },{
+                                        "type": "input",
+                                        "block_id": "blkdeadline",
+                                        "element": {
+                                            "type": "datepicker",
+                                            "action_id": "select_deadline",
+                                            "initial_date": datetime,
+                                            "placeholder": {
+                                                "type": "plain_text",
+                                                "text": "Select a date",
+                                                "emoji": true
                                             }
-                                        ]
+                                        },
+                                        "label": {
+                                            "type": "plain_text",
+                                            "text": "Deadline",
+                                            "emoji": true
+                                        }
                                     }
                                 ]
                             }
