@@ -485,8 +485,8 @@ module.exports = controller => {
                             if (accounts == null || Object.keys(accounts).length == 0) {
                                 console.log('errors');
                                 const errorStr = "*No Active Reference program member found by name:" + accName + ".\n Please check the spelling or Activate the Account.*" ;
-                                const result = await bot.api.views.update({
-                                    view_id: message.view.root_view_id,
+                                const resultNew = await bot.api.views.push({
+                                    trigger_id: message.trigger_id,
                                     view: {
                                         "type": "modal",
                                         "notify_on_close" : true,
@@ -536,6 +536,61 @@ module.exports = controller => {
                                         ]
                                     }
                                 });
+                                console.log('resultNew');
+                                console.dir(resultNew);
+                                const result = await bot.api.views.update({
+                                    view_id: message.view.id,
+                                    view: {
+                                        "type": "modal",
+                                        "notify_on_close" : true,
+                                        "callback_id" : "accountNameView",
+                                        "private_metadata" : "test",
+                                        "submit": {
+                                            "type": "plain_text",
+                                            "text": "Submit",
+                                            "emoji": true
+                                        },
+                                        "close": {
+                                            "type": "plain_text",
+                                            "text": "Cancel",
+                                            "emoji": true
+                                        },
+                                        "title": {
+                                            "type": "plain_text",
+                                            "text": "Request",
+                                            "emoji": true
+                                        },
+                                        "blocks": [
+                                            {
+                                                "type": "section",
+                                                "text": {
+                                                    "type": "mrkdwn",
+                                                    "text": errorStr
+                                                }
+                                            },
+                                            {
+                                                "type": "input",
+                                                "block_id" : "accblock",
+                                                "element": {
+                                                    "type": "plain_text_input",
+                                                    "action_id": "account_name",
+                                                    "placeholder": {
+                                                        "type": "plain_text",
+                                                        "text": "Active Reference Account"
+                                                    },
+                                                    "multiline": false
+                                                },
+                                                "label": {
+                                                    "type": "plain_text",
+                                                    "text": "Account Name",
+                                                    "emoji": true
+                                                }
+                                            }
+                                        ]
+                                    }
+                                });
+                                console.log('result');
+                                console.dir(result);
                             } else if (Object.keys(accounts).length > 1) {
                                 
                                 console.log('Got Accounts')
@@ -543,8 +598,11 @@ module.exports = controller => {
                                     token : bot.api.token,
                                     user : message.user
                                 });
-                                let refTypes = await getRefTypes(existingConn,userProfile);
-                                
+                                let mapval = await getRefTypes(existingConn,userProfile);
+                                let refTypes = mapval.ref;
+                                let opps = mapval.opp;
+                                console.log('Got opps');
+                                console.dir(opps);
                                 const result = await bot.api.views.update({
                                     view_id: message.view.id, 
                                     view: {
@@ -568,7 +626,7 @@ module.exports = controller => {
                                                     "type": "static_select",
                                                     "placeholder": {
                                                         "type": "plain_text",
-                                                        "text": "Select an item",
+                                                        "text": "Select an item 1",
                                                         "emoji": true
                                                     },
                                                     "options": accounts
@@ -670,21 +728,6 @@ module.exports = controller => {
                                                     "text": "Referenceability Type",
                                                     "emoji": true
                                                 }
-                                            },
-                                            {
-                                                "type": "actions",
-                                                "elements": [
-                                                    {
-                                                        "type": "button",
-                                                        "action_id" : "get_deadline",
-                                                        "text": {
-                                                            "type": "plain_text",
-                                                            "text": "Submit Details",
-                                                            "emoji": true
-                                                        },
-                                                        "value": "request"
-                                                    }
-                                                ]
                                             }
                                         ]
                                     }
@@ -692,11 +735,42 @@ module.exports = controller => {
                                 
                                 console.dir(resultnext);
                             } else {
-                                console.log('392');
+                                
                             }
                         }
                     } else if (message.view.callback_id == 'detailView') {
-
+                        console.log('detailView');
+                        console.dir(message.view.state.values);
+                        const result = await bot.api.views.open({
+                            trigger_id: message.trigger_id,
+                            view: {
+                                "type": "modal",
+                                "notify_on_close" : true,
+                                "callback_id" : "detailView",
+                                "private_metadata" : "test2",
+                                "title": {
+                                    "type": "plain_text",
+                                    "text": "Select Action"
+                                },
+                                "blocks": [
+                                    {
+                                        "type": "actions",
+                                        "elements": [
+                                            {
+                                                "type": "button",
+                                                "action_id" : "request",
+                                                "text": {
+                                                    "type": "plain_text",
+                                                    "text": "detailView",
+                                                    "emoji": true
+                                                },
+                                                "value": "request"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        });
                     }
                 }
             } catch (err) {

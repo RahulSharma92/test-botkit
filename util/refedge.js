@@ -10,7 +10,9 @@ module.exports = {
         });
     },
     getRefTypes: async (conn,userProfile) => {
-        let val = [];
+        let opp = [];
+        let ref = [];
+        let returnVal = {};
         //key should have mindays in format 'Id@@days'
         await conn.apex.get('/rebot/REF_TYPE::' + userProfile.user.profile.email, (err, response) => {
             if (err) {
@@ -18,20 +20,34 @@ module.exports = {
             } else  if (response) {
                 if (response != 'false') {
                     response = JSON.parse(response);
-                    Object.keys(response).forEach(function(k){
-                        var entry = {
+                    let oppList = JSON.parse(response['opp']);
+                    let refList = JSON.parse(response['ref']);
+                    oppList.forEach(function(oppWrapper){
+                        let entry = {
                             "text": {
                                 "type": "plain_text",
-                                "text": response[k]
+                                "text": oppWrapper['oppName'] + '(' + oppWrapper['accName'] + ')'
                             },
-                            "value": k
+                            "value": oppWrapper['id']
                         }
-                        val.push(entry);
+                        opp.push(entry);
                     });
+                    Object.keys(refList).forEach(function(k){
+                        let entry = {
+                            "text": {
+                                "type": "plain_text",
+                                "text": k
+                            },
+                            "value": refList[k] + '@@' + k
+                        }
+                        ref.push(entry);
+                    });
+                    returnVal['ref'] = ref;
+                    returnVal['opp'] = opp;
                 }
             }
         });
-        return val;
+        return returnVal;
     },
     
     getAccounts: async (conn, accName,userProfile) => {
