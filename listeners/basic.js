@@ -608,7 +608,6 @@ module.exports = controller => {
                                     view: {
                                         "type": "modal",
                                         "callback_id": "detailView",
-                                        "notify_on_close" : true,
                                         "submit": {
                                             "type": "plain_text",
                                             "text": "Submit",
@@ -625,7 +624,7 @@ module.exports = controller => {
                                                 "elements": [
                                                     {
                                                         "type": "button",
-                                                        "action_id" : "request",
+                                                        "action_id" : "get_deadline",
                                                         "text": {
                                                             "type": "plain_text",
                                                             "text": "Retry",
@@ -634,7 +633,7 @@ module.exports = controller => {
                                                         "value": "request"
                                                     }
                                                 ]
-                                            },
+                                            }
                                         ]
                                     }
                                 });
@@ -706,7 +705,7 @@ module.exports = controller => {
                     } else if (message.view.callback_id == 'detailView') {
                         console.log('detailView');
                         console.dir(message.view.state.values);
-                        const result = await bot.api.views.update({
+                        const result = await bot.api.views.push({
                             trigger_id: message.trigger_id,
                             view: {
                                 "type": "modal",
