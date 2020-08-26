@@ -520,13 +520,16 @@ module.exports = controller => {
                             refselectedVal = refselected.value.split('@@')[1];
                         }
                         var todayDate = new Date();
-                        //todayDate.setDate(todayDate.getDate() + days);
-                        const dateString = todayDate.getDate() + "-" + todayDate.getMonth() + "-" + todayDate.getFullYear();
+                        console.log(todayDate);
+                        var newDate = new Date();
+                        newDate.setDate(newDate.getDate() + days);
+                        console.log(newDate..toLocaleFormat() + '--newDate : ' + newDate.getFullYear() + "-" + newDate.getMonth() + "-" + newDate.getDate());
+                        let dateString = todayDate.getFullYear() + "-" + todayDate.getMonth() + "-" + todayDate.getDate();
                         console.log('dateString : ' + dateString);
                         let refselectemeta = {'ref' : refselected.value,'acc' : accselected.value};
                         console.dir(refselectemeta);
                         bot.httpBody({
-                            response_action: 'push',
+                            response_action: 'update',
                             view: {
                                 "type": "modal",
                                 "notify_on_close" : true,
