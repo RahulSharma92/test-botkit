@@ -559,7 +559,7 @@ module.exports = controller => {
                                         "type": "section",
                                         "text": {
                                             "type": "mrkdwn",
-                                            "text": "*Type* : " + refselected.text.text
+                                            "text": "* Referenceability Type* : " + refselected.text.text
                                         }
                                     },{
                                         "type": "input",
@@ -601,6 +601,41 @@ module.exports = controller => {
                                       "blkdeadline": 'Selected Date must be greater than "' + dateString + '".'
                                     }
                                   });
+                            } else {
+                                bot.httpBody({
+                                    response_action: 'update',
+                                    view: {
+                                        "type": "modal",
+                                        "notify_on_close" : true,
+                                        "close": {
+                                            "type": "plain_text",
+                                            "text": "Close",
+                                            "emoji": true
+                                        },
+                                        "title": {
+                                            "type": "plain_text",
+                                            "text": "Request Created",
+                                            "emoji": true
+                                        },
+                                        "blocks": [
+                                            {
+                                                "type": "header",
+                                                "text": {
+                                                    "type": "plain_text",
+                                                    "text": "Thanks You",
+                                                    "emoji": true
+                                                }
+                                            },
+                                            {
+                                                "type": "section",
+                                                "text": {
+                                                    "type": "mrkdwn",
+                                                    "text": "* Request Created*"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                });
                             }
                         }
                     }
