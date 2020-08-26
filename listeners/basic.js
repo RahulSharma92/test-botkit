@@ -600,12 +600,15 @@ module.exports = controller => {
                         const refselected = message.view.state.values.blkref.reftype_select.selected_option;
                         const accselected = message.view.state.values.blkaccount.account_select.selected_option;
                         let days = 7;
-                        if (refselected.values.indexOf('@@') > -1) {
+                        console.dir(refselected);
+                        console.dir(accselected);
+                        if (refselected.value.indexOf('@@') > -1) {
                             days = refselected.split('@@')[1];
                         }
                         var todayDate = new Date();
                         todayDate.setDate(todayDate.getDate() + days);
                         const dateString = todayDate.getDate() + "-" + todayDate.getMonth() + "-" + todayDate.getFullYear;
+                        console.log('dateString : ' + dateString);
                         let refselectemeta = {'ref' : refselected.value,'acc' : accselected.value};
                         bot.httpBody({
                             response_action: 'update',
