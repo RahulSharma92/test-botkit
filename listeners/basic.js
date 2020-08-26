@@ -592,12 +592,9 @@ module.exports = controller => {
                             let days = refselected.split('@@')[0];
                             var todayDate = new Date();
                             todayDate.setDate(todayDate.getDate() + parseInt(days));
-                            
-                            console.log('Dates\n' + todayDate + ' v/s ' + dateselected);
                             let dateConverted = new Date(dateselected);
-                            console.dir(dateConverted)
-                        
-                            if (dateselected < todayDate ) {
+                            
+                            if (dateConverted < todayDate ) {
                                 const dateString = todayDate.getDate() + "-" + todayDate.getMonth() + "-" + todayDate.getFullYear;
                                 bot.httpBody({
                                     response_action: 'errors',
