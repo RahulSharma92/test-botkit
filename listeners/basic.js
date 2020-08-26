@@ -600,10 +600,12 @@ module.exports = controller => {
                         const refselected = message.view.state.values.blkref.reftype_select.selected_option;
                         const accselected = message.view.state.values.blkaccount.account_select.selected_option;
                         let days = 7;
+                        let refselectedVal = refselected.text.text;
                         console.dir(refselected);
                         console.dir(accselected);
                         if (refselected.value.indexOf('@@') > -1) {
-                            days = refselected.split('@@')[1];
+                            days = refselected.value.split('@@')[0];
+                            refselectedVal = refselected.value.split('@@')[1];
                         }
                         var todayDate = new Date();
                         todayDate.setDate(todayDate.getDate() + days);
@@ -675,7 +677,7 @@ module.exports = controller => {
                         const refselected = message.view.state.values.blkref.reftype_select.selected_option;
                         
                         if (refselected.indexOf('@@') > -1) {
-                            let days = refselected.split('@@')[1];
+                            let days = refselected.value.split('@@')[0];
                             var todayDate = new Date();
                             todayDate.setDate(todayDate.getDate() + days);
                             
