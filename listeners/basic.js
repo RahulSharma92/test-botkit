@@ -64,7 +64,7 @@ module.exports = controller => {
                         view: {
                             "type": "modal",
                             "notify_on_close" : true,
-                            "callback_id" : "deadlineView",
+                            "callback_id" : "select_deadline",
                             "private_metadata" : message.view.private_metadata,
                             "submit": {
                                 "type": "plain_text",
@@ -425,7 +425,7 @@ module.exports = controller => {
                             bot.httpBody({
                                 response_action: 'errors',
                                 errors: {
-                                  "empty_account": 'Please enter an Account Name.'
+                                  "accblock": 'Please enter an Account Name.'
                                 }
                               });
                         } else {
@@ -445,7 +445,7 @@ module.exports = controller => {
                                       "accblock": errorStr
                                     }
                                   })
-                            }/* else if (Object.keys(accounts).length > 1) {
+                            } else if (Object.keys(accounts).length > 0) {
                                 const userProfile = await bot.api.users.info({
                                     token : bot.api.token,
                                     user : message.user
@@ -454,9 +454,7 @@ module.exports = controller => {
                                 let refTypes = mapval.ref;
                                 console.dir(mapval.opp);
                                 let opps = mapval.opp;
-                                console.log(message.view.id + '----root612 : ' + message.view.root_view_id + '--' + message.trigger_id);
                                 if (opps != null && opps.length > 0) {
-                                    console.log('551');
                                     const resultnext = await bot.api.views.update({
                                         view_id: message.view.previous_view_id, 
                                         view: {
@@ -534,7 +532,6 @@ module.exports = controller => {
                                         }
                                     });
                                 } else {
-                                    console.log('628');
                                     const resultnext = await bot.api.views.update({
                                         view_id: message.view.previous_view_id, 
                                         view: {
@@ -593,21 +590,26 @@ module.exports = controller => {
                                         }
                                     });
                                 }
-                            } else {
-                                
-                            }*/
+                            }
                         }
                     } else if (message.view.callback_id == 'detailView') {
                         console.log('detailView');
                         const refselected = message.view.state.values.blkref.reftype_select.selected_option;
                         const accselected = message.view.state.values.blkaccount.account_select.selected_option;
+                        let days = 7;
+                        if (refselected.values.indexOf('@@') > -1) {
+                            days = refselected.split('@@')[1];
+                        }
+                        var todayDate = new Date();
+                        todayDate.setDate(todayDate.getDate() + days);
+                        const dateString = todayDate.getDate() + "-" + todayDate.getMonth() + "-" + todayDate.getFullYear;
                         let refselectemeta = {'ref' : refselected.value,'acc' : accselected.value};
                         bot.httpBody({
                             response_action: 'push',
                             view: {
                                 "type": "modal",
                                 "notify_on_close" : true,
-                                "callback_id" : "deadlineView",
+                                "callback_id" : "select_deadline",
                                 "private_metadata" : JSON.stringify(refselectemeta),
                                 "submit": {
                                     "type": "plain_text",
@@ -643,11 +645,12 @@ module.exports = controller => {
                                         "block_id": "blkdeadline",
                                         "element": {
                                             "type": "datepicker",
-                                            "action_id": "select_deadline",
+                                            "initial_date": dateString,
+                                            "action_id": "selectdeadline",
                                             "initial_date": datetime,
                                             "placeholder": {
                                                 "type": "plain_text",
-                                                "text": "Select a date",
+                                                "text": "Select deadline",
                                                 "emoji": true
                                             }
                                         },
@@ -660,6 +663,26 @@ module.exports = controller => {
                                 ]
                             }
                         });
+                    } else if (message.view.callback_id == 'select_deadline') {
+                        const dateselected = message.view.state.values.blkdeadline.selectdeadline.selected_date;
+                        
+                        const refselected = message.view.state.values.blkref.reftype_select.selected_option;
+                        
+                        if (refselected.indexOf('@@') > -1) {
+                            let days = refselected.split('@@')[1];
+                            var todayDate = new Date();
+                            todayDate.setDate(todayDate.getDate() + days);
+                            
+                            if (dateselected < todayDate ) {
+                                const dateString = todayDate.getDate() + "-" + todayDate.getMonth() + "-" + todayDate.getFullYear;
+                                bot.httpBody({
+                                    response_action: 'errors',
+                                    errors: {
+                                      "blkdeadline": 'Selected Date must be greater than "' + dateString + '".'
+                                    }
+                                  });
+                            }
+                        }
                     }
                 }
             } catch (err) {
