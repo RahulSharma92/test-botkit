@@ -459,6 +459,8 @@ module.exports = controller => {
                                         view_id: message.view.previous_view_id, 
                                         view: {
                                             "type": "modal",
+                                            "notify_on_close" : true,
+                                            "callback_id": "detailView",
                                             "submit": {
                                                 "type": "plain_text",
                                                 "text": "Submit",
@@ -536,6 +538,7 @@ module.exports = controller => {
                                         view_id: message.view.previous_view_id, 
                                         view: {
                                             "type": "modal",
+                                            "notify_on_close" : true,
                                             "callback_id": "detailView",
                                             "submit": {
                                                 "type": "plain_text",
@@ -605,7 +608,7 @@ module.exports = controller => {
                         const dateString = todayDate.getDate() + "-" + todayDate.getMonth() + "-" + todayDate.getFullYear;
                         let refselectemeta = {'ref' : refselected.value,'acc' : accselected.value};
                         bot.httpBody({
-                            response_action: 'push',
+                            response_action: 'update',
                             view: {
                                 "type": "modal",
                                 "notify_on_close" : true,
