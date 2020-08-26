@@ -626,15 +626,8 @@ module.exports = controller => {
                                                 "type": "header",
                                                 "text": {
                                                     "type": "plain_text",
-                                                    "text": "Thanks You",
+                                                    "text": "! Thank You",
                                                     "emoji": true
-                                                }
-                                            },
-                                            {
-                                                "type": "section",
-                                                "text": {
-                                                    "type": "mrkdwn",
-                                                    "text": "* Request Created*"
                                                 }
                                             }
                                         ]
