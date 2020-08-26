@@ -45,81 +45,6 @@ module.exports = controller => {
             let requestURL = await getRequestURL(existingConn,message.actions[0].selected_option.value);
             await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
 
-        } else if (existingConn && message.actions != null && message.actions[0].action_id == 'reftype_select') {
-            
-        } else if (existingConn && message.actions != null && message.actions[0].action_id == 'select_deadline') {
-            const dateselected = message.actions[0].selected_date;
-            
-            let refselected = JSON.parse(message.view.private_metadata).ref;
-            
-            if (refselected.indexOf('@@') > -1) {
-                let days = refselected.split('@@')[1];
-                var todayDate = new Date();
-                todayDate.setDate(todayDate.getDate() + days);
-                
-                if (dateselected < todayDate ) {
-                    const dateString = todayDate.getDate() + "-" + todayDate.getMonth() + "-" + todayDate.getFullYear();
-                    const result = await bot.api.views.update({
-                        trigger_id: message.trigger_id,
-                        view: {
-                            "type": "modal",
-                            "notify_on_close" : true,
-                            "callback_id" : "select_deadline",
-                            "private_metadata" : message.view.private_metadata,
-                            "submit": {
-                                "type": "plain_text",
-                                "text": "Submit",
-                                "emoji": true
-                            },
-                            "close": {
-                                "type": "plain_text",
-                                "text": "Cancel",
-                                "emoji": true
-                            },
-                            "title": {
-                                "type": "plain_text",
-                                "text": "Request",
-                                "emoji": true
-                            },
-                            "blocks": [
-                                {
-                                    "type": "section",
-                                    "text": {
-                                        "type": "mrkdwn",
-                                        "text": "*Account* : " + accountselected.text.text
-                                    }
-                                },
-                                {
-                                    "type": "section",
-                                    "text": {
-                                        "type": "mrkdwn",
-                                        "text": "*Type* : " + refselected.text.text
-                                    }
-                                },{
-                                    "type": "input",
-                                    "block_id": "blkdeadline",
-                                    "element": {
-                                        "type": "datepicker",
-                                        "action_id": "select_deadline",
-                                        "initial_date": dateString,
-                                        "placeholder": {
-                                            "type": "plain_text",
-                                            "text": "Select a date(Date should be greater than " + dateString + ")",
-                                            "emoji": true
-                                        }
-                                    },
-                                    "label": {
-                                        "type": "plain_text",
-                                        "text": "Deadline",
-                                        "emoji": true
-                                    }
-                                }
-                            ]
-                        }
-                    });
-                }
-            }
-        
         } else if (existingConn && message.actions != null && message.actions[0].action_id == 'request') {
             console.log('request');
             const result = await bot.api.views.push({
@@ -173,7 +98,7 @@ module.exports = controller => {
             await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
         
         } else {
-            console.log('77');
+            console.log('77' + message.actions[0].action_id);
             const authUrl = connFactory.getAuthUrl(message.team);
             await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
         }
@@ -421,13 +346,8 @@ module.exports = controller => {
                                 }
                               });
                         } else {
-                            const userProfile = await bot.api.users.info({
-                                token : bot.api.token,
-                                user : message.user
-                            });
-                            let accounts = await getAccounts(existingConn,accName,userProfile);
-                            console.log('accounts');
-                            console.dir(accounts);
+                            let accounts = await getAccounts(existingConn,accName);
+                            
                             if (accounts == null || Object.keys(accounts).length == 0) {
                                 console.log('errors');
                                 const errorStr = "*No Active Reference program member found by name:" + accName + ".\n Please check the spelling or Activate the Account.*" ;
@@ -600,17 +520,17 @@ module.exports = controller => {
                             refselectedVal = refselected.value.split('@@')[1];
                         }
                         var todayDate = new Date();
-                        todayDate.setDate(todayDate.getDate() + days);
+                        //todayDate.setDate(todayDate.getDate() + days);
                         const dateString = todayDate.getDate() + "-" + todayDate.getMonth() + "-" + todayDate.getFullYear();
                         console.log('dateString : ' + dateString);
                         let refselectemeta = {'ref' : refselected.value,'acc' : accselected.value};
+                        console.dir(refselectemeta);
                         bot.httpBody({
-                            response_action: 'update',
+                            response_action: 'push',
                             view: {
                                 "type": "modal",
                                 "notify_on_close" : true,
                                 "callback_id" : "select_deadline",
-                                "private_metadata" : JSON.stringify(refselectemeta),
                                 "submit": {
                                     "type": "plain_text",
                                     "text": "Submit",
