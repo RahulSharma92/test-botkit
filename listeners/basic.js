@@ -519,12 +519,9 @@ module.exports = controller => {
                             days = refselected.value.split('@@')[0];
                             refselectedVal = refselected.value.split('@@')[1];
                         }
-                        var todayDate = new Date();
-                        console.log(todayDate);
                         var newDate = new Date();
-                        newDate.setDate(newDate.getDate() + days);
-                        console.log('--newDate : ' + newDate.getFullYear() + "-" + newDate.getMonth() + "-" + newDate.getDate());
-                        let dateString = todayDate.getFullYear() + "-" + todayDate.getMonth() + "-" + todayDate.getDate();
+                        newDate.setDate(newDate.getDate() + parseInt(days));
+                        let dateString = newDate.getFullYear() + "-" + parseInt(newDate.getMonth() + 1) + "-" + newDate.getDate();
                         console.log('dateString : ' + dateString);
                         let refselectemeta = {'ref' : refselected.value,'acc' : accselected.value};
                         console.dir(refselectemeta);
@@ -534,6 +531,7 @@ module.exports = controller => {
                                 "type": "modal",
                                 "notify_on_close" : true,
                                 "callback_id" : "select_deadline",
+                                "private_metadata" : JSON.stringify(refselectemeta),
                                 "submit": {
                                     "type": "plain_text",
                                     "text": "Submit",
@@ -587,8 +585,7 @@ module.exports = controller => {
                         });
                     } else if (message.view.callback_id == 'select_deadline') {
                         const dateselected = message.view.state.values.blkdeadline.selectdeadline.selected_date;
-                        
-                        const refselected = message.view.state.values.blkref.reftype_select.selected_option;
+                        let refselected = JSON.parse(message.view.state.private_metadata).ref;
                         
                         if (refselected.indexOf('@@') > -1) {
                             let days = refselected.value.split('@@')[0];
