@@ -58,7 +58,7 @@ module.exports = controller => {
                 todayDate.setDate(todayDate.getDate() + days);
                 
                 if (dateselected < todayDate ) {
-                    const dateString = todayDate.getDate() + "-" + todayDate.getMonth() + "-" + todayDate.getFullYear;
+                    const dateString = todayDate.getDate() + "-" + todayDate.getMonth() + "-" + todayDate.getFullYear();
                     const result = await bot.api.views.update({
                         trigger_id: message.trigger_id,
                         view: {
@@ -95,21 +95,13 @@ module.exports = controller => {
                                         "type": "mrkdwn",
                                         "text": "*Type* : " + refselected.text.text
                                     }
-                                },
-                                {
-                                    "type": "section",
-                                    "text": {
-                                        "type": "mrkdwn",
-                                        "text": "Date Invalid"
-                                    }
-                                },
-                                {
+                                },{
                                     "type": "input",
                                     "block_id": "blkdeadline",
                                     "element": {
                                         "type": "datepicker",
                                         "action_id": "select_deadline",
-                                        "initial_date": datetime,
+                                        "initial_date": dateString,
                                         "placeholder": {
                                             "type": "plain_text",
                                             "text": "Select a date(Date should be greater than " + dateString + ")",
