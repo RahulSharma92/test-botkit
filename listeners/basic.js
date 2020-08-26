@@ -589,9 +589,9 @@ module.exports = controller => {
                         let refselected = JSON.parse(message.view.private_metadata).ref;
                         
                         if (refselected.indexOf('@@') > -1) {
-                            let days = refselected.value.split('@@')[0];
+                            let days = refselected.split('@@')[0];
                             var todayDate = new Date();
-                            todayDate.setDate(todayDate.getDate() + days);
+                            todayDate.setDate(todayDate.getDate() + parseInt(days));
                             
                             if (dateselected < todayDate ) {
                                 const dateString = todayDate.getDate() + "-" + todayDate.getMonth() + "-" + todayDate.getFullYear;
