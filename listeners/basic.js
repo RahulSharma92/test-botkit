@@ -593,6 +593,10 @@ module.exports = controller => {
                             var todayDate = new Date();
                             todayDate.setDate(todayDate.getDate() + parseInt(days));
                             
+                            console.log('Dates\n' + todayDate + ' v/s ' + dateselected);
+                            let dateConverted = new Date(dateselected);
+                            console.dir(dateConverted)
+                        
                             if (dateselected < todayDate ) {
                                 const dateString = todayDate.getDate() + "-" + todayDate.getMonth() + "-" + todayDate.getFullYear;
                                 bot.httpBody({
