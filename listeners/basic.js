@@ -601,7 +601,7 @@ module.exports = controller => {
                         }
                         var todayDate = new Date();
                         todayDate.setDate(todayDate.getDate() + days);
-                        const dateString = todayDate.getDate() + "-" + todayDate.getMonth() + "-" + todayDate.getFullYear;
+                        const dateString = todayDate.getDate() + "-" + todayDate.getMonth() + "-" + todayDate.getFullYear();
                         console.log('dateString : ' + dateString);
                         let refselectemeta = {'ref' : refselected.value,'acc' : accselected.value};
                         bot.httpBody({
@@ -647,7 +647,6 @@ module.exports = controller => {
                                             "type": "datepicker",
                                             "initial_date": dateString,
                                             "action_id": "selectdeadline",
-                                            "initial_date": datetime,
                                             "placeholder": {
                                                 "type": "plain_text",
                                                 "text": "Select deadline",
