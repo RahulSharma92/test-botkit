@@ -511,6 +511,10 @@ module.exports = controller => {
                         console.log('detailView');
                         const refselected = message.view.state.values.blkref.reftype_select.selected_option;
                         const accselected = message.view.state.values.blkaccount.account_select.selected_option;
+                        let oppSelected = {};
+                        if (message.view.state.values.blkopp != null && message.view.state.values.blkopp.opp_select != null && message.view.state.values.blkopp.opp_select.selected_option != null) {
+                            oppSelected = message.view.state.values.blkopp.opp_select.selected_option;
+                        }
                         let days = 7;
                         let refselectedVal = refselected.text.text;
                         console.dir(refselected);
@@ -523,7 +527,7 @@ module.exports = controller => {
                         newDate.setDate(newDate.getDate() + parseInt(days));
                         let dateString = newDate.getFullYear() + "-" + parseInt(newDate.getMonth() + 1) + "-" + newDate.getDate();
                         console.log('dateString : ' + dateString);
-                        let refselectemeta = {'ref' : refselected.value,'acc' : accselected.value};
+                        let refselectemeta = {'ref' : refselected.value,'acc' : accselected.value,'opp' : oppSelected.value};
                         console.dir(refselectemeta);
                         bot.httpBody({
                             response_action: 'update',
@@ -561,7 +565,15 @@ module.exports = controller => {
                                             "type": "mrkdwn",
                                             "text": "* Referenceability Type* : " + refselected.text.text
                                         }
-                                    },{
+                                    },
+                                    {
+                                        "type": "section",
+                                        "text": {
+                                            "type": "mrkdwn",
+                                            "text": "* Opportunity * : " + oppSelected.text.text
+                                        }
+                                    },
+                                    {
                                         "type": "input",
                                         "block_id": "blkdeadline",
                                         "element": {
@@ -591,11 +603,12 @@ module.exports = controller => {
                         if (refselected.indexOf('@@') > -1) {
                             let days = refselected.split('@@')[0];
                             var todayDate = new Date();
-                            todayDate.setDate(todayDate.getDate() + parseInt(days));
+                            todayDate.setDate(todayDate.getDate() + (parseInt(days)-1));
                             let dateConverted = new Date(dateselected);
                             
                             if (dateConverted < todayDate ) {
-                                const dateString = todayDate.getDate() + "-" + todayDate.getMonth() + "-" + todayDate.getFullYear;
+                                todayDate.setDate(todayDate.getDate() + (-1));
+                                const dateString = todayDate.getDate() + "-" + todayDate.getMonth() + "-" + todayDate.getFullYear();
                                 bot.httpBody({
                                     response_action: 'errors',
                                     errors: {
