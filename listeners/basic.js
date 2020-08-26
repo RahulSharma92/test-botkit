@@ -523,7 +523,7 @@ module.exports = controller => {
                         console.log(todayDate);
                         var newDate = new Date();
                         newDate.setDate(newDate.getDate() + days);
-                        console.log(newDate.toLocaleFormat() + '--newDate : ' + newDate.getFullYear() + "-" + newDate.getMonth() + "-" + newDate.getDate());
+                        console.log('--newDate : ' + newDate.getFullYear() + "-" + newDate.getMonth() + "-" + newDate.getDate());
                         let dateString = todayDate.getFullYear() + "-" + todayDate.getMonth() + "-" + todayDate.getDate();
                         console.log('dateString : ' + dateString);
                         let refselectemeta = {'ref' : refselected.value,'acc' : accselected.value};
