@@ -563,14 +563,14 @@ module.exports = controller => {
                                         "type": "section",
                                         "text": {
                                             "type": "mrkdwn",
-                                            "text": "* Referenceability Type* : " + refselected.text.text
+                                            "text": "*Referenceability Type* : " + refselected.text.text
                                         }
                                     },
                                     {
                                         "type": "section",
                                         "text": {
                                             "type": "mrkdwn",
-                                            "text": "* Opportunity * : " + oppSelected.text.text
+                                            "text": "*Opportunity* : " + oppSelected.text.text
                                         }
                                     },
                                     {
