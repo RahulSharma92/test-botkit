@@ -1,6 +1,6 @@
 const connFactory = require('../util/connection-factory');
 const logger = require('../util/logger');
-const { getAccounts, getRequestURL, getRefTypes} = require('../util/refedge');
+const { getAccounts, getRequestURL, getRefTypes,submitRequest} = require('../util/refedge');
 
 const { checkTeamMigration } = require('../listeners/middleware/migration-filter');
 
@@ -529,86 +529,146 @@ module.exports = controller => {
                         console.log('dateString : ' + dateString);
                         let refselectemeta = {'ref' : refselected.value,'acc' : accselected.value,'opp' : oppSelected.value};
                         console.dir(refselectemeta);
-                        bot.httpBody({
-                            response_action: 'update',
-                            view: {
-                                "type": "modal",
-                                "notify_on_close" : true,
-                                "callback_id" : "select_deadline",
-                                "private_metadata" : JSON.stringify(refselectemeta),
-                                "submit": {
-                                    "type": "plain_text",
-                                    "text": "Submit",
-                                    "emoji": true
-                                },
-                                "close": {
-                                    "type": "plain_text",
-                                    "text": "Cancel",
-                                    "emoji": true
-                                },
-                                "title": {
-                                    "type": "plain_text",
-                                    "text": "Request",
-                                    "emoji": true
-                                },
-                                "blocks": [
-                                    {
-                                        "type": "section",
-                                        "text": {
-                                            "type": "mrkdwn",
-                                            "text": "*Account* : " + accselected.text.text
-                                        }
+                        if (oppSelected.value != null) {
+                            bot.httpBody({
+                                response_action: 'update',
+                                view: {
+                                    "type": "modal",
+                                    "notify_on_close" : true,
+                                    "callback_id" : "select_deadline",
+                                    "private_metadata" : JSON.stringify(refselectemeta),
+                                    "submit": {
+                                        "type": "plain_text",
+                                        "text": "Submit",
+                                        "emoji": true
                                     },
-                                    {
-                                        "type": "section",
-                                        "text": {
-                                            "type": "mrkdwn",
-                                            "text": "*Referenceability Type* : " + refselected.text.text
-                                        }
+                                    "close": {
+                                        "type": "plain_text",
+                                        "text": "Cancel",
+                                        "emoji": true
                                     },
-                                    {
-                                        "type": "section",
-                                        "text": {
-                                            "type": "mrkdwn",
-                                            "text": "*Opportunity* : " + oppSelected.text.text
-                                        }
+                                    "title": {
+                                        "type": "plain_text",
+                                        "text": "Request",
+                                        "emoji": true
                                     },
-                                    {
-                                        "type": "input",
-                                        "block_id": "blkdeadline",
-                                        "element": {
-                                            "type": "datepicker",
-                                            "initial_date": dateString,
-                                            "action_id": "selectdeadline",
-                                            "placeholder": {
-                                                "type": "plain_text",
-                                                "text": "Select deadline",
-                                                "emoji": true
+                                    "blocks": [
+                                        {
+                                            "type": "section",
+                                            "text": {
+                                                "type": "mrkdwn",
+                                                "text": "*Account* : " + accselected.text.text
                                             }
                                         },
-                                        "label": {
-                                            "type": "plain_text",
-                                            "text": "Deadline",
-                                            "emoji": true
+                                        {
+                                            "type": "section",
+                                            "text": {
+                                                "type": "mrkdwn",
+                                                "text": "*Referenceability Type* : " + refselected.text.text
+                                            }
+                                        },
+                                        {
+                                            "type": "section",
+                                            "text": {
+                                                "type": "mrkdwn",
+                                                "text": "*Opportunity* : " + oppSelected.text.text
+                                            }
+                                        },
+                                        {
+                                            "type": "input",
+                                            "block_id": "blkdeadline",
+                                            "element": {
+                                                "type": "datepicker",
+                                                "initial_date": dateString,
+                                                "action_id": "selectdeadline",
+                                                "placeholder": {
+                                                    "type": "plain_text",
+                                                    "text": "Select deadline",
+                                                    "emoji": true
+                                                }
+                                            },
+                                            "label": {
+                                                "type": "plain_text",
+                                                "text": "Deadline",
+                                                "emoji": true
+                                            }
                                         }
-                                    }
-                                ]
-                            }
-                        });
+                                    ]
+                                }
+                            });
+                        } else {
+                            bot.httpBody({
+                                response_action: 'update',
+                                view: {
+                                    "type": "modal",
+                                    "notify_on_close" : true,
+                                    "callback_id" : "select_deadline",
+                                    "private_metadata" : JSON.stringify(refselectemeta),
+                                    "submit": {
+                                        "type": "plain_text",
+                                        "text": "Submit",
+                                        "emoji": true
+                                    },
+                                    "close": {
+                                        "type": "plain_text",
+                                        "text": "Cancel",
+                                        "emoji": true
+                                    },
+                                    "title": {
+                                        "type": "plain_text",
+                                        "text": "Request",
+                                        "emoji": true
+                                    },
+                                    "blocks": [
+                                        {
+                                            "type": "section",
+                                            "text": {
+                                                "type": "mrkdwn",
+                                                "text": "*Account* : " + accselected.text.text
+                                            }
+                                        },
+                                        {
+                                            "type": "section",
+                                            "text": {
+                                                "type": "mrkdwn",
+                                                "text": "*Referenceability Type* : " + refselected.text.text
+                                            }
+                                        },{
+                                            "type": "input",
+                                            "block_id": "blkdeadline",
+                                            "element": {
+                                                "type": "datepicker",
+                                                "initial_date": dateString,
+                                                "action_id": "selectdeadline",
+                                                "placeholder": {
+                                                    "type": "plain_text",
+                                                    "text": "Select deadline",
+                                                    "emoji": true
+                                                }
+                                            },
+                                            "label": {
+                                                "type": "plain_text",
+                                                "text": "Deadline",
+                                                "emoji": true
+                                            }
+                                        }
+                                    ]
+                                }
+                            });
+                        }
                     } else if (message.view.callback_id == 'select_deadline') {
                         const dateselected = message.view.state.values.blkdeadline.selectdeadline.selected_date;
-                        console.dir(message.view.private_metadata);
-                        let refselected = JSON.parse(message.view.private_metadata).ref;
+                        let dataMap = message.view.private_metadata;
+                        let refselected = dataMap.ref;
                         
                         if (refselected.indexOf('@@') > -1) {
                             let days = refselected.split('@@')[0];
                             var todayDate = new Date();
-                            todayDate.setDate(todayDate.getDate() + (parseInt(days)-1));
+                            todayDate.setDate(todayDate.getDate() + (parseInt(days)));
                             let dateConverted = new Date(dateselected);
                             
                             if (dateConverted < todayDate ) {
-                                todayDate.setDate(todayDate.getDate() + (-1));
-                                const dateString = todayDate.getDate() + "-" + todayDate.getMonth() + "-" + todayDate.getFullYear();
+                                const dateString = todayDate.getDate() + "-" + parseInt(todayDate.getMonth() + 1) + "-" + todayDate.getFullYear();
                                 bot.httpBody({
                                     response_action: 'errors',
                                     errors: {
@@ -616,6 +676,9 @@ module.exports = controller => {
                                     }
                                   });
                             } else {
+                                dataMap['deadline'] = dateselected;
+                                console.log(dataMap);
+                                let res = await submitRequest(existingConn,dataMap);
                                 bot.httpBody({
                                     response_action: 'update',
                                     view: {

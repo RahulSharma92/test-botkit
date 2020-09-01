@@ -2,10 +2,20 @@ const logger = require('../util/logger');
 
 module.exports = {
     saveTeamId: (conn, teamData) => {
-        conn.apex.post('/rebot', teamData, (err, res) => {
+        conn.apex.post('/rebot/saveTeamId', teamData, (err, res) => {
 
             if (err) {
                 logger.log(err);
+            }
+        });
+    },
+    submitRequest: (conn, teamData) => {
+        conn.apex.post('/rebot/submitRequest', teamData, (err, res) => {
+            console.dir(res);
+            if (err) {
+                logger.log(err);
+            } else {
+                return res;
             }
         });
     },
@@ -53,7 +63,7 @@ module.exports = {
         return returnVal;
     },
     
-    getAccounts: async (conn, accName,userProfile) => {
+    getAccounts: async (conn, accName) => {
         if (accName == '' || accName == null) {
             return 'false';
         } else {
