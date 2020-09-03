@@ -658,7 +658,7 @@ module.exports = controller => {
                         }
                     } else if (message.view.callback_id == 'select_deadline') {
                         const dateselected = message.view.state.values.blkdeadline.selectdeadline.selected_date;
-                        let dataMap = message.view.private_metadata;
+                        let dataMap = JSON.parse(message.view.private_metadata);
                         let refselected = dataMap.ref;
                         
                         if (refselected.indexOf('@@') > -1) {
