@@ -678,9 +678,10 @@ module.exports = controller => {
                             } else {
                                 dataMap['deadline'] = dateselected;
                                 console.log(dataMap);
-                                let res = await submitRequest(existingConn,dataMap);
                                 let responseString = 'Request Successfully created. Thank You:thumbsup:';
-                                if (res.indexOf('referenceuserequest')) {
+                                let res = await submitRequest(existingConn,dataMap);
+                                console.log(res);
+                                if (res.indexOf('referenceuserequest') > -1) {
                                     responseString = 'Please click the link to complete the request <' + res + '|Complete Request>';
                                 }
                                 bot.httpBody({

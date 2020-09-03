@@ -9,7 +9,7 @@ module.exports = {
             }
         });
     },
-    submitRequest: (conn, teamData) => {
+    submitRequest: async (conn, teamData) => {
         conn.apex.post('/rebot/submitRequest', teamData, (err, res) => {
             console.dir(res);
             if (err) {
