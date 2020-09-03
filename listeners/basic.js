@@ -679,6 +679,10 @@ module.exports = controller => {
                                 dataMap['deadline'] = dateselected;
                                 console.log(dataMap);
                                 let res = await submitRequest(existingConn,dataMap);
+                                let responseString = 'Request Successfully created. Thank You:thumbsup:';
+                                if (res.indexOf('referenceuserequest')) {
+                                    responseString = 'Please click the link to complete the request <' + res + '|Complete Request>';
+                                }
                                 bot.httpBody({
                                     response_action: 'update',
                                     view: {
@@ -696,11 +700,10 @@ module.exports = controller => {
                                         },
                                         "blocks": [
                                             {
-                                                "type": "header",
+                                                "type": "section",
                                                 "text": {
-                                                    "type": "plain_text",
-                                                    "text": "! Thank You",
-                                                    "emoji": true
+                                                    "type": "mrkdwn",
+                                                    "text": responseString
                                                 }
                                             }
                                         ]
