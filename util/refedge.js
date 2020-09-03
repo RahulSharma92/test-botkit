@@ -10,14 +10,15 @@ module.exports = {
         });
     },
     submitRequest: async (conn, teamData) => {
-        conn.apex.post('/rebot/submitRequest', teamData, (err, res) => {
+        let returnVal = '';
+        await conn.apex.post('/rebot/submitRequest', teamData, (err, res) => {
             console.dir(res);
+            returnVal = res;
             if (err) {
                 logger.log(err);
-            } else {
-                return res;
-            }
+            } 
         });
+        return returnVal;
     },
     getRefTypes: async (conn,userProfile) => {
         let opp = [];
