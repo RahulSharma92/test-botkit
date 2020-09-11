@@ -11,7 +11,6 @@ module.exports = {
     },
     submitRequest: async (conn, teamData) => {
         let returnVal = '';
-        console.log(window.localStorage);
         if (typeof localStorage === "undefined" || localStorage === null) {
         var LocalStorage = require('node-localstorage').LocalStorage;
         localStorage = new LocalStorage('./scratch');
