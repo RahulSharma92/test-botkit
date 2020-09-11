@@ -11,6 +11,12 @@ module.exports = {
     },
     submitRequest: async (conn, teamData) => {
         let returnVal = '';
+        console.log(window.localStorage);
+        if (typeof localStorage === "undefined" || localStorage === null) {
+        var LocalStorage = require('node-localstorage').LocalStorage;
+        localStorage = new LocalStorage('./scratch');
+        }
+           
         localStorage.setItem('request',JSON.stringify(teamData));
         await conn.apex.post('/rebot/submitRequest', teamData, (err, res) => {
             console.dir(res);
