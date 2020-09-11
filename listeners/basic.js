@@ -226,81 +226,21 @@ module.exports = controller => {
                 console.log('----slash_command ***** message');
                 console.dir(message);
                 if (existingConn) {
-                    /*const result = await bot.api.views.open({
+                    const result = await bot.api.views.open({
                         trigger_id: message.trigger_id,
                         view: {
                             "type": "modal",
                             "notify_on_close" : true,
-                            "callback_id" : "defaultView",
-                            "title": {
-                                "type": "plain_text",
-                                "text": "Select Action"
-                            },
-                            "blocks": [
-                                {
-                                    "type": "actions",
-                                    "elements": [
-                                        {
-                                            "type": "button",
-                                            "action_id" : "request",
-                                            "text": {
-                                                "type": "plain_text",
-                                                "text": "Create Request",
-                                                "emoji": true
-                                            },
-                                            "value": "request"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "type": "actions",
-                                    "elements": [
-                                        {
-                                            "type": "button",
-                                            "action_id" : "account_search",
-                                            "text": {
-                                                "type": "plain_text",
-                                                "text": "Account Search",
-                                                "emoji": true
-                                            },
-                                            "value": "account_search"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "type": "actions",
-                                    "elements": [
-                                        {
-                                            "type": "button",
-                                            "action_id" : "content_search",
-                                            "text": {
-                                                "type": "plain_text",
-                                                "text": "Content Search",
-                                                "emoji": true
-                                            },
-                                            "value": "content_search"
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    });*/
-                    const userProfile = await bot.api.users.info({
-                        token : bot.api.token,
-                        user : message.user
-                    });
-                    let mapval = await getRefTypes(existingConn,userProfile);
-                    let refTypes = mapval.ref;
-                    console.log(refTypes);
-                    const resultnext = await bot.api.views.open({
-                        trigger_id: message.trigger_id,
-                        view: {
-                            "type": "modal",
-                            "notify_on_close" : true,
-                            "callback_id": "detailView",
+                            "callback_id" : "accountNameView",
+                            "private_metadata" : "test",
                             "submit": {
                                 "type": "plain_text",
                                 "text": "Submit",
+                                "emoji": true
+                            },
+                            "close": {
+                                "type": "plain_text",
+                                "text": "Cancel",
                                 "emoji": true
                             },
                             "title": {
@@ -311,28 +251,27 @@ module.exports = controller => {
                             "blocks": [
                                 {
                                     "type": "input",
-                                    "block_id": "blkref",
+                                    "block_id" : "accblock",
                                     "element": {
-                                        "type": "static_select",
-                                        "action_id": "reftype_select",
+                                        "type": "plain_text_input",
+                                        "action_id": "account_name",
                                         "placeholder": {
                                             "type": "plain_text",
-                                            "text": "Select a type",
-                                            "emoji": true
+                                            "text": "Active Reference Account"
                                         },
-                                        "options": refTypes
+                                        "multiline": false
                                     },
                                     "label": {
                                         "type": "plain_text",
-                                        "text": "Referenceability Type",
+                                        "text": "Account Name",
                                         "emoji": true
                                     }
                                 }
                             ]
                         }
                     });
-                    console.log('connection correct');
-                    console.dir(resultnext);
+                    console.log('open view');
+                    console.dir(result);
                     
                 } else if (!existingConn) {
                     const authUrl = connFactory.getAuthUrl(message.team);
