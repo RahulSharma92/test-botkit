@@ -20,75 +20,79 @@ module.exports = controller => {
     controller.on('block_actions',async function(bot, message) {
         console.log('block_actions');
         console.dir(message);
-        // Account selected
-        let existingConn = await connFactory.getConnection(message.team.id, controller);
+        try {
+            // Account selected
+            let existingConn = await connFactory.getConnection(message.team.id, controller);
 
-        if (existingConn && message.actions != null && message.actions[0].action_id == 'content_search') {
-            console.log('28 : content_search');
-            let requestURL = await getRequestURL(existingConn,message.actions[0].selected_option.value);
-            await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
+            if (existingConn && message.actions != null && message.actions[0].action_id == 'content_search') {
+                console.log('28 : content_search');
+                let requestURL = await getRequestURL(existingConn,message.actions[0].selected_option.value);
+                await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
 
-        } else if (existingConn && message.actions != null && message.actions[0].action_id == 'account_search') {
-            console.log('32 : account_search');
-            let requestURL = await getRequestURL(existingConn,message.actions[0].selected_option.value);
-            await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
+            } else if (existingConn && message.actions != null && message.actions[0].action_id == 'account_search') {
+                console.log('32 : account_search');
+                let requestURL = await getRequestURL(existingConn,message.actions[0].selected_option.value);
+                await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
 
-        } else if (existingConn && message.actions != null && message.actions[0].action_id == 'request') {
-            console.log('request');
-            const result = await bot.api.views.push({
-                trigger_id: message.trigger_id,
-                view: {
-                    "type": "modal",
-                    "notify_on_close" : true,
-                    "callback_id" : "accountNameView",
-                    "private_metadata" : "test",
-                    "submit": {
-                        "type": "plain_text",
-                        "text": "Submit",
-                        "emoji": true
-                    },
-                    "close": {
-                        "type": "plain_text",
-                        "text": "Cancel",
-                        "emoji": true
-                    },
-                    "title": {
-                        "type": "plain_text",
-                        "text": "Request",
-                        "emoji": true
-                    },
-                    "blocks": [
-                        {
-                            "type": "input",
-                            "block_id" : "accblock",
-                            "element": {
-                                "type": "plain_text_input",
-                                "action_id": "account_name",
-                                "placeholder": {
-                                    "type": "plain_text",
-                                    "text": "Active Reference Account"
+            } else if (existingConn && message.actions != null && message.actions[0].action_id == 'request') {
+                console.log('request');
+                const result = await bot.api.views.push({
+                    trigger_id: message.trigger_id,
+                    view: {
+                        "type": "modal",
+                        "notify_on_close" : true,
+                        "callback_id" : "accountNameView",
+                        "private_metadata" : "test",
+                        "submit": {
+                            "type": "plain_text",
+                            "text": "Submit",
+                            "emoji": true
+                        },
+                        "close": {
+                            "type": "plain_text",
+                            "text": "Cancel",
+                            "emoji": true
+                        },
+                        "title": {
+                            "type": "plain_text",
+                            "text": "Request",
+                            "emoji": true
+                        },
+                        "blocks": [
+                            {
+                                "type": "input",
+                                "block_id" : "accblock",
+                                "element": {
+                                    "type": "plain_text_input",
+                                    "action_id": "account_name",
+                                    "placeholder": {
+                                        "type": "plain_text",
+                                        "text": "Active Reference Account"
+                                    },
+                                    "multiline": false
                                 },
-                                "multiline": false
-                            },
-                            "label": {
-                                "type": "plain_text",
-                                "text": "Account Name",
-                                "emoji": true
+                                "label": {
+                                    "type": "plain_text",
+                                    "text": "Account Name",
+                                    "emoji": true
+                                }
                             }
-                        }
-                    ]
-                }
-            });
-            console.dir(result);
-        } else if (existingConn && message.actions != null && message.actions[0].action_id == 'accountSelect') {
-            console.log('73 : accountSelect');
-            let requestURL = await getRequestURL(existingConn,message.actions[0].selected_option.value);
-            await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
-        
-        } else {
-            console.log('77' + message.actions[0].action_id);
-            const authUrl = connFactory.getAuthUrl(message.team);
-            await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
+                        ]
+                    }
+                });
+                console.dir(result);
+            } else if (existingConn && message.actions != null && message.actions[0].action_id == 'accountSelect') {
+                console.log('73 : accountSelect');
+                let requestURL = await getRequestURL(existingConn,message.actions[0].selected_option.value);
+                await bot.reply(message, `click this link to create the request\n<${requestURL}|Create Request>`);
+            
+            } else {
+                console.log('77' + message.actions[0].action_id);
+                const authUrl = connFactory.getAuthUrl(message.team);
+                await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
+            }
+        } catch (err) {
+            logger.log(err);
         }
     });
 
