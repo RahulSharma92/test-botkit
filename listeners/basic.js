@@ -285,6 +285,10 @@ module.exports = controller => {
                             ]
                         }
                     });*/
+                    const userProfile = await bot.api.users.info({
+                        token : bot.api.token,
+                        user : message.user
+                    });
                     let mapval = await getRefTypes(existingConn,userProfile);
                     let refTypes = mapval.ref;
                     console.log(refTypes);
