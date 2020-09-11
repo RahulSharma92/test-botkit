@@ -226,7 +226,7 @@ module.exports = controller => {
                 console.log('----slash_command ***** message');
                 console.dir(message);
                 if (existingConn) {
-                    const result = await bot.api.views.open({
+                    /*const result = await bot.api.views.open({
                         trigger_id: message.trigger_id,
                         view: {
                             "type": "modal",
@@ -284,9 +284,51 @@ module.exports = controller => {
                                 }
                             ]
                         }
+                    });*/
+                    let mapval = await getRefTypes(existingConn,userProfile);
+                    let refTypes = mapval.ref;
+                    console.log(refTypes);
+                    const resultnext = await bot.api.views.open({
+                        trigger_id: message.trigger_id,
+                        view: {
+                            "type": "modal",
+                            "notify_on_close" : true,
+                            "callback_id": "detailView",
+                            "submit": {
+                                "type": "plain_text",
+                                "text": "Submit",
+                                "emoji": true
+                            },
+                            "title": {
+                                "type": "plain_text",
+                                "text": "Request",
+                                "emoji": true
+                            },
+                            "blocks": [
+                                {
+                                    "type": "input",
+                                    "block_id": "blkref",
+                                    "element": {
+                                        "type": "static_select",
+                                        "action_id": "reftype_select",
+                                        "placeholder": {
+                                            "type": "plain_text",
+                                            "text": "Select a type",
+                                            "emoji": true
+                                        },
+                                        "options": refTypes
+                                    },
+                                    "label": {
+                                        "type": "plain_text",
+                                        "text": "Referenceability Type",
+                                        "emoji": true
+                                    }
+                                }
+                            ]
+                        }
                     });
-                    console.log('open view');
-                    console.dir(result);
+                    console.log('connection correct');
+                    console.dir(resultnext);
                     
                 } else if (!existingConn) {
                     const authUrl = connFactory.getAuthUrl(message.team);
