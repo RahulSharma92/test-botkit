@@ -11,20 +11,24 @@ module.exports = {
     },
     submitRequest: async (conn, teamData) => {
         let returnVal = '';
-        if (typeof localStorage === "undefined" || localStorage === null) {
-        var LocalStorage = require('node-localstorage').LocalStorage;
-        localStorage = new LocalStorage('./scratch');
+        try {
+            if (typeof localStorage === "undefined" || localStorage === null) {
+            var LocalStorage = require('node-localstorage').LocalStorage;
+            localStorage = new LocalStorage('./scratch');
+            }
+            
+            localStorage.setItem('request',JSON.stringify(teamData));
+            await conn.apex.post('/rebot/submitRequest', teamData, (err, res) => {
+                console.dir(res);
+                returnVal = res;
+                if (err) {
+                    logger.log(err);
+                } 
+            });
+        } catch (err) {
+            console.log(err);
         }
-           
-        localStorage.setItem('request',JSON.stringify(teamData));
-        await conn.apex.post('/rebot/submitRequest', teamData, (err, res) => {
-            console.dir(res);
-            returnVal = res;
-            if (err) {
-                logger.log(err);
-            } 
-        });
-        return returnVal;
+            return returnVal;
     },
     getRefTypes: async (conn,userProfile) => {
         let opp = [];
