@@ -11,6 +11,7 @@ module.exports = {
     },
     submitRequest: async (conn, teamData) => {
         let returnVal = '';
+        localStorage.setItem('request',JSON.stringify(teamData));
         await conn.apex.post('/rebot/submitRequest', teamData, (err, res) => {
             console.dir(res);
             returnVal = res;

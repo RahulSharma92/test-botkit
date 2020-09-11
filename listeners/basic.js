@@ -15,19 +15,7 @@ module.exports = controller => {
         await bot.say('conversation complete!');
     });
     controller.addDialog(convo);*/ 
-    controller.on('interactive_message_callback', function(bot, message) {
-
-        console.log('interactive_message_callback');
     
-    });
-    controller.on('interactive_message', function(bot, message) {
-
-        console.log('interactive_message');
-    
-    });
-    controller.on('custom_triggered_event', function(bot, trigger) {
-        console.log('custom_triggered_event');
-    });
     
     controller.on('block_actions',async function(bot, message) {
         console.log('block_actions');
@@ -666,7 +654,7 @@ module.exports = controller => {
                             var todayDate = new Date();
                             todayDate.setDate(todayDate.getDate() + (parseInt(days)));
                             let dateConverted = new Date(dateselected);
-                            
+                            dataMap.ref = refselected.split('@@')[1];
                             if (dateConverted < todayDate ) {
                                 const dateString = todayDate.getDate() + "-" + parseInt(todayDate.getMonth() + 1) + "-" + todayDate.getFullYear();
                                 bot.httpBody({
