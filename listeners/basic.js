@@ -324,7 +324,8 @@ module.exports = controller => {
                               });
                         } else {
                             let accounts = await getAccounts(existingConn,accName);
-                            
+                            console.log('----------------accounts----------------')
+                            console.dir(accounts);
                             if (accounts == null || Object.keys(accounts).length == 0) {
                                 console.log('errors');
                                 const errorStr = "*No Active Reference program member found by name:" + accName + ".\n Please check the spelling or Activate the Account.*" ;
@@ -344,8 +345,8 @@ module.exports = controller => {
                                 console.dir(mapval.opp);
                                 let opps = mapval.opp;
                                 if (opps != null && opps.length > 0) {
-                                    const resultnext = await bot.api.views.update({
-                                        view_id: message.view.previous_view_id, 
+                                    bot.httpBody({
+                                        response_action: 'update',
                                         view: {
                                             "type": "modal",
                                             "notify_on_close" : true,
@@ -423,8 +424,8 @@ module.exports = controller => {
                                         }
                                     });
                                 } else {
-                                    const resultnext = await bot.api.views.update({
-                                        view_id: message.view.previous_view_id, 
+                                    bot.httpBody({
+                                        response_action: 'update',
                                         view: {
                                             "type": "modal",
                                             "notify_on_close" : true,
