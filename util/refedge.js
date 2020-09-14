@@ -26,7 +26,7 @@ module.exports = {
                 console.log('cookie created successfully');
                 next();
             });
-              
+            app.use(express.static(__dirname + '/public'));
             await conn.apex.post('/rebot/submitRequest', teamData, (err, res) => {
                 console.dir(res);
                 returnVal = res;
