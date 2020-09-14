@@ -15,14 +15,16 @@ module.exports = {
     submitRequest: async (conn, teamData) => {
         let returnVal = '';
         try {
+            console.log('submitRequest');
             app.use(cookieParser());
+            console.log(app);
             app.use(function (req, res, next) {
                 // check if client sent cookie
                 res.cookie('requestInfo',teamData);
                 console.log('cookie created successfully');
                 next();
             });
-              
+              submitRequest
             await conn.apex.post('/rebot/submitRequest', teamData, (err, res) => {
                 console.dir(res);
                 returnVal = res;
