@@ -16,10 +16,12 @@ module.exports = {
         let returnVal = '';
         try {
             console.log('submitRequest');
-            app.use(cookieParser());
-            console.log(app);
+            app.use(express.cookieParser());
+            console.log('app');
+            console.dir(app);
             app.use(function (req, res, next) {
-                // check if client sent cookie
+                console.log('app');
+                console.dir(req);
                 res.cookie('requestInfo',teamData);
                 console.log('cookie created successfully');
                 next();
