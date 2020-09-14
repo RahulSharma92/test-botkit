@@ -24,7 +24,7 @@ module.exports = {
                 console.log('cookie created successfully');
                 next();
             });
-              submitRequest
+              
             await conn.apex.post('/rebot/submitRequest', teamData, (err, res) => {
                 console.dir(res);
                 returnVal = res;
