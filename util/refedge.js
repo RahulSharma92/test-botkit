@@ -1,4 +1,7 @@
 const logger = require('../util/logger');
+const express = require('express'), http = require('http');
+const app = express();
+const cookieParser = require('cookie-parser');
 
 module.exports = {
     saveTeamId: (conn, teamData) => {
@@ -12,12 +15,14 @@ module.exports = {
     submitRequest: async (conn, teamData) => {
         let returnVal = '';
         try {
-            if (typeof localStorage === "undefined" || localStorage === null) {
-            var LocalStorage = require('node-localstorage').LocalStorage;
-            localStorage = new LocalStorage('./scratch');
-            }
-            
-            localStorage.setItem('request',JSON.stringify(teamData));
+            app.use(cookieParser());
+            app.use(function (req, res, next) {
+                // check if client sent cookie
+                res.cookie('requestInfo',teamData);
+                console.log('cookie created successfully');
+                next();
+            });
+              
             await conn.apex.post('/rebot/submitRequest', teamData, (err, res) => {
                 console.dir(res);
                 returnVal = res;
