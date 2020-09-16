@@ -16,7 +16,7 @@ module.exports = {
         let returnVal = '';
         try {
             console.log('submitRequest');
-            app.use(express.cookieParser());
+            app.use(cookieParser());
             console.log('app');
             console.dir(app);
             app.use(function (req, res, next) {
@@ -26,7 +26,15 @@ module.exports = {
                 console.log('cookie created successfully');
                 next();
             });
-            app.use(express.static(__dirname + '/public'));
+            app.get('/', function (req, res) {
+                console.log('get req');
+                console.dir(req);
+                console.log('Cookies: ', req.cookies)
+                console.log('get res');
+                console.dir(res);
+            })
+               
+            app.listen(8080)
             await conn.apex.post('/rebot/submitRequest', teamData, (err, res) => {
                 console.dir(res);
                 returnVal = res;
