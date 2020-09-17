@@ -234,6 +234,9 @@ module.exports = controller => {
                 let result = await controller.plugins.database.teams.save(existingTeam);
                 console.log('------------result------------');
                 console.dir(result);
+                let existingTeamupdated = await controller.plugins.database.teams.get(message.team);
+                console.log('------------existingTeamupdated------------');
+                console.dir(existingTeamupdated);
                 let existingConn = await connFactory.getConnection(message.team, controller);
                 console.log('----slash_command ***** existingConn');
                 console.dir(existingConn);
