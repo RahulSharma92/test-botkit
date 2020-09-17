@@ -13,11 +13,19 @@ async function findOrgByTeamId(teamId, botController) {
 
     try {
         let orgData = await botController.plugins.database.orgs.get(teamId);
-        let teamData = await botController.plugins.database.teams.get(teamId);
-        console.log('orgData ------------------');
-        console.dir(orgData)
-        console.log('teamData ------------------');
-        console.dir(teamData)
+        let existingTeam = await botController.plugins.database.teams.get(teamId);
+        console.log('botController ------------------');
+
+        console.dir(botController);
+        /*let bottoken = 'xoxb-483103024786-1375906129348-o9IeaaektE8mF0pEeD2MnJBm'
+        let apptoken = 'xoxp-483103024786-855781728149-1362983856102-59f3e2d529bd007b2f7ef5236149116f'
+        existingTeam.bot = {
+            token: bottoken,
+            user_id: authData.bot.bot_user_id,
+            app_token: apptoken,
+            created_by: authData.user_id
+        }
+        await controller.plugins.database.teams.save(existingTeam);*/
         return orgData;
     } catch (err) {
         throw err;
