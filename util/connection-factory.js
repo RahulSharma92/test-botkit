@@ -77,13 +77,11 @@ module.exports = {
     getConnection: async (teamId, botController) => {
 
         if (teamId in connectionsCache) {
-            console.dir(connectionsCache[teamId]);
             return connectionsCache[teamId];
         }
-       
+
         try {
             let conn = await getExistingConnection(teamId, botController);
-            console.dir(conn);
             return conn;
         } catch (err) {
             throw err;

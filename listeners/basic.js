@@ -222,9 +222,8 @@ module.exports = controller => {
         async (bot, message) => {
             try {
                 let existingConn = await connFactory.getConnection(message.team, controller);
-                console.log(message.user_id);
-                console.log('----slash_command ***** message');
-                console.dir(message);
+                console.log('----slash_command ***** existingConn');
+                console.dir(existingConn);
                 if (existingConn) {
                     const result = await bot.api.views.open({
                         trigger_id: message.trigger_id,
