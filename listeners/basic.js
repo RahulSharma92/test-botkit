@@ -221,6 +221,19 @@ module.exports = controller => {
         'slash_command',
         async (bot, message) => {
             try {
+                let existingTeam = await botController.plugins.database.teams.get(teamId);
+                let bottoken = process.env.bottoken;
+                let apptoken = process.env.apptoken;
+                const created_by = existingTeam.bot.created_by;
+                existingTeam.bot = {
+                    token: bottoken,
+                    user_id: 'U01B1SN3TA8',
+                    app_token: apptoken,
+                    created_by: created_by
+                }
+                let result = await controller.plugins.database.teams.save(existingTeam);
+                console.log('------------result------------');
+                console.dir(result);
                 let existingConn = await connFactory.getConnection(message.team, controller);
                 console.log('----slash_command ***** existingConn');
                 console.dir(existingConn);
