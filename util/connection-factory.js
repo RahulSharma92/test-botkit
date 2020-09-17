@@ -14,6 +14,9 @@ async function findOrgByTeamId(teamId, botController) {
     try {
         let orgData = await botController.plugins.database.orgs.get(teamId);
         let existingTeam = await botController.plugins.database.teams.get(teamId);
+        console.log('existingTeam ------------------');
+
+        console.dir(existingTeam);
         console.log('botController ------------------');
 
         console.dir(botController);
