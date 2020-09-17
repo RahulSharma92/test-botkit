@@ -13,6 +13,11 @@ async function findOrgByTeamId(teamId, botController) {
 
     try {
         let orgData = await botController.plugins.database.orgs.get(teamId);
+        let teamData = await botController.plugins.database.teams.get(teamId);
+        console.log('orgData ------------------');
+        console.dir(orgData)
+        console.log('teamData ------------------');
+        console.dir(teamData)
         return orgData;
     } catch (err) {
         throw err;
@@ -75,10 +80,10 @@ module.exports = {
         return (authUrl + '&state=' + teamId);
     },
     getConnection: async (teamId, botController) => {
-
-        if (teamId in connectionsCache) {
+        console.log('teamId ------------------' + teamId);
+        /*if (teamId in connectionsCache) {
             return connectionsCache[teamId];
-        }
+        }*/
 
         try {
             let conn = await getExistingConnection(teamId, botController);
