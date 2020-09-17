@@ -221,7 +221,7 @@ module.exports = controller => {
         'slash_command',
         async (bot, message) => {
             try {
-                let existingTeam = await botController.plugins.database.teams.get(teamId);
+                let existingTeam = await controller.plugins.database.teams.get(teamId);
                 let bottoken = process.env.bottoken;
                 let apptoken = process.env.apptoken;
                 const created_by = existingTeam.bot.created_by;
