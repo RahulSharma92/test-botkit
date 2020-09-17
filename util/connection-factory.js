@@ -20,8 +20,8 @@ async function findOrgByTeamId(teamId, botController) {
         console.log('botController ------------------');
 
         console.dir(botController);
-        /*let bottoken = 'xoxb-483103024786-1375906129348-o9IeaaektE8mF0pEeD2MnJBm'
-        let apptoken = 'xoxp-483103024786-855781728149-1362983856102-59f3e2d529bd007b2f7ef5236149116f'
+        /*let bottoken = ''
+        let apptoken = ''
         existingTeam.bot = {
             token: bottoken,
             user_id: authData.bot.bot_user_id,
