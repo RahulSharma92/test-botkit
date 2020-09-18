@@ -221,25 +221,8 @@ module.exports = controller => {
         'slash_command',
         async (bot, message) => {
             try {
-                let existingTeam = await controller.plugins.database.teams.get(message.team);
-                let bottoken = process.env.bottoken;
-                let apptoken = process.env.apptoken;
-                const created_by = existingTeam.bot.created_by;
-                existingTeam.bot = {
-                    token: bottoken,
-                    user_id: 'U01B1SN3TA8',
-                    app_token: apptoken,
-                    created_by: created_by
-                }
-                let result = await controller.plugins.database.teams.save(existingTeam);
-                console.log('------------result------------');
-                console.dir(result);
-                let existingTeamupdated = await controller.plugins.database.teams.get(message.team);
-                console.log('------------existingTeamupdated------------');
-                console.dir(existingTeamupdated);
                 let existingConn = await connFactory.getConnection(message.team, controller);
-                console.log('----slash_command ***** existingConn');
-                console.dir(existingConn);
+                
                 if (existingConn) {
                     const result = await bot.api.views.open({
                         trigger_id: message.trigger_id,
@@ -657,11 +640,11 @@ module.exports = controller => {
                         if (refselected.indexOf('@@') > -1) {
                             let days = refselected.split('@@')[0];
                             var todayDate = new Date();
-                            todayDate.setDate(todayDate.getDate() + (parseInt(days)));
+                            todayDate.setDate(todayDate.getDate() + (parseInt(days) - 1 ));
                             let dateConverted = new Date(dateselected);
                             dataMap.ref = refselected.split('@@')[1];
                             if (dateConverted < todayDate ) {
-                                const dateString = todayDate.getDate() + "-" + parseInt(todayDate.getMonth() + 1) + "-" + todayDate.getFullYear();
+                                const dateString = todayDate.getDate() + 1 + "-" + parseInt(todayDate.getMonth() + 1) + "-" + todayDate.getFullYear();
                                 bot.httpBody({
                                     response_action: 'errors',
                                     errors: {
