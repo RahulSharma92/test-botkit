@@ -1,7 +1,4 @@
 const logger = require('../util/logger');
-const express = require('express'), http = require('http');
-const app = express();
-const cookieParser = require('cookie-parser');
 
 module.exports = {
     saveTeamId: (conn, teamData) => {
