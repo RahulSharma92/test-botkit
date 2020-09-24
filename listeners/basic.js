@@ -15,7 +15,32 @@ module.exports = controller => {
         await bot.say('conversation complete!');
     });
     controller.addDialog(convo);*/ 
-    
+    controller.hears('interactive', 'direct_message', function(bot, message) {
+        console.log('19');
+        bot.reply(message, {
+            attachments:[
+                {
+                    title: 'Do you want to interact with my buttons?',
+                    callback_id: '123',
+                    attachment_type: 'default',
+                    actions: [
+                        {
+                            "name":"yes",
+                            "text": "Yes",
+                            "value": "yes",
+                            "type": "button",
+                        },
+                        {
+                            "name":"no",
+                            "text": "No",
+                            "value": "no",
+                            "type": "button",
+                        }
+                    ]
+                }
+            ]
+        });
+    });
     
     controller.on('block_actions',async function(bot, message) {
         console.log('block_actions');
@@ -226,7 +251,7 @@ module.exports = controller => {
                 if (existingConn) {
                     const result = await bot.api.views.open({
                         trigger_id: message.trigger_id,
-                        /*view: {
+                        view: {
                             "type": "modal",
                             "notify_on_close" : true,
                             "callback_id" : "accountNameView",
@@ -266,87 +291,8 @@ module.exports = controller => {
                                     }
                                 }
                             ]
-                        }*/
-                        /*view: {
-                            "type": "modal",
-                            "notify_on_close" : true,
-                            "callback_id" : "defaultView",
-                            "title": {
-                                "type": "plain_text",
-                                "text": "Select Action"
-                            },
-                            "blocks": [
-                                {
-                                    "type": "actions",
-                                    "elements": [
-                                        {
-                                            "type": "button",
-                                            "action_id" : "request",
-                                            "text": {
-                                                "type": "plain_text",
-                                                "text": "Create Request",
-                                                "emoji": true
-                                            },
-                                            "value": "request"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "type": "actions",
-                                    "elements": [
-                                        {
-                                            "type": "button",
-                                            "action_id" : "account_search",
-                                            "text": {
-                                                "type": "plain_text",
-                                                "text": "Account Search",
-                                                "emoji": true
-                                            },
-                                            "value": "account_search"
-                                        }
-                                    ]
-                                },
-                                {
-                                    "type": "actions",
-                                    "elements": [
-                                        {
-                                            "type": "button",
-                                            "action_id" : "content_search",
-                                            "text": {
-                                                "type": "plain_text",
-                                                "text": "Content Search",
-                                                "emoji": true
-                                            },
-                                            "value": "content_search"
-                                        }
-                                    ]
-                                }
-                            ]
-                        }*/
-                        view: {
-                            "type": "modal",
-                            "notify_on_close": true,
-                            "title": {
-                                "type": "plain_text",
-                                "text": "Select Action"
-                            },
-                            "blocks": [
-                                {
-                                    "type": "actions",
-                                    "elements": [
-                                        {
-                                            "type": "button",
-                                            "action_id": "request",
-                                            "text": {
-                                                "type": "plain_text",
-                                                "text": "Create Request"
-                                            },
-                                            "value": "request"
-                                        }
-                                    ]
-                                }
-                            ]
                         }
+                        
                     });
                     console.log('open view');
                     console.dir(result);
