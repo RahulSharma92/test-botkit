@@ -267,7 +267,7 @@ module.exports = controller => {
                                 }
                             ]
                         }*/
-                        view: {
+                        /*view: {
                             "type": "modal",
                             "notify_on_close" : true,
                             "callback_id" : "defaultView",
@@ -318,6 +318,30 @@ module.exports = controller => {
                                                 "emoji": true
                                             },
                                             "value": "content_search"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }*/
+                        view: {
+                            "type": "modal",
+                            "notify_on_close": true,
+                            "title": {
+                                "type": "plain_text",
+                                "text": "Select Action"
+                            },
+                            "blocks": [
+                                {
+                                    "type": "actions",
+                                    "elements": [
+                                        {
+                                            "type": "button",
+                                            "action_id": "request",
+                                            "text": {
+                                                "type": "plain_text",
+                                                "text": "Create Request"
+                                            },
+                                            "value": "request"
                                         }
                                     ]
                                 }
