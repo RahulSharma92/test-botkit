@@ -226,7 +226,7 @@ module.exports = controller => {
                 if (existingConn) {
                     const result = await bot.api.views.open({
                         trigger_id: message.trigger_id,
-                        view: {
+                        /*view: {
                             "type": "modal",
                             "notify_on_close" : true,
                             "callback_id" : "accountNameView",
@@ -264,6 +264,62 @@ module.exports = controller => {
                                         "text": "Account Name",
                                         "emoji": true
                                     }
+                                }
+                            ]
+                        }*/
+                        view: {
+                            "type": "modal",
+                            "notify_on_close" : true,
+                            "callback_id" : "defaultView",
+                            "title": {
+                                "type": "plain_text",
+                                "text": "Select Action"
+                            },
+                            "blocks": [
+                                {
+                                    "type": "actions",
+                                    "elements": [
+                                        {
+                                            "type": "button",
+                                            "action_id" : "request",
+                                            "text": {
+                                                "type": "plain_text",
+                                                "text": "Create Request",
+                                                "emoji": true
+                                            },
+                                            "value": "request"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "actions",
+                                    "elements": [
+                                        {
+                                            "type": "button",
+                                            "action_id" : "account_search",
+                                            "text": {
+                                                "type": "plain_text",
+                                                "text": "Account Search",
+                                                "emoji": true
+                                            },
+                                            "value": "account_search"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "type": "actions",
+                                    "elements": [
+                                        {
+                                            "type": "button",
+                                            "action_id" : "content_search",
+                                            "text": {
+                                                "type": "plain_text",
+                                                "text": "Content Search",
+                                                "emoji": true
+                                            },
+                                            "value": "content_search"
+                                        }
+                                    ]
                                 }
                             ]
                         }

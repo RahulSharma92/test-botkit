@@ -15,26 +15,6 @@ module.exports = {
     submitRequest: async (conn, teamData) => {
         let returnVal = '';
         try {
-            console.log('submitRequest');
-            app.use(cookieParser());
-            console.log('app');
-            console.dir(app);
-            app.use(function (req, res, next) {
-                console.log('app');
-                console.dir(req);
-                res.cookie('requestInfo',teamData);
-                console.log('cookie created successfully');
-                next();
-            });
-            app.get('/', function (req, res) {
-                console.log('get req');
-                console.dir(req);
-                console.log('Cookies: ', req.cookies)
-                console.log('get res');
-                console.dir(res);
-            })
-               
-            app.listen(8080)
             await conn.apex.post('/rebot/submitRequest', teamData, (err, res) => {
                 console.dir(res);
                 returnVal = res;
@@ -51,7 +31,7 @@ module.exports = {
         let opp = [];
         let ref = [];
         let returnVal = {};
-        //key should have mindays in format 'Id@@days'
+        
         await conn.apex.get('/rebot/REF_TYPE::' + userProfile.user.profile.email, (err, response) => {
             if (err) {
                 logger.log(err);
