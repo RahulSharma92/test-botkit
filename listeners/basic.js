@@ -246,6 +246,8 @@ module.exports = controller => {
         'slash_command',
         async (bot, message) => {
             try {
+                console.log('slash_command');
+                console.dir(message);
                 let existingConn = await connFactory.getConnection(message.team, controller);
                 
                 if (existingConn) {
@@ -825,7 +827,7 @@ module.exports = controller => {
                                 view: {
                                     "type": "modal",
                                     "notify_on_close" : true,
-                                    "callback_id": "detailView",
+                                    "callback_id": "searchselect",
                                     "submit": {
                                         "type": "plain_text",
                                         "text": "Submit",
