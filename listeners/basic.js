@@ -254,8 +254,12 @@ module.exports = controller => {
                         view: {
                             "type": "modal",
                             "notify_on_close" : true,
-                            "callback_id" : "accountNameView",
-                            "private_metadata" : "test",
+                            "callback_id" : "actionSelectionView",
+                            "title": {
+                                "type": "plain_text",
+                                "text": "Reference Edge",
+                                "emoji": true
+                            },
                             "submit": {
                                 "type": "plain_text",
                                 "text": "Submit",
@@ -266,28 +270,47 @@ module.exports = controller => {
                                 "text": "Cancel",
                                 "emoji": true
                             },
-                            "title": {
-                                "type": "plain_text",
-                                "text": "Request",
-                                "emoji": true
-                            },
                             "blocks": [
                                 {
-                                    "type": "input",
-                                    "block_id" : "accblock",
-                                    "element": {
-                                        "type": "plain_text_input",
-                                        "action_id": "account_name",
-                                        "placeholder": {
-                                            "type": "plain_text",
-                                            "text": "Active Reference Account"
-                                        },
-                                        "multiline": false
-                                    },
-                                    "label": {
+                                    "type": "section",
+                                    "block_id": "accblock",
+                                    "text": {
                                         "type": "plain_text",
-                                        "text": "Account Name",
-                                        "emoji": true
+                                        "text": "What do you need?"
+                                    },
+                                    "accessory": {
+                                        "type": "radio_buttons",
+                                        "action_id": "searchid",
+                                        "initial_option": {
+                                            "value": "account_search",
+                                            "text": {
+                                                "type": "plain_text",
+                                                "text": "Reference Account(s)"
+                                            }
+                                        },
+                                        "options": [
+                                            {
+                                                "value": "account_search",
+                                                "text": {
+                                                    "type": "plain_text",
+                                                    "text": "Reference Account(s)"
+                                                }
+                                            },
+                                            {
+                                                "value": "content_search",
+                                                "text": {
+                                                    "type": "plain_text",
+                                                    "text": "Reference Content(s)"
+                                                }
+                                            },
+                                            {
+                                                "value": "both",
+                                                "text": {
+                                                    "type": "plain_text",
+                                                    "text": "Both"
+                                                }
+                                            }
+                                        ]
                                     }
                                 }
                             ]
@@ -364,7 +387,7 @@ module.exports = controller => {
                                     token : bot.api.token,
                                     user : message.user
                                 });
-                                let mapval = await getRefTypes(existingConn,userProfile);
+                                let mapval = await getRefTypes(existingConn,userProfile,null);
                                 let refTypes = mapval.ref;
                                 console.dir(mapval.opp);
                                 let opps = mapval.opp;
@@ -518,12 +541,10 @@ module.exports = controller => {
                             oppSelected = message.view.state.values.blkopp.opp_select.selected_option;
                         }
                         let days = 7;
-                        let refselectedVal = refselected.text.text;
                         console.dir(refselected);
                         console.dir(accselected);
                         if (refselected.value.indexOf('@@') > -1) {
                             days = refselected.value.split('@@')[0];
-                            refselectedVal = refselected.value.split('@@')[1];
                         }
                         var newDate = new Date();
                         newDate.setDate(newDate.getDate() + parseInt(days));
@@ -714,6 +735,163 @@ module.exports = controller => {
                                 });
                             }
                         }
+                    } else if (message.view.callback_id == 'actionSelectionView') {
+                        let actionName = 'account_search';
+                        for (let key in message.view.state.values) {
+                            if (message.view.state.values[key] != undefined && message.view.state.values[key].account_name != undefined && message.view.state.values[key].account_name != "") {
+                                console.dir(message.view.state.values[key]);
+                                actionName = message.view.state.values[key].searchid.value;
+                                break;
+                            }
+                        }
+                        const userProfile = await bot.api.users.info({
+                            token : bot.api.token,
+                            user : message.user
+                        });
+                        let mapval = await getRefTypes(existingConn,userProfile,actionName);
+                        let selectionLabel = 'Referenceability Type';
+                        console.dir(mapval);
+
+                        if (actionName == 'content_search') {
+                            selectionLabel = 'Content Type';
+                        }
+                        let refTypes = mapval.ref;
+                        let searchURL = mapval.searchURL;
+                        let opps = mapval.opp;
+
+                        if (opps != null && opps.length > 0) {
+                            bot.httpBody({
+                                response_action: 'update',
+                                view: {
+                                    "type": "modal",
+                                    "notify_on_close" : true,
+                                    "callback_id": "searchselect",
+                                    "private_metadata" : searchURL,
+                                    "submit": {
+                                        "type": "plain_text",
+                                        "text": "Submit",
+                                        "emoji": true
+                                    },
+                                    "title": {
+                                        "type": "plain_text",
+                                        "text": "Request",
+                                        "emoji": true
+                                    },
+                                    "blocks": [
+                                        {
+                                            "type": "input",
+                                            "block_id": "blkref",
+                                            "element": {
+                                                "type": "static_select",
+                                                "action_id": "reftype_select",
+                                                "placeholder": {
+                                                    "type": "plain_text",
+                                                    "text": "Select a type",
+                                                    "emoji": true
+                                                },
+                                                "options": refTypes
+                                            },
+                                            "label": {
+                                                "type": "plain_text",
+                                                "text": selectionLabel,
+                                                "emoji": true
+                                            }
+                                        },
+                                        {
+                                            "type": "input",
+                                            "block_id": "blkopp",
+                                            "element": {
+                                                "type": "static_select",
+                                                "action_id": "opp_select",
+                                                "placeholder": {
+                                                    "type": "plain_text",
+                                                    "text": "Select an Opp",
+                                                    "emoji": true
+                                                },
+                                                "options": opps
+                                            },
+                                            "label": {
+                                                "type": "plain_text",
+                                                "text": "Opportunity",
+                                                "emoji": true
+                                            }
+                                        }
+                                    ]
+                                }
+                            });
+                        } else {
+                            bot.httpBody({
+                                response_action: 'update',
+                                view: {
+                                    "type": "modal",
+                                    "notify_on_close" : true,
+                                    "callback_id": "detailView",
+                                    "submit": {
+                                        "type": "plain_text",
+                                        "text": "Submit",
+                                        "emoji": true
+                                    },
+                                    "title": {
+                                        "type": "plain_text",
+                                        "text": "Request",
+                                        "emoji": true
+                                    },
+                                    "blocks": [
+                                        {
+                                            "type": "input",
+                                            "block_id": "blkref",
+                                            "element": {
+                                                "type": "static_select",
+                                                "action_id": "reftype_select",
+                                                "placeholder": {
+                                                    "type": "plain_text",
+                                                    "text": "Select a type",
+                                                    "emoji": true
+                                                },
+                                                "options": refTypes
+                                            },
+                                            "label": {
+                                                "type": "plain_text",
+                                                "text": selectionLabel,
+                                                "emoji": true
+                                            }
+                                        }
+                                    ]
+                                }
+                            });
+                        }
+                    } else if (message.view.callback_id == 'searchselect') {
+                        const refselected = message.view.state.values.blkref.reftype_select.selected_option;
+                        let oppSelected = message.view.state.values.blkopp != null ? message.view.state.values.blkopp.opp_select.selected_option : null;
+                        let searchURL = message.view.private_metadata.replace('@@',oppSelected.value);
+                        searchURL += oppSelected == null ? '?type=' : '&type=';
+                        searchURL += refselected.value.split('::')[1];
+                        bot.httpBody({
+                            response_action: 'update',
+                            view: {
+                                "type": "modal",
+                                "notify_on_close" : true,
+                                "close": {
+                                    "type": "plain_text",
+                                    "text": "Close",
+                                    "emoji": true
+                                },
+                                "title": {
+                                    "type": "plain_text",
+                                    "text": "Continue Search",
+                                    "emoji": true
+                                },
+                                "blocks": [
+                                    {
+                                        "type": "section",
+                                        "text": {
+                                            "type": "mrkdwn",
+                                            "text": searchURL
+                                        }
+                                    }
+                                ]
+                            }
+                        });
                     }
                 }
             } catch (err) {

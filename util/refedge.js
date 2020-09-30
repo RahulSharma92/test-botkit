@@ -24,12 +24,12 @@ module.exports = {
         }
             return returnVal;
     },
-    getRefTypes: async (conn,userProfile) => {
+    getRefTypes: async (conn,userProfile,action) => {
         let opp = [];
         let ref = [];
         let returnVal = {};
-        
-        await conn.apex.get('/rebot/REF_TYPE::' + userProfile.user.profile.email, (err, response) => {
+        let url = action == null || action == '' ? '/rebot/REF_TYPE' : '/rebot/REF_TYPE::' + action;
+        await conn.apex.get(url + '::' + userProfile.user.profile.email, (err, response) => {
             if (err) {
                 logger.log(err);
             } else  if (response) {
@@ -39,6 +39,7 @@ module.exports = {
                     console.dir(response);
                     let oppList = JSON.parse(response['opp']);
                     let refList = JSON.parse(response['ref']);
+                    returnVal['searchURL'] = response['searchURL'];
                     oppList.forEach(function(oppWrapper){
                         let entry = {
                             "text": {
@@ -49,16 +50,29 @@ module.exports = {
                         }
                         opp.push(entry);
                     });
-                    Object.keys(refList).forEach(function(k){
-                        let entry = {
-                            "text": {
-                                "type": "plain_text",
-                                "text": k
-                            },
-                            "value": refList[k] + '@@' + k
-                        }
-                        ref.push(entry);
-                    });
+                    if (action == 'content_search') {
+                        Object.keys(refList).forEach(function(k){
+                            var entry = {
+                                "text": {
+                                    "type": "plain_text",
+                                    "text": response[k]
+                                },
+                                "value": k
+                            }
+                            ref.push(entry);
+                        });
+                    } else {
+                        Object.keys(refList).forEach(function(k){
+                            let entry = {
+                                "text": {
+                                    "type": "plain_text",
+                                    "text": k
+                                },
+                                "value": refList[k]
+                            }
+                            ref.push(entry);
+                        });
+                    }
                     returnVal['ref'] = ref;
                     returnVal['opp'] = opp;
                     console.dir(ref);
@@ -67,7 +81,6 @@ module.exports = {
         });
         return returnVal;
     },
-    
     getAccounts: async (conn, accName) => {
         if (accName == '' || accName == null) {
             return 'false';
