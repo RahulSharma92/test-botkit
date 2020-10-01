@@ -272,24 +272,14 @@ module.exports = controller => {
                                 "text": "Cancel",
                                 "emoji": true
                             },
+                            
                             "blocks": [
                                 {
-                                    "type": "section",
+                                    "type": "input",
                                     "block_id": "accblock",
-                                    "text": {
-                                        "type": "plain_text",
-                                        "text": "What do you need?"
-                                    },
-                                    "accessory": {
+                                    "element": {
                                         "type": "radio_buttons",
                                         "action_id": "searchid",
-                                        "initial_option": {
-                                            "value": "account_search",
-                                            "text": {
-                                                "type": "plain_text",
-                                                "text": "Reference Account(s)"
-                                            }
-                                        },
                                         "options": [
                                             {
                                                 "value": "account_search",
@@ -313,6 +303,11 @@ module.exports = controller => {
                                                 }
                                             }
                                         ]
+                                    },
+                                    "label": {
+                                        "type": "plain_text",
+                                        "text": "What do you need?",
+                                        "emoji": true
                                     }
                                 }
                             ]
@@ -740,7 +735,7 @@ module.exports = controller => {
                     } else if (message.view.callback_id == 'actionSelectionView') {
                         let actionName = 'account_search';
                         for (let key in message.view.state.values) {
-                            if (message.view.state.values[key] != undefined && message.view.state.values[key].account_name != undefined && message.view.state.values[key].account_name != "") {
+                            if (message.view.state.values[key] != undefined && message.view.state.values[key].searchid != undefined && message.view.state.values[key].searchid != "") {
                                 console.dir(message.view.state.values[key]);
                                 actionName = message.view.state.values[key].searchid.value;
                                 break;
@@ -865,6 +860,7 @@ module.exports = controller => {
                     } else if (message.view.callback_id == 'searchselect') {
                         const refselected = message.view.state.values.blkref.reftype_select.selected_option;
                         let oppSelected = message.view.state.values.blkopp != null ? message.view.state.values.blkopp.opp_select.selected_option : null;
+                        console.log(oppSelected);
                         let searchURL = message.view.private_metadata.replace('@@',oppSelected.value);
                         searchURL += oppSelected == null ? '?type=' : '&type=';
                         searchURL += refselected.value.split('::')[1];

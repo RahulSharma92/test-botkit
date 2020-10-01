@@ -34,7 +34,7 @@ module.exports = {
                 logger.log(err);
             } else  if (response) {
                 if (response != 'false') {
-                    console.log('------ ref Type Response-------');
+                    console.log('------ ref Type Response-------' + action);
                     response = JSON.parse(response);
                     console.dir(response);
                     let oppList = JSON.parse(response['opp']);
