@@ -859,12 +859,12 @@ module.exports = controller => {
                             });
                         }
                     } else if (message.view.callback_id == 'searchselect') {
+                        console.log('searchURL ***** ' + message.view.private_metadata);
                         const refselected = message.view.state.values.blkref.reftype_select.selected_option;
-                        let oppSelected = message.view.state.values.blkopp != null ? message.view.state.values.blkopp.opp_select.selected_option : null;
-                        console.log(oppSelected);
-                        let searchURL = message.view.private_metadata.replace('@@',oppSelected.value);
+                        let oppSelected = message.view.state.values.blkopp != null ? message.view.state.values.blkopp.opp_select.selected_option.value : '';
+                        let searchURL = message.view.private_metadata.replace('@@',oppSelected);
                         searchURL += oppSelected == null ? '?type=' : '&type=';
-                        searchURL += refselected.value.split('::')[1];
+                        searchURL += refselected.indexOf('::') > -1 ? refselected.value.split('::')[1] : refselected.value;
                         searchURL = 'Please click the link to continue <' + searchURL + '|Complete Request>';
                         bot.httpBody({
                             response_action: 'update',
