@@ -823,6 +823,7 @@ module.exports = controller => {
                                     "type": "modal",
                                     "notify_on_close" : true,
                                     "callback_id": "searchselect",
+                                    "private_metadata" : searchURL,
                                     "submit": {
                                         "type": "plain_text",
                                         "text": "Submit",
@@ -864,6 +865,7 @@ module.exports = controller => {
                         let searchURL = message.view.private_metadata.replace('@@',oppSelected.value);
                         searchURL += oppSelected == null ? '?type=' : '&type=';
                         searchURL += refselected.value.split('::')[1];
+                        searchURL = 'Please click the link to continue <' + searchURL + '|Complete Request>';
                         bot.httpBody({
                             response_action: 'update',
                             view: {
