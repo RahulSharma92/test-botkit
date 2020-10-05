@@ -736,8 +736,7 @@ module.exports = controller => {
                         let actionName = 'account_search';
                         for (let key in message.view.state.values) {
                             if (message.view.state.values[key] != undefined && message.view.state.values[key].searchid != undefined && message.view.state.values[key].searchid != "") {
-                                console.dir(message.view.state.values[key]);
-                                actionName = message.view.state.values[key].searchid.value;
+                                actionName = message.view.state.values[key].searchid.selected_option.value;
                                 break;
                             }
                         }
@@ -745,6 +744,7 @@ module.exports = controller => {
                             token : bot.api.token,
                             user : message.user
                         });
+                        console.log(actionName);
                         let mapval = await getRefTypes(existingConn,userProfile,actionName);
                         let selectionLabel = 'Referenceability Type';
                         console.dir(mapval);

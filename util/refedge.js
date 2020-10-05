@@ -28,6 +28,8 @@ module.exports = {
         let opp = [];
         let ref = [];
         let returnVal = {};
+        console.log('action');
+        console.log(action);
         let url = action == null || action == '' ? '/rebot/REF_TYPE' : '/rebot/REF_TYPE::' + action;
         await conn.apex.get(url + '::' + userProfile.user.profile.email, (err, response) => {
             if (err) {
