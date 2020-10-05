@@ -57,7 +57,7 @@ module.exports = {
                             var entry = {
                                 "text": {
                                     "type": "plain_text",
-                                    "text": response[k]
+                                    "text": refList[k]
                                 },
                                 "value": k
                             }
