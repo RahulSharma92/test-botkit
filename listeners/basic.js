@@ -864,7 +864,7 @@ module.exports = controller => {
                         let oppSelected = message.view.state.values.blkopp != null ? message.view.state.values.blkopp.opp_select.selected_option.value : '';
                         let searchURL = message.view.private_metadata.replace('@@',oppSelected);
                         searchURL += oppSelected == null ? '?type=' : '&type=';
-                        searchURL += refselected.indexOf('::') > -1 ? refselected.value.split('::')[1] : refselected.value;
+                        searchURL += refselected.value.indexOf('::') > -1 ? refselected.value.split('::')[1] : refselected.value;
                         searchURL = 'Please click the link to continue <' + searchURL + '|Complete Request>';
                         bot.httpBody({
                             response_action: 'update',
