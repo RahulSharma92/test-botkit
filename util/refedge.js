@@ -30,8 +30,8 @@ module.exports = {
         let returnVal = {};
         console.log('action');
         console.log(action);
-        let url = action == null || action == '' ? '/rebot/REF_TYPE' : '/rebot/REF_TYPE::' + action;
-        await conn.apex.get(url + '::' + userProfile.user.profile.email, (err, response) => {
+        let url = action == null || action == '' ? '/rebot/REF_TYPE' + '::' + userProfile.user.profile.email : '/rebot/REF_TYPE::' + userProfile.user.profile.email + '::' + action;
+        await conn.apex.get(url, (err, response) => {
             if (err) {
                 logger.log(err);
             } else  if (response) {
