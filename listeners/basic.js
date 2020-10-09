@@ -863,7 +863,7 @@ module.exports = controller => {
                         const refselected = message.view.state.values.blkref.reftype_select.selected_option;
                         let oppSelected = message.view.state.values.blkopp != null ? message.view.state.values.blkopp.opp_select.selected_option.value : '';
                         let searchURL = message.view.private_metadata.replace('@@',oppSelected);
-                        searchURL += oppSelected == null || oppSelected == '' ? '?type=' : '&type=';
+                        searchURL += '&type=';
                         searchURL += refselected.value.indexOf('::') > -1 ? refselected.value.split('::')[1] : refselected.value;
                         searchURL = 'Please click the link to continue <' + searchURL + '|Complete Request>';
                         bot.httpBody({

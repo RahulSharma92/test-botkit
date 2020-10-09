@@ -77,7 +77,7 @@ module.exports = {
                     }
                     returnVal['ref'] = ref;
                     returnVal['opp'] = opp;
-                    console.dir(ref);
+                    
                 }
             }
         });
