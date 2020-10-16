@@ -2,7 +2,9 @@ require('dotenv').config();
 
 const { Botkit } = require('botkit');
 const { SlackAdapter, SlackMessageTypeMiddleware, SlackEventMiddleware } = require('botbuilder-adapter-slack');
-const dialogflowMiddleware = require('botkit-middleware-dialogflow')();
+const dialogflowMiddleware = require('botkit-middleware-dialogflow')({
+    keyFilename : '../util/dialogflowprivatekey',
+});
 
 const mongoProvider = require('./db/mongo-provider')({
     mongoUri: process.env.MONGO_CONNECTION_STRING

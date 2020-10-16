@@ -60,6 +60,47 @@ module.exports = controller => {
     },
 
     request_accounttext_view => (data) {
+        view: {
+                            "type": "modal",
+                            "notify_on_close" : true,
+                            "callback_id" : "accountNameView",
+                            "private_metadata" : "test",
+                            "submit": {
+                                "type": "plain_text",
+                                "text": "Submit",
+                                "emoji": true
+                            },
+                            "close": {
+                                "type": "plain_text",
+                                "text": "Cancel",
+                                "emoji": true
+                            },
+                            "title": {
+                                "type": "plain_text",
+                                "text": "Request",
+                                "emoji": true
+                            },
+                            "blocks": [
+                                {
+                                    "type": "input",
+                                    "block_id" : "accblock",
+                                    "element": {
+                                        "type": "plain_text_input",
+                                        "action_id": "account_name",
+                                        "placeholder": {
+                                            "type": "plain_text",
+                                            "text": "Active Reference Account"
+                                        },
+                                        "multiline": false
+                                    },
+                                    "label": {
+                                        "type": "plain_text",
+                                        "text": "Account Name",
+                                        "emoji": true
+                                    }
+                                }
+                            ]
+                        }
         
     },
 
