@@ -15,10 +15,8 @@
     "botbuilder-adapter-slack": "^1.0.4",
     "botkit": "^4.5.0",
     "botkit-middleware-dialogflow": "^2.1.0",
-    "cookie-parser": "^1.4.5",
     "dotenv": "^8.0.0",
-    "express": "^4.17.1",
-    "jsforce": "^1.9.3",
+    "jsforce": "^1.9.2",
     "mongoose": "^5.6.8"
   }
 }
