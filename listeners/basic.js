@@ -333,6 +333,13 @@ module.exports = controller => {
             console.log('-----------view_closed message -----------');
             console.dir(message);
     });
+    controller.on(
+        'app_mention',
+        async (bot, message) => {
+            console.log('-----------app_mention message -----------');
+            console.dir(message);
+    });
+    
 
     controller.on(
         'view_submission',
