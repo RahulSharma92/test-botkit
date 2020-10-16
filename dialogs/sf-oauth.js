@@ -15,7 +15,7 @@ module.exports = controller => {
     }, 'bad_response');
 
     convo.addMessage({
-        text: `click this link to connect\n<${vars.authUrl}|Connect to Salesforce>`,
+        text: `click this link to connect\n<{{vars.authUrl}}|Connect to Salesforce>`,
         action: 'default'
     }, 'connect');
 
@@ -28,6 +28,9 @@ module.exports = controller => {
                 var teamResponse = await bot.api.team.info();
                 const authUrl = connFactory.getAuthUrl(teamResponse.team.id);
                 convo.setVar('authUrl',authUrl);
+                convo.after(async(bot) => {
+                    await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
+                });
                 await convo.gotoThread('connect');
             }
         },
