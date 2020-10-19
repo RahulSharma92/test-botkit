@@ -27,8 +27,8 @@ module.exports = controller => {
                 console.log(response);
                 var teamResponse = await bot.api.team.info();
                 const authUrl = connFactory.getAuthUrl(teamResponse.team.id);
-                console.log(authUrl);
-                await bot.reply(response, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
+                convo.setVar('authUrl',authUrl);
+                await convo.gotoThread('connect');
             }
         },
         {
