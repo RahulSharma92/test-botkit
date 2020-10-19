@@ -76,9 +76,9 @@ module.exports = {
     },
     getConnection: async (teamId, botController) => {
         console.log('teamId ------------------' + teamId);
-        /*if (teamId in connectionsCache) {
+        if (teamId in connectionsCache) {
             return connectionsCache[teamId];
-        }*/
+        }
 
         try {
             let conn = await getExistingConnection(teamId, botController);
@@ -89,16 +89,17 @@ module.exports = {
     },
     connect: async (authCode, botController, teamId) => {
 
-        if (teamId in connectionsCache) {
+        /*if (teamId in connectionsCache) {
             return connectionsCache[teamId];
-        }
+        }*/
 
         try {
             let conn = await getExistingConnection(teamId, botController);
 
-            if (conn) {
+            /*if (conn) {
                 return conn;
-            }
+            }*/
+            console.log('connect :102');
             conn = new jsforce.Connection({ oauth2: oauth2 });
             const userInfo = await conn.authorize(authCode);
 
@@ -123,6 +124,8 @@ module.exports = {
                 org_id: userInfo.organizationId,
                 revoke_url: conn.oauth2.revokeServiceUrl
             };
+            console.log('org :127');
+            console.dir(org);
             saveOrg(org, botController);
             connectionsCache[teamId] = conn;
             return conn;
