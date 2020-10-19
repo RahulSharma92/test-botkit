@@ -1,8 +1,8 @@
 const logger = require('../util/logger');
 
 module.exports = {
-    saveTeamId: (conn, teamData) => {
-        conn.apex.post('/rebot/saveTeamId', teamData, (err, res) => {
+    saveTeamId: async (conn, teamData) => {
+        await conn.apex.post('/rebot/saveTeamId', teamData, (err, res) => {
 
             if (err) {
                 logger.log(err);
