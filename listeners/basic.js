@@ -139,7 +139,7 @@ module.exports = controller => {
                         const authUrl = connFactory.getAuthUrl(message.team);
                         await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
                     } else {
-                        await connFactory.deleteOrg(message.team, controller);
+                        await controller.plugins.database.orgs.delete(message.team);
                         const authUrl = connFactory.getAuthUrl(message.team);
                         await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
                     }
