@@ -139,7 +139,9 @@ module.exports = controller => {
                         const authUrl = connFactory.getAuthUrl(message.team);
                         await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
                     } else {
-                        await bot.beginDialog('sf_auth');
+                        await deleteOrg(message.team, controller);
+                        const authUrl = connFactory.getAuthUrl(message.team);
+                        await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
                     }
                 } else if (message.intent === 'create_request') {
                     let existingConn = await connFactory.getConnection(message.team, controller);
