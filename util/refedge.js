@@ -12,7 +12,7 @@ module.exports = {
     submitRequest: async (conn, teamData) => {
         let returnVal = '';
         try {
-            await conn.apex.post('/rebot/submitRequest', teamData, (err, res) => {
+            await conn.apex.post('/refedge/rebot/submitRequest', teamData, (err, res) => {
                 console.dir(res);
                 returnVal = res;
                 if (err) {
@@ -30,7 +30,7 @@ module.exports = {
         let returnVal = {};
         console.log('action');
         console.log(action);
-        let url = action == null || action == '' ? '/rebot/REF_TYPE' + '::' + userProfile.user.profile.email : '/rebot/REF_TYPE::' + userProfile.user.profile.email + '::' + action;
+        let url = action == null || action == '' ? '/refedge/rebot/REF_TYPE' + '::' + userProfile.user.profile.email : '/refedge/rebot/REF_TYPE::' + userProfile.user.profile.email + '::' + action;
         await conn.apex.get(url, (err, response) => {
             if (err) {
                 logger.log(err);
@@ -88,7 +88,7 @@ module.exports = {
             return 'false';
         } else {
             let val = [];
-            await conn.apex.get('/rebot/' + accName , accName, (err, response) => {
+            await conn.apex.get('/refedge/rebot/' + accName , accName, (err, response) => {
                 if (err) {
                     logger.log(err);
                 } else  if (response) {
@@ -115,7 +115,7 @@ module.exports = {
             return 'false';
         } else {
             let val = '';
-            await conn.apex.get('/rebot/' + 'LINK_URL' ,'LINK_URL', (err, response) => {
+            await conn.apex.get('/refedge/rebot/' + 'LINK_URL' ,'LINK_URL', (err, response) => {
                 if (err) {
                     logger.log(err);
                 } else  if (response) {
