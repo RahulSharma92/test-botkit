@@ -16,7 +16,9 @@ module.exports = controller => {
             if (req.query.code && req.query.state) {
                 let conn = await connFactory.connect(req.query.code, controller, req.query.state);
                 let teamData = { addTeam: req.query.state };
+                console.log('19');
                 await saveTeamId(conn, teamData);
+                console.log('21');
                 res.status(302);
                 res.json({ ok: true, msg: 'salesforce auth successful' });
                 //res.redirect('/auth-success.html');
