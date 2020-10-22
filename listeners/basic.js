@@ -262,7 +262,7 @@ module.exports = controller => {
                             "callback_id" : "actionSelectionView",
                             "title": {
                                 "type": "plain_text",
-                                "text": "Reference Edge",
+                                "text": "Available References",
                                 "emoji": true
                             },
                             "submit": {
@@ -295,7 +295,7 @@ module.exports = controller => {
                                                 "value": "content_search",
                                                 "text": {
                                                     "type": "plain_text",
-                                                    "text": "Reference Content(s)"
+                                                    "text": "Reference Content"
                                                 }
                                             },
                                             {
@@ -394,6 +394,7 @@ module.exports = controller => {
                                     token : bot.api.token,
                                     user : message.user
                                 });
+                                console.dir(userProfile);
                                 let mapval = await getRefTypes(existingConn,userProfile,null);
                                 let refTypes = mapval.ref;
                                 console.dir(mapval.opp);

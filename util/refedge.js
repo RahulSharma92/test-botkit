@@ -39,8 +39,8 @@ module.exports = {
                     console.log('------ ref Type Response-------' + action);
                     response = JSON.parse(response);
                     console.dir(response);
-                    let oppList = JSON.parse(response['opp']);
-                    let refList = JSON.parse(response['ref']);
+                    let oppList = response['opp'];
+                    let refList = response['ref'];
                     returnVal['searchURL'] = response['searchURL'];
                     oppList.forEach(function(oppWrapper){
                         let entry = {
