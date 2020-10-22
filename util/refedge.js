@@ -13,7 +13,6 @@ module.exports = {
         let returnVal = '';
         try {
             await conn.apex.post('/rebot/submitRequest', teamData, (err, res) => {
-                console.dir(res);
                 returnVal = res;
                 if (err) {
                     logger.log(err);
@@ -28,17 +27,13 @@ module.exports = {
         let opp = [];
         let ref = [];
         let returnVal = {};
-        console.log('action');
-        console.log(action);
         let url = action == null || action == '' ? '/rebot/REF_TYPE' + '::' + userProfile.user.profile.email : '/rebot/REF_TYPE::' + userProfile.user.profile.email + '::' + action;
         await conn.apex.get(url, (err, response) => {
             if (err) {
                 logger.log(err);
             } else  if (response) {
                 if (response != 'false') {
-                    console.log('------ ref Type Response-------' + action);
                     response = JSON.parse(response);
-                    console.dir(response);
                     let oppList = response['opp'];
                     let refList = response['ref'];
                     returnVal['searchURL'] = response['searchURL'];

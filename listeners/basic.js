@@ -177,7 +177,6 @@ module.exports = controller => {
                                     }
                                   }
                                 ]};
-                                console.dir(content);
                                 await bot.reply(message, content);
                             } else if (Object.keys(accounts).length = 1) {
                                 let requestURL = await getRequestURL(existingConn,accounts[Object.keys(accounts)[0]].value);
@@ -250,7 +249,6 @@ module.exports = controller => {
         async (bot, message) => {
             try {
                 console.log('slash_command');
-                console.dir(message);
                 let existingConn = await connFactory.getConnection(message.team, controller);
                 
                 if (existingConn) {
@@ -318,7 +316,6 @@ module.exports = controller => {
                         
                     });
                     console.log('open view');
-                    console.dir(result);
                     
                 } else if (!existingConn) {
                     const authUrl = connFactory.getAuthUrl(message.team);
@@ -348,8 +345,7 @@ module.exports = controller => {
         'view_submission',
         async (bot, message) => {
             console.log('view_submission');
-            console.dir(message);
-
+            
             try {
                 let existingConn = await connFactory.getConnection(message.team.id, controller);
                         
@@ -394,10 +390,8 @@ module.exports = controller => {
                                     token : bot.api.token,
                                     user : message.user
                                 });
-                                console.dir(userProfile);
                                 let mapval = await getRefTypes(existingConn,userProfile,null);
                                 let refTypes = mapval.ref;
-                                console.dir(mapval.opp);
                                 let opps = mapval.opp;
                                 if (opps != null && opps.length > 0) {
                                     bot.httpBody({
@@ -549,8 +543,6 @@ module.exports = controller => {
                             oppSelected = message.view.state.values.blkopp.opp_select.selected_option;
                         }
                         let days = 7;
-                        console.dir(refselected);
-                        console.dir(accselected);
                         if (refselected.value.indexOf('@@') > -1) {
                             days = refselected.value.split('@@')[0];
                         }
@@ -559,7 +551,6 @@ module.exports = controller => {
                         let dateString = newDate.getFullYear() + "-" + parseInt(newDate.getMonth() + 1) + "-" + newDate.getDate();
                         console.log('dateString : ' + dateString);
                         let refselectemeta = {'ref' : refselected.value,'acc' : accselected.value,'opp' : oppSelected.value};
-                        console.dir(refselectemeta);
                         if (oppSelected.value != null) {
                             bot.httpBody({
                                 response_action: 'update',
