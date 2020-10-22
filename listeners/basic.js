@@ -820,7 +820,7 @@ module.exports = controller => {
                                     "blocks": [
                                         {
                                             "type": "input",
-                                            "block_id": "blkopp",
+                                            "block_id": "blkselectopp",
                                             "element": {
                                                 "type": "static_select",
                                                 "action_id": "opp_select",
