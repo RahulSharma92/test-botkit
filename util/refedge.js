@@ -70,7 +70,7 @@ module.exports = {
                 logger.log(err);
             } else  if (response) {
                 if (response != 'false') {
-                    response = response;
+                    response = JSON.parse(response);
                     let oppList = response['opp'];
                     returnVal['searchURL'] = response['searchURL'];
                     oppList.forEach(function(oppWrapper){
