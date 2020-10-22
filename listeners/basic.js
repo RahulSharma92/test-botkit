@@ -736,36 +736,27 @@ module.exports = controller => {
                         }
                     } else if (message.view.callback_id == 'actionSelectionView') {
                         let actionName = 'account_search';
-                        for (let key in message.view.state.values) {
-                            if (message.view.state.values[key] != undefined && message.view.state.values[key].searchid != undefined && message.view.state.values[key].searchid != "") {
-                                actionName = message.view.state.values[key].searchid.selected_option.value;
-                                break;
-                            }
-                        }
+                        actionName = message.view.state.values.accblock.searchid.selected_option.value;
                         const userProfile = await bot.api.users.info({
                             token : bot.api.token,
                             user : message.user
                         });
                         console.log(actionName);
-                        let mapval = await getRefTypes(existingConn,userProfile,actionName);
+                        let mapval = await getRefTypes(existingConn,actionName);
                         let selectionLabel = 'Referenceability Type';
                         console.dir(mapval);
 
                         if (actionName == 'content_search') {
                             selectionLabel = 'Content Type';
                         }
-                        let refTypes = mapval.ref;
-                        let searchURL = mapval.searchURL;
-                        let opps = mapval.opp;
-
-                        if (opps != null && opps.length > 0) {
-                            bot.httpBody({
+                        
+                        bot.httpBody({
                                 response_action: 'update',
                                 view: {
                                     "type": "modal",
                                     "notify_on_close" : true,
-                                    "callback_id": "searchselect",
-                                    "private_metadata" : searchURL,
+                                    "callback_id": "oppselect",
+                                    "private_metadata" : userProfile.user.profile.email + '::' + actionName,
                                     "submit": {
                                         "type": "plain_text",
                                         "text": "Submit",
@@ -788,14 +779,46 @@ module.exports = controller => {
                                                     "text": "Select a type",
                                                     "emoji": true
                                                 },
-                                                "options": refTypes
+                                                "options": mapval
                                             },
                                             "label": {
                                                 "type": "plain_text",
                                                 "text": selectionLabel,
                                                 "emoji": true
                                             }
-                                        },
+                                        }
+                                    ]
+                                }
+                            });
+                        
+                    } else if (message.view.callback_id == 'oppselect') {
+                        let metdata = message.view.private_metadata;
+                        const email = metdata.split('::')[0];
+                        let refselected = message.view.state.values.blkref.reftype_select.selected_option;
+                        refselected = refselected.value.indexOf('::') > -1 ? refselected.value.split('::')[1] : refselected.value;
+                        const actionName = metdata.split('::')[1];
+                        let mapval = await getOpp(existingConn,email,actionName);
+                        let searchURL = mapval['searchURL'];
+                        let opps = mapval['opp'];
+                        if (opps != null && opps.length > 0 && opps.length < 21) {
+                            bot.httpBody({
+                                response_action: 'update',
+                                view: {
+                                    "type": "modal",
+                                    "notify_on_close" : true,
+                                    "callback_id": "searchselect",
+                                    "private_metadata" : searchURL + '::' + refselected,
+                                    "submit": {
+                                        "type": "plain_text",
+                                        "text": "Submit",
+                                        "emoji": true
+                                    },
+                                    "title": {
+                                        "type": "plain_text",
+                                        "text": "Request",
+                                        "emoji": true
+                                    },
+                                    "blocks": [
                                         {
                                             "type": "input",
                                             "block_id": "blkopp",
@@ -818,14 +841,14 @@ module.exports = controller => {
                                     ]
                                 }
                             });
-                        } else {
+                        } else if (opps != null && opps.length >= 21) {
                             bot.httpBody({
                                 response_action: 'update',
                                 view: {
                                     "type": "modal",
                                     "notify_on_close" : true,
-                                    "callback_id": "searchselect",
-                                    "private_metadata" : searchURL,
+                                    "callback_id": "searchselectopplarge",
+                                    "private_metadata" : searchURL + '::' + refselected,
                                     "submit": {
                                         "type": "plain_text",
                                         "text": "Submit",
@@ -839,21 +862,89 @@ module.exports = controller => {
                                     "blocks": [
                                         {
                                             "type": "input",
-                                            "block_id": "blkref",
+                                            "optional": true,
+                                            "block_id": "blkselectopp",
                                             "element": {
                                                 "type": "static_select",
-                                                "action_id": "reftype_select",
+                                                "action_id": "opp_select",
                                                 "placeholder": {
                                                     "type": "plain_text",
-                                                    "text": "Select a type",
+                                                    "text": "Select an Opp",
                                                     "emoji": true
                                                 },
-                                                "options": refTypes
+                                                "options": opps
                                             },
                                             "label": {
                                                 "type": "plain_text",
-                                                "text": selectionLabel,
+                                                "text": "Opportunity",
                                                 "emoji": true
+                                            }
+                                        },
+                                        {
+                                            "type": "input",
+                                            "optional": true,
+                                            "block_id" : "accblock",
+                                            "element": {
+                                                "type": "plain_text_input",
+                                                "action_id": "account_name",
+                                                "placeholder": {
+                                                    "type": "plain_text",
+                                                    "text": "Opportunity Account"
+                                                },
+                                                "multiline": false
+                                            },
+                                            "label": {
+                                                "type": "plain_text",
+                                                "text": "Opportunity Account",
+                                                "emoji": true
+                                            }
+                                        } ,
+                                        {
+                                            "type": "input",
+                                            "optional": true,
+                                            "block_id" : "oppblock",
+                                            "element": {
+                                                "type": "plain_text_input",
+                                                "action_id": "opp_name",
+                                                "placeholder": {
+                                                    "type": "plain_text",
+                                                    "text": "Opportunity Account"
+                                                },
+                                                "multiline": false
+                                            },
+                                            "label": {
+                                                "type": "plain_text",
+                                                "text": "Opportunity Account",
+                                                "emoji": true
+                                            }
+                                        }
+                                    ]
+                                }
+                            });
+                        } else {
+                            searchURL += '&type=' + refselected;
+                            searchURL = 'Please click the link to continue <' + searchURL + '|Complete Request>';
+                            bot.httpBody({
+                                response_action: 'update',
+                                view: {
+                                    "type": "modal",
+                                    "notify_on_close" : true,
+                                    "close": {
+                                        "type": "plain_text",
+                                        "text": "Close",
+                                        "emoji": true
+                                    },
+                                    "title": {
+                                        "type": "plain_text",
+                                        "text": "Continue Search",
+                                        "emoji": true
+                                    },
+                                    "blocks": [
+                                        {
+                                            "type": "section",
+                                            "text": {
+                                                "type": "mrkdwn",
+                                                "text": searchURL
                                             }
                                         }
                                     ]
@@ -861,12 +952,13 @@ module.exports = controller => {
                             });
                         }
                     } else if (message.view.callback_id == 'searchselect') {
-                        console.log('searchURL ***** ' + message.view.private_metadata);
-                        const refselected = message.view.state.values.blkref.reftype_select.selected_option;
-                        let oppSelected = message.view.state.values.blkopp != null ? message.view.state.values.blkopp.opp_select.selected_option.value : '';
-                        let searchURL = message.view.private_metadata.replace('@@',oppSelected);
+                        let metadata = message.view.private_metadata;
+                        const refselected = metadata.split('::')[1];
+                        let oppSelected = message.view.state.values.blkselectopp != null ? message.view.state.values.blkselectopp.opp_select.selected_option.value : '';
+                        let searchURL = metadata.split('::')[0];
+                        searchURL = searchURL.replace('@@',oppSelected);
                         searchURL += '&type=';
-                        searchURL += refselected.value.indexOf('::') > -1 ? refselected.value.split('::')[1] : refselected.value;
+                        searchURL += refselected;
                         searchURL = 'Please click the link to continue <' + searchURL + '|Complete Request>';
                         bot.httpBody({
                             response_action: 'update',

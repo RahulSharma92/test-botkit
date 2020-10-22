@@ -23,30 +23,17 @@ module.exports = {
         }
             return returnVal;
     },
-    getRefTypes: async (conn,userProfile,action) => {
-        let opp = [];
+    getRefTypes: async (conn,action) => {
         let ref = [];
-        let returnVal = {};
-        let url = action == null || action == '' ? '/rebot/REF_TYPE' + '::' + userProfile.user.profile.email : '/rebot/REF_TYPE::' + userProfile.user.profile.email + '::' + action;
+        let url = action == null || action == '' ? '/rebot/REF_TYPE' : '/rebot/REF_TYPE::' + action;
         await conn.apex.get(url, (err, response) => {
             if (err) {
                 logger.log(err);
             } else  if (response) {
                 if (response != 'false') {
                     response = JSON.parse(response);
-                    let oppList = response['opp'];
                     let refList = response['ref'];
-                    returnVal['searchURL'] = response['searchURL'];
-                    oppList.forEach(function(oppWrapper){
-                        let entry = {
-                            "text": {
-                                "type": "plain_text",
-                                "text": oppWrapper['oppName'] + '(' + oppWrapper['accName'] + ')'
-                            },
-                            "value": oppWrapper['id']
-                        }
-                        opp.push(entry);
-                    });
+                    
                     if (action == 'content_search') {
                         Object.keys(refList).forEach(function(k){
                             var entry = {
@@ -70,9 +57,34 @@ module.exports = {
                             ref.push(entry);
                         });
                     }
-                    returnVal['ref'] = ref;
+                }
+            }
+        });
+        return ref;
+    },
+    getOpp: async (conn,email,action) => {
+        let opp = [];
+        let returnVal = {};
+        let url = action == null || action == '' ? '/rebot/OPP_TYPE' + '::' + email : '/rebot/OPP_TYPE::' + email + '::' + action;
+        await conn.apex.get(url, (err, response) => {
+            if (err) {
+                logger.log(err);
+            } else  if (response) {
+                if (response != 'false') {
+                    response = response;
+                    let oppList = response['opp'];
+                    returnVal['searchURL'] = response['searchURL'];
+                    oppList.forEach(function(oppWrapper){
+                        let entry = {
+                            "text": {
+                                "type": "plain_text",
+                                "text": oppWrapper['oppName'] + '(' + oppWrapper['accName'] + ')'
+                            },
+                            "value": oppWrapper['id']
+                        }
+                        opp.push(entry);
+                    });
                     returnVal['opp'] = opp;
-                    
                 }
             }
         });
