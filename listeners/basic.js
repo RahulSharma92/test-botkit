@@ -1,6 +1,6 @@
 const connFactory = require('../util/connection-factory');
 const logger = require('../util/logger');
-const { getAccounts, getRequestURL, getRefTypes,submitRequest} = require('../util/refedge');
+const { getAccounts, getRequestURL, getRefTypes,submitRequest,getOpp} = require('../util/refedge');
 
 const { checkTeamMigration } = require('../listeners/middleware/migration-filter');
 
@@ -345,7 +345,7 @@ module.exports = controller => {
         'view_submission',
         async (bot, message) => {
             console.log('view_submission');
-            
+            console.dir(message);
             try {
                 let existingConn = await connFactory.getConnection(message.team.id, controller);
                         
@@ -744,7 +744,6 @@ module.exports = controller => {
                         console.log(actionName);
                         let mapval = await getRefTypes(existingConn,actionName);
                         let selectionLabel = 'Referenceability Type';
-                        console.dir(mapval);
 
                         if (actionName == 'content_search') {
                             selectionLabel = 'Content Type';
