@@ -32,27 +32,26 @@ module.exports = {
             } else  if (response) {
                 if (response != 'false') {
                     response = JSON.parse(response);
-                    let refList = response['ref'];
                     
                     if (action == 'content_search') {
-                        Object.keys(refList).forEach(function(k){
+                        Object.keys(response).forEach(function(k){
                             var entry = {
                                 "text": {
                                     "type": "plain_text",
-                                    "text": refList[k]
+                                    "text": response[k]
                                 },
                                 "value": k
                             }
                             ref.push(entry);
                         });
                     } else {
-                        Object.keys(refList).forEach(function(k){
+                        Object.keys(response).forEach(function(k){
                             let entry = {
                                 "text": {
                                     "type": "plain_text",
                                     "text": k
                                 },
-                                "value": refList[k]
+                                "value": response[k]
                             }
                             ref.push(entry);
                         });
