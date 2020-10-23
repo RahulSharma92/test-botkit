@@ -91,6 +91,56 @@ module.exports = {
         });
         return returnVal;
     },
+    getOppfromName: async (conn,email,name) => {
+        let opp = [];
+        let url = '/rebot/OPP_TYPE_NAME' + '::' + email + '::' + name;
+        await conn.apex.get(url, (err, response) => {
+            if (err) {
+                logger.log(err);
+            } else  if (response) {
+                if (response != 'false') {
+                    console.log(response);
+                    response = JSON.parse(response);;
+                    response.forEach(function(oppWrapper){
+                        let entry = {
+                            "text": {
+                                "type": "plain_text",
+                                "text": oppWrapper['oppName'] + '(' + oppWrapper['accName'] + ')'
+                            },
+                            "value": oppWrapper['id']
+                        }
+                        opp.push(entry);
+                    });
+                }
+            }
+        });
+        return opp;
+    },
+    getOppfromAcc: async (conn,email,name) => {
+        let opp = [];
+        let url = '/rebot/OPP_TYPE_ACCNAME' + '::' + email + '::' + name;
+        await conn.apex.get(url, (err, response) => {
+            if (err) {
+                logger.log(err);
+            } else  if (response) {
+                if (response != 'false') {
+                    console.log(response);
+                    response = JSON.parse(response);;
+                    response.forEach(function(oppWrapper){
+                        let entry = {
+                            "text": {
+                                "type": "plain_text",
+                                "text": oppWrapper['oppName'] + '(' + oppWrapper['accName'] + ')'
+                            },
+                            "value": oppWrapper['id']
+                        }
+                        opp.push(entry);
+                    });
+                }
+            }
+        });
+        return opp;
+    },
     getAccounts: async (conn, accName) => {
         if (accName == '' || accName == null) {
             return 'false';

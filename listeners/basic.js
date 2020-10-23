@@ -1,6 +1,6 @@
 const connFactory = require('../util/connection-factory');
 const logger = require('../util/logger');
-const { getAccounts, getRequestURL, getRefTypes,submitRequest,getOpp} = require('../util/refedge');
+const { getAccounts, getRequestURL, getRefTypes,submitRequest,getOpp, getOppfromName, getOppfromAcc} = require('../util/refedge');
 
 const { checkTeamMigration } = require('../listeners/middleware/migration-filter');
 
@@ -847,7 +847,7 @@ module.exports = controller => {
                                     "type": "modal",
                                     "notify_on_close" : true,
                                     "callback_id": "searchselectopplarge",
-                                    "private_metadata" : searchURL + '::' + refselected,
+                                    "private_metadata" : searchURL + '::' + refselected + '::' + email,
                                     "submit": {
                                         "type": "plain_text",
                                         "text": "Submit",
@@ -888,13 +888,13 @@ module.exports = controller => {
                                                 "action_id": "account_name",
                                                 "placeholder": {
                                                     "type": "plain_text",
-                                                    "text": "Opportunity Account"
+                                                    "text": "Opportunity Account Name"
                                                 },
                                                 "multiline": false
                                             },
                                             "label": {
                                                 "type": "plain_text",
-                                                "text": "Opportunity Account",
+                                                "text": "Opportunity Account Name",
                                                 "emoji": true
                                             }
                                         } ,
@@ -907,13 +907,13 @@ module.exports = controller => {
                                                 "action_id": "opp_name",
                                                 "placeholder": {
                                                     "type": "plain_text",
-                                                    "text": "Opportunity Account"
+                                                    "text": "Opportunity Name"
                                                 },
                                                 "multiline": false
                                             },
                                             "label": {
                                                 "type": "plain_text",
-                                                "text": "Opportunity Account",
+                                                "text": "Opportunity Name",
                                                 "emoji": true
                                             }
                                         }
@@ -949,6 +949,156 @@ module.exports = controller => {
                                     ]
                                 }
                             });
+                        }
+                    } else if (message.view.callback_id == 'searchselectopplarge') {
+                        let searchURL = metadata.split('::')[0];
+                        let metadata = message.view.private_metadata;
+                        const refselected = metadata.split('::')[1];
+                        const email = metadata.split('::')[2];
+                        let oppSelected = message.view.state.values.blkselectopp != null ? message.view.state.values.blkselectopp.opp_select.selected_option.value : '';
+                        let acctext = message.view.state.values.accblock != null ? message.view.state.values.accblock.account_name.value : '';
+                        let opptext = message.view.state.values.oppblock != null ? message.view.state.values.oppblock.opp_name.value : '';
+                        
+                        if (oppSelected != '') {
+                            searchURL = searchURL.replace('@@',oppSelected);
+                            searchURL += '&type=';
+                            searchURL += refselected;
+                            searchURL = 'Please click the link to continue <' + searchURL + '|Complete Request>';
+                            bot.httpBody({
+                            response_action: 'update',
+                            view: {
+                                "type": "modal",
+                                "notify_on_close" : true,
+                                "close": {
+                                    "type": "plain_text",
+                                    "text": "Close",
+                                    "emoji": true
+                                },
+                                "title": {
+                                    "type": "plain_text",
+                                    "text": "Continue Search",
+                                    "emoji": true
+                                },
+                                "blocks": [
+                                    {
+                                        "type": "section",
+                                        "text": {
+                                            "type": "mrkdwn",
+                                            "text": searchURL
+                                        }
+                                    }
+                                ]
+                            }
+                        });
+                        } else if (acctext != '' && opptext != '') {
+                            bot.httpBody({
+                                response_action: 'errors',
+                                errors: {
+                                    "accblock": 'Please enter Account Name OR Opportunity name;'
+                                }
+                            });
+                        } else if (acctext != '' && opptext == '') {
+                            let opps = await getOppfromAcc(existingConn,email,acctext);
+                            if (opps == null || opps.length == 0) {
+                                bot.httpBody({
+                                    response_action: 'errors',
+                                    errors: {
+                                        "accblock": 'No Opportunity matching the Opportunity Account Name found.Please retry.'
+                                    }
+                                });
+                            } else if (opps != null && opps.length > 0) {
+                                bot.httpBody({
+                                    response_action: 'update',
+                                    view: {
+                                        "type": "modal",
+                                        "notify_on_close" : true,
+                                        "callback_id": "searchselect",
+                                        "private_metadata" : searchURL + '::' + refselected,
+                                        "submit": {
+                                            "type": "plain_text",
+                                            "text": "Submit",
+                                            "emoji": true
+                                        },
+                                        "title": {
+                                            "type": "plain_text",
+                                            "text": "Request",
+                                            "emoji": true
+                                        },
+                                        "blocks": [
+                                            {
+                                                "type": "input",
+                                                "block_id": "blkselectopp",
+                                                "element": {
+                                                    "type": "static_select",
+                                                    "action_id": "opp_select",
+                                                    "placeholder": {
+                                                        "type": "plain_text",
+                                                        "text": "Select an Opp",
+                                                        "emoji": true
+                                                    },
+                                                    "options": opps
+                                                },
+                                                "label": {
+                                                    "type": "plain_text",
+                                                    "text": "Opportunity",
+                                                    "emoji": true
+                                                }
+                                            }
+                                        ]
+                                    }
+                                });
+                            } 
+                        } else if (acctext == '' && opptext != '') {
+                            let opps = await getOppfromName(existingConn,email,opptext);
+                            if (opps == null || opps.length == 0) {
+                                bot.httpBody({
+                                    response_action: 'errors',
+                                    errors: {
+                                        "oppblock": 'No Opportunity matching the Opportunity Name found.Please retry.'
+                                    }
+                                });
+                            } else if (opps != null && opps.length > 0) {
+                                bot.httpBody({
+                                    response_action: 'update',
+                                    view: {
+                                        "type": "modal",
+                                        "notify_on_close" : true,
+                                        "callback_id": "searchselect",
+                                        "private_metadata" : searchURL + '::' + refselected,
+                                        "submit": {
+                                            "type": "plain_text",
+                                            "text": "Submit",
+                                            "emoji": true
+                                        },
+                                        "title": {
+                                            "type": "plain_text",
+                                            "text": "Request",
+                                            "emoji": true
+                                        },
+                                        "blocks": [
+                                            {
+                                                "type": "input",
+                                                "block_id": "blkselectopp",
+                                                "element": {
+                                                    "type": "static_select",
+                                                    "action_id": "opp_select",
+                                                    "placeholder": {
+                                                        "type": "plain_text",
+                                                        "text": "Select an Opp",
+                                                        "emoji": true
+                                                    },
+                                                    "options": opps
+                                                },
+                                                "label": {
+                                                    "type": "plain_text",
+                                                    "text": "Opportunity",
+                                                    "emoji": true
+                                                }
+                                            }
+                                        ]
+                                    }
+                                });
+                            } 
                         }
                     } else if (message.view.callback_id == 'searchselect') {
                         let metadata = message.view.private_metadata;
