@@ -26,6 +26,7 @@ module.exports = {
     getRefTypes: async (conn,action) => {
         let ref = [];
         let url = action == null || action == '' ? '/rebot/REF_TYPE' : '/rebot/REF_TYPE::' + action;
+        console.log('28' + url);
         await conn.apex.get(url, (err, response) => {
             if (err) {
                 logger.log(err);
