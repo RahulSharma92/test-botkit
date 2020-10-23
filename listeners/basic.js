@@ -744,7 +744,7 @@ module.exports = controller => {
                         console.log(actionName);
                         let mapval = await getRefTypes(existingConn,actionName);
                         let selectionLabel = 'Referenceability Type';
-
+                        console.log(mapval);
                         if (actionName == 'content_search') {
                             selectionLabel = 'Content Type';
                         }

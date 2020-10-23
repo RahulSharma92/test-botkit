@@ -32,7 +32,7 @@ module.exports = {
             } else  if (response) {
                 if (response != 'false') {
                     response = JSON.parse(response);
-                    
+                    console.log(response)
                     if (action == 'content_search') {
                         Object.keys(response).forEach(function(k){
                             var entry = {
