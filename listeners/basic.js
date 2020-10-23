@@ -952,8 +952,8 @@ module.exports = controller => {
                             });
                         }
                     } else if (message.view.callback_id == 'searchselectopplarge') {
-                        let searchURL = metadata.split('::')[0];
                         let metadata = message.view.private_metadata;
+                        let searchURL = metadata.split('::')[0];
                         const refselected = metadata.split('::')[1];
                         const email = metadata.split('::')[2];
                         let oppSelected = message.view.state.values.blkselectopp != null ? message.view.state.values.blkselectopp.opp_select.selected_option.value : '';
