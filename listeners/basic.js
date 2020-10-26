@@ -1024,48 +1024,7 @@ module.exports = controller => {
                                         "oppblock": 'No Opportunity matching the Opportunity Name found.Please retry.'
                                     }
                                 });
-                            } /*else if (opps != null && opps.length > 0) {
-                                bot.httpBody({
-                                    response_action: 'update',
-                                    view: {
-                                        "type": "modal",
-                                        "notify_on_close" : true,
-                                        "callback_id": "searchselect",
-                                        "private_metadata" : searchURL + '::' + refselected,
-                                        "submit": {
-                                            "type": "plain_text",
-                                            "text": "Submit",
-                                            "emoji": true
-                                        },
-                                        "title": {
-                                            "type": "plain_text",
-                                            "text": "Request",
-                                            "emoji": true
-                                        },
-                                        "blocks": [
-                                            {
-                                                "type": "input",
-                                                "block_id": "blkselectopp",
-                                                "element": {
-                                                    "type": "static_select",
-                                                    "action_id": "opp_select",
-                                                    "placeholder": {
-                                                        "type": "plain_text",
-                                                        "text": "Select an Opportunity",
-                                                        "emoji": true
-                                                    },
-                                                    "options": opps
-                                                },
-                                                "label": {
-                                                    "type": "plain_text",
-                                                    "text": "Opportunity",
-                                                    "emoji": true
-                                                }
-                                            }
-                                        ]
-                                    }
-                                });
-                            } */
+                            }
                         }
                         if (opps != null && opps.length > 0) {
                             bot.httpBody({
@@ -1094,7 +1053,7 @@ module.exports = controller => {
                                                 "action_id": "opp_select",
                                                 "placeholder": {
                                                     "type": "plain_text",
-                                                    "text": "Select an Opp",
+                                                    "text": "Select an Opportunity",
                                                     "emoji": true
                                                 },
                                                 "options": opps
