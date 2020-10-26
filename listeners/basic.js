@@ -1002,7 +1002,7 @@ module.exports = controller => {
                             bot.httpBody({
                                 response_action: 'errors',
                                 errors: {
-                                    "accblock": 'Please enter Account Name OR Opportunity name;'
+                                    "blkselectopp": 'Please enter Account Name OR Opportunity name;'
                                 }
                             });
                         } else if (acctext != '' && opptext == '') {
@@ -1053,7 +1053,7 @@ module.exports = controller => {
                                                 "action_id": "opp_select",
                                                 "placeholder": {
                                                     "type": "plain_text",
-                                                    "text": "Select an Opportunity",
+                                                    "text": "Select an Opp",
                                                     "emoji": true
                                                 },
                                                 "options": opps
