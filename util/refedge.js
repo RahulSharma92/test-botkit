@@ -100,7 +100,6 @@ module.exports = {
                 logger.log(err);
             } else  if (response) {
                 if (response != 'false') {
-                    console.log(response);
                     response = JSON.parse(response);;
                     response.forEach(function(oppWrapper){
                         let entry = {
@@ -125,7 +124,6 @@ module.exports = {
                 logger.log(err);
             } else  if (response) {
                 if (response != 'false') {
-                    console.log(response);
                     response = JSON.parse(response);;
                     response.forEach(function(oppWrapper){
                         let entry = {

@@ -1025,7 +1025,7 @@ module.exports = controller => {
                                     }
                                 });
                             }
-                        }
+                        } 
                         if (opps != null && opps.length > 0) {
                             bot.httpBody({
                                 response_action: 'update',
@@ -1047,7 +1047,7 @@ module.exports = controller => {
                                     "blocks": [
                                         {
                                             "type": "input",
-                                            "block_id": "blkselectopp",
+                                            "block_id": "blkselectoppFinal",
                                             "element": {
                                                 "type": "static_select",
                                                 "action_id": "opp_select",
@@ -1071,7 +1071,8 @@ module.exports = controller => {
                     } else if (message.view.callback_id == 'searchselect') {
                         let metadata = message.view.private_metadata;
                         const refselected = metadata.split('::')[1];
-                        let oppSelected = message.view.state.values.blkselectopp != null ? message.view.state.values.blkselectopp.opp_select.selected_option.value : '';
+                        let oppSelected = message.view.state.values.blkselectopp != null ? message.view.state.values.blkselectopp.opp_select.selected_option.value :
+                                            (message.view.state.values.blkselectoppFinal != null ? message.view.state.values.blkselectoppFinal.opp_select.selected_option.value : '');
                         let searchURL = metadata.split('::')[0];
                         searchURL = searchURL.replace('@@',oppSelected);
                         searchURL += '&type=';
