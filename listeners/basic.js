@@ -959,7 +959,7 @@ module.exports = controller => {
                         let oppSelected = message.view.state.values.blkselectopp != null && message.view.state.values.blkselectopp.opp_select.selected_option != null ? message.view.state.values.blkselectopp.opp_select.selected_option.value : '';
                         let acctext = message.view.state.values.accblock != null && message.view.state.values.accblock.account_name.value != null ? message.view.state.values.accblock.account_name.value : '';
                         let opptext = message.view.state.values.oppblock != null && message.view.state.values.oppblock.opp_name.value != null ? message.view.state.values.oppblock.opp_name.value : '';
-                        
+                        let opps = [];
                         if (oppSelected != '') {
                             searchURL = searchURL.replace('@@',oppSelected);
                             searchURL += '&type=';
@@ -991,6 +991,13 @@ module.exports = controller => {
                                 ]
                             }
                         });
+                        } else if (oppSelected == '' && acctext == '' && opptext == '') {
+                            bot.httpBody({
+                                response_action: 'errors',
+                                errors: {
+                                    "accblock": 'Please enter atleast one value;'
+                                }
+                            });
                         } else if (acctext != '' && opptext != '') {
                             bot.httpBody({
                                 response_action: 'errors',
@@ -999,7 +1006,7 @@ module.exports = controller => {
                                 }
                             });
                         } else if (acctext != '' && opptext == '') {
-                            let opps = await getOppfromAcc(existingConn,email,acctext);
+                            opps = await getOppfromAcc(existingConn,email,acctext);
                             if (opps == null || opps.length == 0) {
                                 bot.httpBody({
                                     response_action: 'errors',
@@ -1007,50 +1014,9 @@ module.exports = controller => {
                                         "accblock": 'No Opportunity matching the Opportunity Account Name found.Please retry.'
                                     }
                                 });
-                            } else if (opps != null && opps.length > 0) {
-                                bot.httpBody({
-                                    response_action: 'update',
-                                    view: {
-                                        "type": "modal",
-                                        "notify_on_close" : true,
-                                        "callback_id": "searchselect",
-                                        "private_metadata" : searchURL + '::' + refselected,
-                                        "submit": {
-                                            "type": "plain_text",
-                                            "text": "Submit",
-                                            "emoji": true
-                                        },
-                                        "title": {
-                                            "type": "plain_text",
-                                            "text": "Request",
-                                            "emoji": true
-                                        },
-                                        "blocks": [
-                                            {
-                                                "type": "input",
-                                                "block_id": "blkselectopp",
-                                                "element": {
-                                                    "type": "static_select",
-                                                    "action_id": "opp_select",
-                                                    "placeholder": {
-                                                        "type": "plain_text",
-                                                        "text": "Select an Opp",
-                                                        "emoji": true
-                                                    },
-                                                    "options": opps
-                                                },
-                                                "label": {
-                                                    "type": "plain_text",
-                                                    "text": "Opportunity",
-                                                    "emoji": true
-                                                }
-                                            }
-                                        ]
-                                    }
-                                });
                             } 
                         } else if (acctext == '' && opptext != '') {
-                            let opps = await getOppfromName(existingConn,email,opptext);
+                            opps = await getOppfromName(existingConn,email,opptext);
                             if (opps == null || opps.length == 0) {
                                 bot.httpBody({
                                     response_action: 'errors',
@@ -1058,7 +1024,7 @@ module.exports = controller => {
                                         "oppblock": 'No Opportunity matching the Opportunity Name found.Please retry.'
                                     }
                                 });
-                            } else if (opps != null && opps.length > 0) {
+                            } /*else if (opps != null && opps.length > 0) {
                                 bot.httpBody({
                                     response_action: 'update',
                                     view: {
@@ -1085,7 +1051,7 @@ module.exports = controller => {
                                                     "action_id": "opp_select",
                                                     "placeholder": {
                                                         "type": "plain_text",
-                                                        "text": "Select an Opp",
+                                                        "text": "Select an Opportunity",
                                                         "emoji": true
                                                     },
                                                     "options": opps
@@ -1099,8 +1065,50 @@ module.exports = controller => {
                                         ]
                                     }
                                 });
-                            } 
+                            } */
                         }
+                        if (opps != null && opps.length > 0) {
+                            bot.httpBody({
+                                response_action: 'update',
+                                view: {
+                                    "type": "modal",
+                                    "notify_on_close" : true,
+                                    "callback_id": "searchselect",
+                                    "private_metadata" : searchURL + '::' + refselected,
+                                    "submit": {
+                                        "type": "plain_text",
+                                        "text": "Submit",
+                                        "emoji": true
+                                    },
+                                    "title": {
+                                        "type": "plain_text",
+                                        "text": "Request",
+                                        "emoji": true
+                                    },
+                                    "blocks": [
+                                        {
+                                            "type": "input",
+                                            "block_id": "blkselectopp",
+                                            "element": {
+                                                "type": "static_select",
+                                                "action_id": "opp_select",
+                                                "placeholder": {
+                                                    "type": "plain_text",
+                                                    "text": "Select an Opp",
+                                                    "emoji": true
+                                                },
+                                                "options": opps
+                                            },
+                                            "label": {
+                                                "type": "plain_text",
+                                                "text": "Opportunity",
+                                                "emoji": true
+                                            }
+                                        }
+                                    ]
+                                }
+                            });
+                        } 
                     } else if (message.view.callback_id == 'searchselect') {
                         let metadata = message.view.private_metadata;
                         const refselected = metadata.split('::')[1];
