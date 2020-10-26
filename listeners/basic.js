@@ -956,9 +956,9 @@ module.exports = controller => {
                         let searchURL = metadata.split('::')[0];
                         const refselected = metadata.split('::')[1];
                         const email = metadata.split('::')[2];
-                        let oppSelected = message.view.state.values.blkselectopp != null ? message.view.state.values.blkselectopp.opp_select.selected_option.value : '';
-                        let acctext = message.view.state.values.accblock != null ? message.view.state.values.accblock.account_name.value : '';
-                        let opptext = message.view.state.values.oppblock != null ? message.view.state.values.oppblock.opp_name.value : '';
+                        let oppSelected = message.view.state.values.blkselectopp != null && message.view.state.values.blkselectopp.opp_select.selected_option != null ? message.view.state.values.blkselectopp.opp_select.selected_option.value : '';
+                        let acctext = message.view.state.values.accblock != null && message.view.state.values.accblock.account_name.value != null ? message.view.state.values.accblock.account_name.value : '';
+                        let opptext = message.view.state.values.oppblock != null && message.view.state.values.oppblock.opp_name.value != null ? message.view.state.values.oppblock.opp_name.value : '';
                         
                         if (oppSelected != '') {
                             searchURL = searchURL.replace('@@',oppSelected);
