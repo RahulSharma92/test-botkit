@@ -736,6 +736,7 @@ module.exports = controller => {
                         }
                     } else if (message.view.callback_id == 'actionSelectionView') {
                         let actionName = 'account_search';
+                        let optional = false;
                         actionName = message.view.state.values.accblock.searchid.selected_option.value;
                         const userProfile = await bot.api.users.info({
                             token : bot.api.token,
@@ -748,6 +749,7 @@ module.exports = controller => {
                         console.log(mapval);
                         if (actionName == 'content_search') {
                             selectionLabel = 'Content Type';
+                            optional = true;
                         }
                         
                         bot.httpBody({
@@ -756,6 +758,7 @@ module.exports = controller => {
                                     "type": "modal",
                                     "notify_on_close" : true,
                                     "callback_id": "oppselect",
+                                    "optional" : optional,
                                     "private_metadata" : userProfile.user.profile.email + '::' + actionName,
                                     "submit": {
                                         "type": "plain_text",
@@ -794,8 +797,8 @@ module.exports = controller => {
                     } else if (message.view.callback_id == 'oppselect') {
                         let metdata = message.view.private_metadata;
                         const email = metdata.split('::')[0];
-                        let refselected = message.view.state.values.blkref.reftype_select.selected_option;
-                        refselected = refselected.value.indexOf('::') > -1 ? refselected.value.split('::')[1] : refselected.value;
+                        let refselected = message.view.state.values.blkref.reftype_select.selected_option != null ? message.view.state.values.blkref.reftype_select.selected_option : 'NONE';
+                        refselected = refselected != 'NONE' ? (refselected.value.indexOf('::') > -1 ? refselected.value.split('::')[1] : refselected.value) : '';
                         const actionName = metdata.split('::')[1];
                         let mapval = await getOpp(existingConn,email,actionName);
                         let searchURL = mapval['searchURL'];
@@ -922,7 +925,9 @@ module.exports = controller => {
                                 }
                             });
                         } else {
-                            searchURL += '&type=' + refselected;
+                            if (refselected != 'NONE') {
+                                searchURL += '&type=' + refselected;
+                            }
                             searchURL = 'Please click the link to continue <' + searchURL + '|Complete Request>';
                             bot.httpBody({
                                 response_action: 'update',
@@ -962,8 +967,10 @@ module.exports = controller => {
                         let opps = [];
                         if (oppSelected != '') {
                             searchURL = searchURL.replace('@@',oppSelected);
-                            searchURL += '&type=';
-                            searchURL += refselected;
+                            if (refselected != 'NONE') {
+                                searchURL += '&type=';
+                                searchURL += refselected;
+                            }
                             searchURL = 'Please click the link to continue <' + searchURL + '|Complete Request>';
                             bot.httpBody({
                             response_action: 'update',
@@ -1075,8 +1082,10 @@ module.exports = controller => {
                                             (message.view.state.values.blkselectoppFinal != null ? message.view.state.values.blkselectoppFinal.opp_select.selected_option.value : '');
                         let searchURL = metadata.split('::')[0];
                         searchURL = searchURL.replace('@@',oppSelected);
-                        searchURL += '&type=';
-                        searchURL += refselected;
+                        if (refselected != 'NONE') {
+                            searchURL += '&type=';
+                            searchURL += refselected;
+                        }
                         searchURL = 'Please click the link to continue <' + searchURL + '|Complete Request>';
                         bot.httpBody({
                             response_action: 'update',
