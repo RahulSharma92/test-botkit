@@ -70,7 +70,7 @@ module.exports = controller => {
                         "private_metadata" : "test",
                         "submit": {
                             "type": "plain_text",
-                            "text": "Submit",
+                            "text": "Search",
                             "emoji": true
                         },
                         "close": {
@@ -260,12 +260,12 @@ module.exports = controller => {
                             "callback_id" : "actionSelectionView",
                             "title": {
                                 "type": "plain_text",
-                                "text": "Available References",
+                                "text": "Reference Assistant",
                                 "emoji": true
                             },
                             "submit": {
                                 "type": "plain_text",
-                                "text": "Submit",
+                                "text": "Next",
                                 "emoji": true
                             },
                             "close": {
@@ -759,7 +759,7 @@ module.exports = controller => {
                                     "private_metadata" : userProfile.user.profile.email + '::' + actionName,
                                     "submit": {
                                         "type": "plain_text",
-                                        "text": "Submit",
+                                        "text": "Next",
                                         "emoji": true
                                     },
                                     "title": {
@@ -810,7 +810,7 @@ module.exports = controller => {
                                     "private_metadata" : searchURL + '::' + refselected,
                                     "submit": {
                                         "type": "plain_text",
-                                        "text": "Submit",
+                                        "text": "Next",
                                         "emoji": true
                                     },
                                     "title": {
@@ -851,7 +851,7 @@ module.exports = controller => {
                                     "private_metadata" : searchURL + '::' + refselected + '::' + email,
                                     "submit": {
                                         "type": "plain_text",
-                                        "text": "Submit",
+                                        "text": "Next",
                                         "emoji": true
                                     },
                                     "title": {
@@ -1036,7 +1036,7 @@ module.exports = controller => {
                                     "private_metadata" : searchURL + '::' + refselected,
                                     "submit": {
                                         "type": "plain_text",
-                                        "text": "Submit",
+                                        "text": "Next",
                                         "emoji": true
                                     },
                                     "title": {
