@@ -738,15 +738,8 @@ module.exports = controller => {
                         let actionName = 'account_search';
                         let optional = false;
                         actionName = message.view.state.values.accblock.searchid.selected_option.value;
-                        const userProfile = await bot.api.users.info({
-                            token : bot.api.token,
-                            user : message.user
-                        });
-                        console.log(actionName);
                         let mapval = await getRefTypes(existingConn,actionName);
-                        console.log('746');
                         let selectionLabel = 'Referenceability Type';
-                        console.log(mapval);
                         if (actionName == 'content_search') {
                             selectionLabel = 'Content Type';
                             optional = true;
