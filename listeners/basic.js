@@ -252,12 +252,18 @@ module.exports = controller => {
                 let existingConn = await connFactory.getConnection(message.team, controller);
                 
                 if (existingConn) {
+                    const userProfile = await bot.api.users.info({
+                        token : bot.api.token,
+                        user : message.user
+                    });
+                    
                     const result = await bot.api.views.open({
                         trigger_id: message.trigger_id,
                         view: {
                             "type": "modal",
                             "notify_on_close" : true,
                             "callback_id" : "actionSelectionView",
+                            "private_metadata" : userProfile.user.profile.email,
                             "title": {
                                 "type": "plain_text",
                                 "text": "Reference Assistant",
@@ -738,6 +744,7 @@ module.exports = controller => {
                         let actionName = 'account_search';
                         let optional = false;
                         actionName = message.view.state.values.accblock.searchid.selected_option.value;
+                        let email = message.view.private_metadata;
                         let mapval = await getRefTypes(existingConn,actionName);
                         let selectionLabel = 'Referenceability Type';
                         if (actionName == 'content_search') {
@@ -752,7 +759,7 @@ module.exports = controller => {
                                     "notify_on_close" : true,
                                     "callback_id": "oppselect",
                                     "optional" : optional,
-                                    "private_metadata" : userProfile.user.profile.email + '::' + actionName,
+                                    "private_metadata" : email + '::' + actionName,
                                     "submit": {
                                         "type": "plain_text",
                                         "text": "Next",
