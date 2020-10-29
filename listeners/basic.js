@@ -256,6 +256,7 @@ module.exports = controller => {
                         token : bot.api.token,
                         user : message.user
                     });
+                    console.log(userProfile.user.profile.email);
                     
                     const result = await bot.api.views.open({
                         trigger_id: message.trigger_id,
@@ -928,7 +929,7 @@ module.exports = controller => {
                             if (refselected != 'NONE') {
                                 searchURL += '&type=' + refselected;
                             }
-                            searchURL = 'Please click the link to continue <' + searchURL + '|Complete Request>';
+                            searchURL = 'Thanks! Now  <' + searchURL + '|let’s finish your request in Salesforce>';
                             bot.httpBody({
                                 response_action: 'update',
                                 view: {
