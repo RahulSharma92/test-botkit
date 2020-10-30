@@ -762,7 +762,6 @@ module.exports = controller => {
                                 "type": "modal",
                                 "notify_on_close" : true,
                                 "callback_id": "oppselect",
-                                "optional" : optional,
                                 "private_metadata" : email,
                                 "submit": {
                                     "type": "plain_text",
