@@ -139,10 +139,10 @@ module.exports = controller => {
                         const authUrl = connFactory.getAuthUrl(message.team);
                         await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
                     } else {
-                        /*await controller.plugins.database.orgs.delete(message.team);
+                        await controller.plugins.database.orgs.delete(message.team);
                         const authUrl = connFactory.getAuthUrl(message.team);
-                        await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);*/
-                        await bot.beginDialog('sf_auth');
+                        await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
+                        //await bot.beginDialog('sf_auth');
                     }
                 } else if (message.intent === 'create_request') {
                     let existingConn = await connFactory.getConnection(message.team, controller);
