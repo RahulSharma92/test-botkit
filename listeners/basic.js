@@ -842,7 +842,7 @@ module.exports = controller => {
                         let metdata = message.view.private_metadata;
                         const email = metdata.split('::')[0];
                         let refselected = message.view.state.values.blkref.reftype_select.selected_option != null ? message.view.state.values.blkref.reftype_select.selected_option : 'NONE';
-                        refselected = refselected != 'NONE' ? (refselected.value.indexOf('::') > -1 ? refselected.value.split('::')[1] : refselected.value) : '';
+                        refselected = refselected && refselected != 'NONE' && refselected != '' && refselected != null ? (refselected.value.indexOf('::') > -1 ? refselected.value.split('::')[1] : refselected.value) : '';
                         const actionName = metdata.split('::')[1];
                         let mapval = await getOpp(existingConn,email,actionName);
                         let searchURL = mapval['searchURL'] + '::' + refselected + '::' + email;
@@ -969,7 +969,7 @@ module.exports = controller => {
                                 }
                             });
                         } else {
-                            if (refselected != 'NONE') {
+                            if (refselected && refselected != 'NONE' && refselected != '' && refselected != null) {
                                 searchURL += '&type=' + refselected;
                             }
                             searchURL = 'Thanks! Now  <' + searchURL + '|let’s finish your request in Salesforce>';
@@ -1011,7 +1011,7 @@ module.exports = controller => {
                         let opps = [];
                         if (oppSelected != '') {
                             searchURL = searchURL.replace('@@',oppSelected);
-                            if (refselected != 'NONE') {
+                            if (refselected && refselected != 'NONE' && refselected != '' && refselected != null) {
                                 searchURL += '&type=';
                                 searchURL += refselected;
                             }
@@ -1127,7 +1127,7 @@ module.exports = controller => {
                                             (message.view.state.values.blkselectoppFinal != null ? message.view.state.values.blkselectoppFinal.opp_select.selected_option.value : '');
                         let searchURL = metadata.split('::')[0];
                         searchURL = searchURL.replace('@@',oppSelected);
-                        if (refselected != 'NONE') {
+                        if (refselected && refselected != 'NONE' && refselected != '' && refselected != null) {
                             searchURL += '&type=';
                             searchURL += refselected;
                         }
