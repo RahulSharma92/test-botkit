@@ -745,7 +745,9 @@ module.exports = controller => {
                         let actionName = 'account_search';
                         actionName = message.view.state.values.accblock.searchid.selected_option.value;
                         let email = message.view.private_metadata + '::' + actionName;
+                        let start_time = new Date().getTime();
                         let mapval = await getRefTypes(existingConn,actionName);
+                        console.log('Time elapsed:', new Date().getTime() - start_time);
                         if (actionName == 'content_search') {
                             console.log('750');
                             bot.httpBody({
@@ -789,6 +791,7 @@ module.exports = controller => {
                                     ]
                                 }
                             });
+                            console.log('750');
                         } else {
                             bot.httpBody({
                                 response_action: 'update',
@@ -837,9 +840,7 @@ module.exports = controller => {
                         let refselected = message.view.state.values.blkref.reftype_select.selected_option != null ? message.view.state.values.blkref.reftype_select.selected_option : 'NONE';
                         refselected = refselected != 'NONE' ? (refselected.value.indexOf('::') > -1 ? refselected.value.split('::')[1] : refselected.value) : '';
                         const actionName = metdata.split('::')[1];
-                        let start_time = new Date().getTime();
                         let mapval = await getOpp(existingConn,email,actionName);
-                        console.log('Time elapsed:', new Date().getTime() - start_time);
                         let searchURL = mapval['searchURL'] + '::' + refselected + '::' + email;
                         let opps = mapval['opp'];
                         if (opps != null && opps.length > 0 && opps.length < 11) {
