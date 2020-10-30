@@ -553,7 +553,7 @@ module.exports = controller => {
                         if (refselected.value.indexOf('@@') > -1) {
                             days = refselected.value.split('@@')[0];
                         }
-                        var newDate = new Date();
+                        let newDate = new Date();
                         newDate.setDate(newDate.getDate() + parseInt(days));
                         let dateString = newDate.getFullYear() + "-" + parseInt(newDate.getMonth() + 1) + "-" + newDate.getDate();
                         console.log('dateString : ' + dateString);
@@ -692,7 +692,7 @@ module.exports = controller => {
                         
                         if (refselected.indexOf('@@') > -1) {
                             let days = refselected.split('@@')[0];
-                            var todayDate = new Date();
+                            let todayDate = new Date();
                             todayDate.setDate(todayDate.getDate() + (parseInt(days) - 1 ));
                             let dateConverted = new Date(dateselected);
                             dataMap.ref = refselected.split('@@')[1];
@@ -743,57 +743,93 @@ module.exports = controller => {
                         }
                     } else if (message.view.callback_id == 'actionSelectionView') {
                         let actionName = 'account_search';
-                        let optional = false;
                         actionName = message.view.state.values.accblock.searchid.selected_option.value;
                         let email = message.view.private_metadata + '::' + actionName;
                         let mapval = await getRefTypes(existingConn,actionName);
-                        
-                        let selectionLabel = 'Referenceability Type';
                         if (actionName == 'content_search') {
-                            selectionLabel = 'Content Type';
-                            optional = true;
-                        }
-                        bot.httpBody({
-                            response_action: 'update',
-                            view: {
-                                "type": "modal",
-                                "notify_on_close" : true,
-                                "callback_id": "oppselect",
-                                "private_metadata" : email,
-                                "submit": {
-                                    "type": "plain_text",
-                                    "text": "Next",
-                                    "emoji": true
-                                },
-                                "title": {
-                                    "type": "plain_text",
-                                    "text": "Request",
-                                    "emoji": true
-                                },
-                                "blocks": [
-                                    {
-                                        "type": "input",
-                                        "block_id": "blkref",
-                                        "element": {
-                                            "type": "static_select",
-                                            "action_id": "reftype_select",
-                                            "placeholder": {
-                                                "type": "plain_text",
-                                                "text": "Select a type",
-                                                "emoji": true
+                            bot.httpBody({
+                                response_action: 'update',
+                                view: {
+                                    "type": "modal",
+                                    "notify_on_close" : true,
+                                    "callback_id": "oppselect",
+                                    "optional" : true,
+                                    "private_metadata" : email,
+                                    "submit": {
+                                        "type": "plain_text",
+                                        "text": "Next",
+                                        "emoji": true
+                                    },
+                                    "title": {
+                                        "type": "plain_text",
+                                        "text": "Request",
+                                        "emoji": true
+                                    },
+                                    "blocks": [
+                                        {
+                                            "type": "input",
+                                            "block_id": "blkref",
+                                            "element": {
+                                                "type": "static_select",
+                                                "action_id": "reftype_select",
+                                                "placeholder": {
+                                                    "type": "plain_text",
+                                                    "text": "Select a type",
+                                                    "emoji": true
+                                                },
+                                                "options": mapval
                                             },
-                                            "options": mapval
-                                        },
-                                        "label": {
-                                            "type": "plain_text",
-                                            "text": selectionLabel,
-                                            "emoji": true
+                                            "label": {
+                                                "type": "plain_text",
+                                                "text": "Content Type",
+                                                "emoji": true
+                                            }
                                         }
-                                    }
-                                ]
-                            }
-                        });
-                        
+                                    ]
+                                }
+                            });
+                        } else {
+                            bot.httpBody({
+                                response_action: 'update',
+                                view: {
+                                    "type": "modal",
+                                    "notify_on_close" : true,
+                                    "callback_id": "oppselect",
+                                    "private_metadata" : email,
+                                    "submit": {
+                                        "type": "plain_text",
+                                        "text": "Next",
+                                        "emoji": true
+                                    },
+                                    "title": {
+                                        "type": "plain_text",
+                                        "text": "Request",
+                                        "emoji": true
+                                    },
+                                    "blocks": [
+                                        {
+                                            "type": "input",
+                                            "block_id": "blkref",
+                                            "element": {
+                                                "type": "static_select",
+                                                "action_id": "reftype_select",
+                                                "placeholder": {
+                                                    "type": "plain_text",
+                                                    "text": "Select a type",
+                                                    "emoji": true
+                                                },
+                                                "options": mapval
+                                            },
+                                            "label": {
+                                                "type": "plain_text",
+                                                "text": "Referenceability Type",
+                                                "emoji": true
+                                            }
+                                        }
+                                    ]
+                                }
+                            });
+                        }
                     } else if (message.view.callback_id == 'oppselect') {
                         let metdata = message.view.private_metadata;
                         const email = metdata.split('::')[0];
@@ -1036,13 +1072,14 @@ module.exports = controller => {
                             }
                         } 
                         if (opps != null && opps.length > 0) {
+                            searchURL += '::' + refselected;
                             bot.httpBody({
                                 response_action: 'update',
                                 view: {
                                     "type": "modal",
                                     "notify_on_close" : true,
                                     "callback_id": "searchselect",
-                                    "private_metadata" : searchURL + '::' + refselected,
+                                    "private_metadata" : searchURL,
                                     "submit": {
                                         "type": "plain_text",
                                         "text": "Next",
