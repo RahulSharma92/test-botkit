@@ -355,7 +355,7 @@ module.exports = controller => {
             console.dir(message);
             try {
                 let existingConn = await connFactory.getConnection(message.team.id, controller);
-                        
+                
                 if (!existingConn) {
                     const authUrl = connFactory.getAuthUrl(message.team);
                     await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
@@ -746,7 +746,10 @@ module.exports = controller => {
                         let optional = false;
                         actionName = message.view.state.values.accblock.searchid.selected_option.value;
                         let email = message.view.private_metadata + '::' + actionName;
+                        console.log('749');
+                        let start_time = new Date().getTime();
                         let mapval = await getRefTypes(existingConn,actionName);
+                        console.log('Time elapsed:', new Date().getTime() - start_time);
                         let selectionLabel = 'Referenceability Type';
                         if (actionName == 'content_search') {
                             selectionLabel = 'Content Type';
@@ -754,7 +757,7 @@ module.exports = controller => {
                         }
                         console.log('755');
                         bot.httpBody({
-                            response_action: 'update',
+                            response_action: 'push',
                             view: {
                                 "type": "modal",
                                 "notify_on_close" : true,
