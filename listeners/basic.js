@@ -1015,7 +1015,7 @@ module.exports = controller => {
                                 searchURL += '&type=';
                                 searchURL += refselected;
                             }
-                            searchURL = 'Please click the link to continue <' + searchURL + '|Complete Request>';
+                            searchURL = 'Thanks! Now  <' + searchURL + '|let’s finish your request in Salesforce>';
                             bot.httpBody({
                             response_action: 'update',
                             view: {
@@ -1131,7 +1131,7 @@ module.exports = controller => {
                             searchURL += '&type=';
                             searchURL += refselected;
                         }
-                        searchURL = 'Please click the link to continue <' + searchURL + '|Complete Request>';
+                        searchURL = 'Thanks! Now  <' + searchURL + '|let’s finish your request in Salesforce>';
                         bot.httpBody({
                             response_action: 'update',
                             view: {
