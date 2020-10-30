@@ -845,7 +845,7 @@ module.exports = controller => {
                         refselected = refselected && refselected != 'NONE' && refselected != '' && refselected != null ? (refselected.value.indexOf('::') > -1 ? refselected.value.split('::')[1] : refselected.value) : '';
                         const actionName = metdata.split('::')[1];
                         let mapval = await getOpp(existingConn,email,actionName);
-                        let searchURL = mapval['searchURL'] + '::' + refselected + '::' + email;
+                        let searchURL = mapval['searchURL'];
                         let opps = mapval['opp'];
                         if (opps != null && opps.length > 0 && opps.length < 21) {
                             bot.httpBody({
@@ -895,7 +895,7 @@ module.exports = controller => {
                                     "type": "modal",
                                     "notify_on_close" : true,
                                     "callback_id": "searchselectopplarge",
-                                    "private_metadata" : searchURL,
+                                    "private_metadata" : searchURL + '::' + refselected + '::' + email,
                                     "submit": {
                                         "type": "plain_text",
                                         "text": "Next",
@@ -1078,14 +1078,13 @@ module.exports = controller => {
                             }
                         } 
                         if (opps != null && opps.length > 0) {
-                            searchURL += '::' + refselected;
                             bot.httpBody({
                                 response_action: 'update',
                                 view: {
                                     "type": "modal",
                                     "notify_on_close" : true,
                                     "callback_id": "searchselect",
-                                    "private_metadata" : searchURL,
+                                    "private_metadata" : searchURL + '::' + refselected,
                                     "submit": {
                                         "type": "plain_text",
                                         "text": "Next",
