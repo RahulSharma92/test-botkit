@@ -338,6 +338,10 @@ module.exports = controller => {
         'view_closed',
         async (bot, message) => {
             console.log('-----------view_closed message -----------');
+            bot.httpBody({
+                "response_action": "clear"
+            });
+            
             console.dir(message);
     });
     controller.on(
@@ -378,7 +382,7 @@ module.exports = controller => {
                                 errors: {
                                   "accblock": 'Please enter an Account Name.'
                                 }
-                              });
+                            });
                         } else {
                             let accounts = await getAccounts(existingConn,accName);
                             console.log('----------------accounts----------------')
@@ -756,7 +760,6 @@ module.exports = controller => {
                                     "type": "modal",
                                     "notify_on_close" : true,
                                     "callback_id": "oppselect",
-                                    "optional" : true,
                                     "private_metadata" : email,
                                     "submit": {
                                         "type": "plain_text",
@@ -771,6 +774,7 @@ module.exports = controller => {
                                     "blocks": [
                                         {
                                             "type": "input",
+                                            "optional" : true,
                                             "block_id": "blkref",
                                             "element": {
                                                 "type": "static_select",
