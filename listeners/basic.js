@@ -746,18 +746,15 @@ module.exports = controller => {
                         let optional = false;
                         actionName = message.view.state.values.accblock.searchid.selected_option.value;
                         let email = message.view.private_metadata + '::' + actionName;
-                        console.log('749');
-                        let start_time = new Date().getTime();
                         let mapval = await getRefTypes(existingConn,actionName);
-                        console.log('Time elapsed:', new Date().getTime() - start_time);
+                        
                         let selectionLabel = 'Referenceability Type';
                         if (actionName == 'content_search') {
                             selectionLabel = 'Content Type';
                             optional = true;
                         }
-                        console.log('755');
                         bot.httpBody({
-                            response_action: 'push',
+                            response_action: 'update',
                             view: {
                                 "type": "modal",
                                 "notify_on_close" : true,
@@ -796,15 +793,17 @@ module.exports = controller => {
                                 ]
                             }
                         });
-                        console.log('797');
+                        
                     } else if (message.view.callback_id == 'oppselect') {
                         let metdata = message.view.private_metadata;
                         const email = metdata.split('::')[0];
                         let refselected = message.view.state.values.blkref.reftype_select.selected_option != null ? message.view.state.values.blkref.reftype_select.selected_option : 'NONE';
                         refselected = refselected != 'NONE' ? (refselected.value.indexOf('::') > -1 ? refselected.value.split('::')[1] : refselected.value) : '';
                         const actionName = metdata.split('::')[1];
+                        let start_time = new Date().getTime();
                         let mapval = await getOpp(existingConn,email,actionName);
-                        let searchURL = mapval['searchURL'];
+                        console.log('Time elapsed:', new Date().getTime() - start_time);
+                        let searchURL = mapval['searchURL'] + '::' + refselected + '::' + email;
                         let opps = mapval['opp'];
                         if (opps != null && opps.length > 0 && opps.length < 11) {
                             bot.httpBody({
@@ -854,7 +853,7 @@ module.exports = controller => {
                                     "type": "modal",
                                     "notify_on_close" : true,
                                     "callback_id": "searchselectopplarge",
-                                    "private_metadata" : searchURL + '::' + refselected + '::' + email,
+                                    "private_metadata" : searchURL,
                                     "submit": {
                                         "type": "plain_text",
                                         "text": "Next",
