@@ -397,7 +397,7 @@ module.exports = controller => {
                                     token : bot.api.token,
                                     user : message.user
                                 });
-                                let mapval = await getRefTypes(existingConn,userProfile,null);
+                                let mapval = await getRefTypes(existingConn,userProfile);
                                 let refTypes = mapval.ref;
                                 let opps = mapval.opp;
                                 if (opps != null && opps.length > 0) {
@@ -745,56 +745,56 @@ module.exports = controller => {
                         let actionName = 'account_search';
                         let optional = false;
                         actionName = message.view.state.values.accblock.searchid.selected_option.value;
-                        let email = message.view.private_metadata;
+                        let email = message.view.private_metadata + '::' + actionName;
                         let mapval = await getRefTypes(existingConn,actionName);
                         let selectionLabel = 'Referenceability Type';
                         if (actionName == 'content_search') {
                             selectionLabel = 'Content Type';
                             optional = true;
                         }
-                        
+                        console.log('755');
                         bot.httpBody({
-                                response_action: 'update',
-                                view: {
-                                    "type": "modal",
-                                    "notify_on_close" : true,
-                                    "callback_id": "oppselect",
-                                    "optional" : optional,
-                                    "private_metadata" : email + '::' + actionName,
-                                    "submit": {
-                                        "type": "plain_text",
-                                        "text": "Next",
-                                        "emoji": true
-                                    },
-                                    "title": {
-                                        "type": "plain_text",
-                                        "text": "Request",
-                                        "emoji": true
-                                    },
-                                    "blocks": [
-                                        {
-                                            "type": "input",
-                                            "block_id": "blkref",
-                                            "element": {
-                                                "type": "static_select",
-                                                "action_id": "reftype_select",
-                                                "placeholder": {
-                                                    "type": "plain_text",
-                                                    "text": "Select a type",
-                                                    "emoji": true
-                                                },
-                                                "options": mapval
-                                            },
-                                            "label": {
+                            response_action: 'update',
+                            view: {
+                                "type": "modal",
+                                "notify_on_close" : true,
+                                "callback_id": "oppselect",
+                                "optional" : optional,
+                                "private_metadata" : email,
+                                "submit": {
+                                    "type": "plain_text",
+                                    "text": "Next",
+                                    "emoji": true
+                                },
+                                "title": {
+                                    "type": "plain_text",
+                                    "text": "Request",
+                                    "emoji": true
+                                },
+                                "blocks": [
+                                    {
+                                        "type": "input",
+                                        "block_id": "blkref",
+                                        "element": {
+                                            "type": "static_select",
+                                            "action_id": "reftype_select",
+                                            "placeholder": {
                                                 "type": "plain_text",
-                                                "text": selectionLabel,
+                                                "text": "Select a type",
                                                 "emoji": true
-                                            }
+                                            },
+                                            "options": mapval
+                                        },
+                                        "label": {
+                                            "type": "plain_text",
+                                            "text": selectionLabel,
+                                            "emoji": true
                                         }
-                                    ]
-                                }
-                            });
-                        
+                                    }
+                                ]
+                            }
+                        });
+                        console.log('797');
                     } else if (message.view.callback_id == 'oppselect') {
                         let metdata = message.view.private_metadata;
                         const email = metdata.split('::')[0];
