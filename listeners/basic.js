@@ -1046,7 +1046,9 @@ module.exports = controller => {
                             bot.httpBody({
                                 response_action: 'errors',
                                 errors: {
-                                    "accblock": 'Please enter atleast one value.'
+                                    "blkselectopp": 'Please enter atleast one of these values.',
+                                    "accblock": 'Please enter atleast one of these values.',
+                                    "oppblock": 'Please enter atleast one of these values.'
                                 }
                             });
                         } else if (acctext != '' && opptext != '') {
