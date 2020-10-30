@@ -747,6 +747,7 @@ module.exports = controller => {
                         let email = message.view.private_metadata + '::' + actionName;
                         let mapval = await getRefTypes(existingConn,actionName);
                         if (actionName == 'content_search') {
+                            console.log('750');
                             bot.httpBody({
                                 response_action: 'update',
                                 view: {
