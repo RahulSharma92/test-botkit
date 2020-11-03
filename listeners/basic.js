@@ -908,6 +908,15 @@ module.exports = controller => {
                                     },
                                     "blocks": [
                                         {
+                                            "type": "section",
+                                            "block_id": "messageblk",
+                                            "text": {
+                                                "type": "plain_text",
+                                                "text": "Select from the 20 most recently-accessed Opportunities, or provide part of an Opportunity Account or Opportunity Name then select Next to see matching records.",
+                                                "emoji": true
+                                            }
+                                        },
+                                        {
                                             "type": "input",
                                             "optional": true,
                                             "block_id": "blkselectopp",
@@ -972,7 +981,7 @@ module.exports = controller => {
                             if (refselected && refselected != 'NONE' && refselected != '' && refselected != null) {
                                 searchURL += '&type=' + refselected;
                             }
-                            searchURL = 'Thanks! Now  <' + searchURL + '|let’s finish your request in Salesforce>';
+                            searchURL = 'Thanks! Please <' + searchURL + '|click to complete your request in Salesforce.>';
                             bot.httpBody({
                                 response_action: 'update',
                                 view: {
@@ -1015,7 +1024,7 @@ module.exports = controller => {
                                 searchURL += '&type=';
                                 searchURL += refselected;
                             }
-                            searchURL = 'Thanks! Now  <' + searchURL + '|let’s finish your request in Salesforce>';
+                            searchURL = 'Thanks! Please <' + searchURL + '|click to complete your request in Salesforce.>';
                             bot.httpBody({
                             response_action: 'update',
                             view: {
@@ -1046,9 +1055,7 @@ module.exports = controller => {
                             bot.httpBody({
                                 response_action: 'errors',
                                 errors: {
-                                    "blkselectopp": 'Please enter atleast one of these values.',
-                                    "accblock": 'Please enter atleast one of these values.',
-                                    "oppblock": 'Please enter atleast one of these values.'
+                                    "messageblk": 'Please provide Opportunity information.'
                                 }
                             });
                         } else if (acctext != '' && opptext != '') {
@@ -1132,7 +1139,7 @@ module.exports = controller => {
                             searchURL += '&type=';
                             searchURL += refselected;
                         }
-                        searchURL = 'Thanks! Now  <' + searchURL + '|let’s finish your request in Salesforce>';
+                        searchURL = 'Thanks! Please <' + searchURL + '|click to complete your request in Salesforce.>';
                         bot.httpBody({
                             response_action: 'update',
                             view: {
