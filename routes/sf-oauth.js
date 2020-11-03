@@ -8,7 +8,7 @@ module.exports = controller => {
         try {
 
             if (req.query.error) {
-                logger.log('salesforce auth error:', req.query.error);
+                logger.log('salesforce auth error:::', req.query.error);
                 res.status(401);
                 res.json({ ok: true, msg: 'salesforce auth failed' });
                 //res.sendFile('/auth-failed.html');
@@ -17,7 +17,8 @@ module.exports = controller => {
                 let conn = await connFactory.connect(req.query.code, controller, req.query.state);
                 let teamData = { addTeam: req.query.state };
                 console.log('19');
-                await saveTeamId(conn, teamData);
+                console.dir(conn);
+                //await saveTeamId(conn, teamData);
                 console.log('21');
                 res.status(302);
                 res.json({ ok: true, msg: 'salesforce auth successful' });
