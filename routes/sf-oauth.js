@@ -18,7 +18,7 @@ module.exports = controller => {
                 let teamData = { addTeam: req.query.state };
                 console.log('19');
                 console.dir(conn);
-                //await saveTeamId(conn, teamData);
+                await saveTeamId(conn, teamData);
                 console.log('21');
                 res.status(302);
                 res.json({ ok: true, msg: 'salesforce auth successful' });
