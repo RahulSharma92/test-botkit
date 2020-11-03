@@ -912,7 +912,7 @@ module.exports = controller => {
                                             "block_id": "messageblk",
                                             "text": {
                                                 "type": "plain_text",
-                                                "text": "Select from the 20 most recently-accessed Opportunities, or provide part of an Opportunity Account or Opportunity Name then select Next to see matching records.",
+                                                "text": "Select from the 10 most recently-accessed Opportunities, or provide part of an Opportunity Account or Opportunity Name then select Next to see matching records.",
                                                 "emoji": true
                                             }
                                         },
@@ -1055,7 +1055,8 @@ module.exports = controller => {
                             bot.httpBody({
                                 response_action: 'errors',
                                 errors: {
-                                    "messageblk": 'Please provide Opportunity information.'
+                                    "messageblk": 'Please provide Opportunity information.',
+                                    "accblock": 'Please provide Opportunity information.'
                                 }
                             });
                         } else if (acctext != '' && opptext != '') {
