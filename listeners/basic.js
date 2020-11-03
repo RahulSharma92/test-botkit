@@ -1055,15 +1055,14 @@ module.exports = controller => {
                             bot.httpBody({
                                 response_action: 'errors',
                                 errors: {
-                                    "messageblk": 'Please provide Opportunity information.',
-                                    "accblock": 'Please provide Opportunity information.'
+                                    "oppblock": 'Please provide Opportunity information.'
                                 }
                             });
                         } else if (acctext != '' && opptext != '') {
                             bot.httpBody({
                                 response_action: 'errors',
                                 errors: {
-                                    "blkselectopp": 'Please enter Account Name OR Opportunity name;'
+                                    "oppblock": 'Please enter Account Name OR Opportunity name;'
                                 }
                             });
                         } else if (acctext != '' && opptext == '') {
