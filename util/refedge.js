@@ -94,7 +94,8 @@ module.exports = {
     },
     getOppfromName: async (conn,email,name) => {
         let opp = [];
-        let url = '/rebot/OPP_TYPE_NAME' + '::' + email + '?name=' + name;
+        name = encodeURI(name);
+        let url = '/rebot/OPP_TYPE_NAME' + '::' + email + '::' + name;
         console.log(url);
         await conn.apex.get(url, (err, response) => {
             if (err) {
@@ -119,7 +120,8 @@ module.exports = {
     },
     getOppfromAcc: async (conn,email,name) => {
         let opp = [];
-        let url = '/rebot/OPP_TYPE_ACCNAME' + '::' + email + '?name=' + name;
+        name = encodeURIComponent(name);
+        let url = '/rebot/OPP_TYPE_ACCNAME' + '::' + email + '::' + name;
         console.log(url);
         await conn.apex.get(url, (err, response) => {
             if (err) {
