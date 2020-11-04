@@ -80,7 +80,7 @@ module.exports = {
                         let entry = {
                             "text": {
                                 "type": "plain_text",
-                                "text": oppWrapper['oppName'] + '(' + oppWrapper['accName'] + ')'
+                                "text": oppWrapper['oppName'] + ' (' + oppWrapper['accName'] + ')'
                             },
                             "value": oppWrapper['id']
                         }
@@ -107,7 +107,7 @@ module.exports = {
                         let entry = {
                             "text": {
                                 "type": "plain_text",
-                                "text": oppWrapper['oppName'] + '(' + oppWrapper['accName'] + ')'
+                                "text": oppWrapper['oppName'] + ' (' + oppWrapper['accName'] + ')'
                             },
                             "value": oppWrapper['id']
                         }
@@ -133,7 +133,7 @@ module.exports = {
                         let entry = {
                             "text": {
                                 "type": "plain_text",
-                                "text": oppWrapper['oppName'] + '(' + oppWrapper['accName'] + ')'
+                                "text": oppWrapper['oppName'] + ' (' + oppWrapper['accName'] + ')'
                             },
                             "value": oppWrapper['id']
                         }
