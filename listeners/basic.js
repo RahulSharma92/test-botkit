@@ -139,9 +139,9 @@ module.exports = controller => {
                         const authUrl = connFactory.getAuthUrl(message.team);
                         await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
                     } else {
-                        await controller.plugins.database.orgs.delete(message.team);
+                        /*await controller.plugins.database.orgs.delete(message.team);
                         const authUrl = connFactory.getAuthUrl(message.team);
-                        await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);
+                        await bot.reply(message, `click this link to connect\n<${authUrl}|Connect to Salesforce>`);*/
                         //await bot.beginDialog('sf_auth');
                     }
                 } else if (message.intent === 'create_request') {
@@ -862,7 +862,7 @@ module.exports = controller => {
                                     },
                                     "title": {
                                         "type": "plain_text",
-                                        "text": "Select Opportunity",
+                                        "text": "Select an Opportunity",
                                         "emoji": true
                                     },
                                     "blocks": [
@@ -881,7 +881,7 @@ module.exports = controller => {
                                             },
                                             "label": {
                                                 "type": "plain_text",
-                                                "text": "Opportunity",
+                                                "text": "Recent Opportunities",
                                                 "emoji": true
                                             }
                                         }
@@ -903,7 +903,7 @@ module.exports = controller => {
                                     },
                                     "title": {
                                         "type": "plain_text",
-                                        "text": "Select Opportunity",
+                                        "text": "Select an Opportunity",
                                         "emoji": true
                                     },
                                     "blocks": [
@@ -911,8 +911,8 @@ module.exports = controller => {
                                             "type": "section",
                                             "block_id": "messageblk",
                                             "text": {
-                                                "type": "plain_text",
-                                                "text": "Select from the 10 most recently-accessed Opportunities, or provide part of an Opportunity Account or Opportunity Name then select Next to see matching records.",
+                                                "type": "mrkdwn",
+                                                "text": "• Select from the 10 most recently accessed opportunities.\n• Or lookup an opportunity by name or account.",
                                                 "emoji": true
                                             }
                                         },
@@ -925,15 +925,22 @@ module.exports = controller => {
                                                 "action_id": "opp_select",
                                                 "placeholder": {
                                                     "type": "plain_text",
-                                                    "text": "Select an Opp",
+                                                    "text": "Select",
                                                     "emoji": true
                                                 },
                                                 "options": opps
                                             },
                                             "label": {
                                                 "type": "plain_text",
-                                                "text": "Opportunity",
+                                                "text": "Recent Opportunities",
                                                 "emoji": true
+                                            }
+                                        },
+                                        {
+                                            "type": "section",
+                                            "text": {
+                                                "type": "mrkdwn",
+                                                "text": "*OR*"
                                             }
                                         },
                                         {
@@ -945,16 +952,23 @@ module.exports = controller => {
                                                 "action_id": "account_name",
                                                 "placeholder": {
                                                     "type": "plain_text",
-                                                    "text": "Opportunity Account Name"
+                                                    "text": "Type account"
                                                 },
                                                 "multiline": false
                                             },
                                             "label": {
                                                 "type": "plain_text",
-                                                "text": "Opportunity Account Name",
+                                                "text": "Account Lookup",
                                                 "emoji": true
                                             }
                                         } ,
+                                        {
+                                            "type": "section",
+                                            "text": {
+                                                "type": "mrkdwn",
+                                                "text": "*OR*"
+                                            }
+                                        },
                                         {
                                             "type": "input",
                                             "optional": true,
@@ -964,13 +978,13 @@ module.exports = controller => {
                                                 "action_id": "opp_name",
                                                 "placeholder": {
                                                     "type": "plain_text",
-                                                    "text": "Opportunity Name"
+                                                    "text": "Type opportunity"
                                                 },
                                                 "multiline": false
                                             },
                                             "label": {
                                                 "type": "plain_text",
-                                                "text": "Opportunity Name",
+                                                "text": "Opportunity Lookup",
                                                 "emoji": true
                                             }
                                         }
@@ -1101,7 +1115,7 @@ module.exports = controller => {
                                     },
                                     "title": {
                                         "type": "plain_text",
-                                        "text": "Select Opportunity",
+                                        "text": "Select an Opportunity",
                                         "emoji": true
                                     },
                                     "blocks": [
@@ -1113,14 +1127,14 @@ module.exports = controller => {
                                                 "action_id": "opp_select",
                                                 "placeholder": {
                                                     "type": "plain_text",
-                                                    "text": "Select an Opp",
+                                                    "text": "Select",
                                                     "emoji": true
                                                 },
                                                 "options": opps
                                             },
                                             "label": {
                                                 "type": "plain_text",
-                                                "text": "Opportunity",
+                                                "text": "Recent Opportunities",
                                                 "emoji": true
                                             }
                                         }
