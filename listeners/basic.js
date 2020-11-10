@@ -937,6 +937,13 @@ module.exports = controller => {
                                             }
                                         },
                                         {
+                                            "type": "section",
+                                            "text": {
+                                                "type": "plain_text",
+                                                "text": "*OR*"
+                                            }
+                                        },
+                                        {
                                             "type": "input",
                                             "optional": true,
                                             "block_id" : "accblock",
@@ -953,6 +960,13 @@ module.exports = controller => {
                                                 "type": "plain_text",
                                                 "text": "Account Lookup",
                                                 "emoji": true
+                                            }
+                                        },
+                                        {
+                                            "type": "section",
+                                            "text": {
+                                                "type": "plain_text",
+                                                "text": "*OR*"
                                             }
                                         },
                                         {
