@@ -847,7 +847,7 @@ module.exports = controller => {
                         let mapval = await getOpp(existingConn,email,actionName);
                         let searchURL = mapval['searchURL'];
                         let opps = mapval['opp'];
-                        /*if (opps != null && opps.length > 0 && opps.length < 11) {
+                        if (opps != null && opps.length > 0 && opps.length < 11) {
                             bot.httpBody({
                                 response_action: 'update',
                                 view: {
@@ -888,7 +888,7 @@ module.exports = controller => {
                                     ]
                                 }
                             });
-                        } else*/ if (opps != null && opps.length >= 1) {
+                        } else if (opps != null && opps.length >= 11) {
                             bot.httpBody({
                                 response_action: 'update',
                                 view: {
