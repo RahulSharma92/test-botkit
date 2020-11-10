@@ -911,8 +911,8 @@ module.exports = controller => {
                                             "type": "section",
                                             "block_id": "messageblk",
                                             "text": {
-                                                "type": "mrkdwn",
-                                                "text": "• Select from the 10 most recently accessed opportunities.\n• Or lookup an opportunity by name or account.",
+                                                "type": "plain_text",
+                                                "text": "Select from the 10 most recently accessed opportunities.\nOr lookup an opportunity by name or account.",
                                                 "emoji": true
                                             }
                                         },
