@@ -888,7 +888,7 @@ module.exports = controller => {
                                     ]
                                 }
                             });
-                        } else*/ if (opps != null && opps.length > 1) {
+                        } else*/ if (opps != null && opps.length >= 1) {
                             bot.httpBody({
                                 response_action: 'update',
                                 view: {
@@ -912,7 +912,7 @@ module.exports = controller => {
                                             "block_id": "messageblk",
                                             "text": {
                                                 "type": "mrkdwn",
-                                                "text": "• Select from the 10 most recently accessed opportunities.\n• Or lookup an opportunity by name or account.",
+                                                "text": "-Select from the 10 most recently accessed opportunities.\n-Or lookup an opportunity by name or account.",
                                                 "emoji": true
                                             }
                                         },
