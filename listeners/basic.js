@@ -939,7 +939,7 @@ module.exports = controller => {
                                         {
                                             "type": "section",
                                             "text": {
-                                                "type": "plain_text",
+                                                "type": "mrkdwn",
                                                 "text": "*OR*"
                                             }
                                         },
@@ -965,7 +965,7 @@ module.exports = controller => {
                                         {
                                             "type": "section",
                                             "text": {
-                                                "type": "plain_text",
+                                                "type": "mrkdwn",
                                                 "text": "*OR*"
                                             }
                                         },
