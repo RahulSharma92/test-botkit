@@ -25,7 +25,6 @@ const adapter = new SlackAdapter({
     'users:read',
     'users.profile:read', 
     'users:read.email', 
-    'chat:write',
     'commands',
     'groups:history',
     'im:history',
