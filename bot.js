@@ -20,7 +20,9 @@ const adapter = new SlackAdapter({
     scopes: ['bot', 'team:read', 'users:read','users.profile:read', 'users:read.email', 'channels:write'],
     redirectUri: process.env.SLACK_REDIRECT_URI,
     getTokenForTeam: getTokenForTeam,
-    getBotUserByTeam: getBotUserByTeam
+    getBotUserByTeam: getBotUserByTeam,
+    oauthVersion: 'v2'
+
 });
 adapter.use(new SlackEventMiddleware());
 adapter.use(new SlackMessageTypeMiddleware());
