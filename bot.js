@@ -66,10 +66,10 @@ controller.ready(() => {
 });
 
 async function getTokenForTeam(teamId) {
-
+    console.log('@@@@@team id in getTokenForTeam', teamId);
     try {
         const teamData = await controller.plugins.database.teams.get(teamId);
-
+        console.log('@@@@@team data in getTokenForTeam', teamData);
         if (!teamData) {
             console.log('team not found for id: ', teamId);
         }
@@ -80,10 +80,10 @@ async function getTokenForTeam(teamId) {
 }
 
 async function getBotUserByTeam(teamId) {
-
+    console.log('@@@@@team id in getBotUserByTeam', teamId);
     try {
         const teamData = await controller.plugins.database.teams.get(teamId);
-
+        console.log('@@@@@team teamData in getBotUserByTeam', teamData);
         if (!teamData) {
             console.log('team not found for id: ', teamId);
         }
