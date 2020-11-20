@@ -249,13 +249,16 @@ module.exports = controller => {
         async (bot, message) => {
             try {
                 console.log('slash_command');
+                console.log('.....bot...',bot);
+                console.log('.....message...',message);
                 let existingConn = await connFactory.getConnection(message.team, controller);
-                
+                console.log('............after hitting slash command .....existingConn', existingConn);
                 if (existingConn) {
                     const userProfile = await bot.api.users.info({
                         token : bot.api.token,
                         user : message.user
                     });
+                    console.log('.......userprofile ....', userProfile);
                     console.log(userProfile.user.profile.email);
                     
                     const result = await bot.api.views.open({
@@ -1192,6 +1195,11 @@ module.exports = controller => {
         console.log('******************-----/oauth_success/-----******************');
         console.log('-----/authData/-----')
         console.dir(authData)
+        console.log('---------------after redirection team id is:::::', authData.team_id);
+        console.log('---------------after redirection team name is:::::', authData.team_name);
+        console.log('---------------after redirection access_token is:::::', authData.access_token);
+        console.log('---------------after redirection bot_user_id is:::::', authData.bot_user_id);
+        console.log('---------------after redirection user_id is:::::', authData.user_id);
         try {
             let existingTeam = await controller.plugins.database.teams.get(authData.team_id);
             let isNew = false;
@@ -1224,6 +1232,7 @@ module.exports = controller => {
                 controller.trigger('onboard', bot, authData.user_id);
             }
         } catch (err) {
+            console.log('-------error-----------');
             console.log(err);
         }
     });
