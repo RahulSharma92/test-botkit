@@ -1217,7 +1217,7 @@ module.exports = controller => {
                 //user_id: authData.bot.bot_user_id,
                 //app_token: authData.access_token,
                 token : authData.access_token,
-                user_id : authData.bot_user_id,
+                user_id : authData.user_id,
                 created_by: authData.user_id
             };
             await controller.plugins.database.teams.save(existingTeam);
