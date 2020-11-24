@@ -2,9 +2,6 @@ require('dotenv').config();
 
 const { Botkit } = require('botkit');
 const { SlackAdapter, SlackMessageTypeMiddleware, SlackEventMiddleware } = require('botbuilder-adapter-slack');
-/* const dialogflowMiddleware = require('botkit-middleware-dialogflow')({
-    keyFilename : './util/dialogflowprivatekey.json',
-}); */
 const projectId = process.env.PROJECT_ID;
 const client_email = process.env.CLIENT_EMAIL;
 const private_key = process.env.PRIVATE_KEY.replace(/\\n/gm, '\n');
