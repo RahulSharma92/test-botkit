@@ -24,8 +24,8 @@ const adapter = new SlackAdapter({
     clientSigningSecret: process.env.SLACK_SIGNING_SECRET,
     clientId: process.env.SLACK_CLIENT_ID,
     clientSecret: process.env.SLACK_CLIENT_SECRET,
-    scopes: [
-    'calls:read',
+    scopes: ['bot', 'team:read', 'users:read','users.profile:read', 'users:read.email', 'channels:write'
+    /* 'calls:read',
     'channels:history',
     'channels:write', 
     'team:read', 
@@ -43,12 +43,12 @@ const adapter = new SlackAdapter({
     'mpim:read',
     'mpim:write',
     'reactions:read',
-    'users.profile:read'
+    'users.profile:read' */
     ],
     redirectUri: process.env.SLACK_REDIRECT_URI,
     getTokenForTeam: getTokenForTeam,
-    getBotUserByTeam: getBotUserByTeam,
-    oauthVersion: 'v2'
+    getBotUserByTeam: getBotUserByTeam/* ,
+    oauthVersion: 'v2' */
 
 });
 adapter.use(new SlackEventMiddleware());
