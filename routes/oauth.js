@@ -9,7 +9,7 @@ module.exports = controller => {
         try {
             console.log('-----/oauth/req-----')
             console.dir(controller.adapter);
-            let botInstance = controller.adapter.middlewares.spawn({});
+            let botInstance = controller.spawn({});
             let options = {
                 client_id: controller.adapter.options.clientId,
                 client_secret: controller.adapter.options.clientSecret,
