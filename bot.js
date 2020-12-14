@@ -50,11 +50,10 @@ const adapter = new SlackAdapter({
     'groups:history',
     */
     ],
+    oauthVersion: 'v2',
     redirectUri: process.env.SLACK_REDIRECT_URI,
     getTokenForTeam: getTokenForTeam,
-    getBotUserByTeam: getBotUserByTeam,
-    oauthVersion: 'v2'
-
+    getBotUserByTeam: getBotUserByTeam
 });
 adapter.use(new SlackEventMiddleware());
 adapter.use(new SlackMessageTypeMiddleware());
