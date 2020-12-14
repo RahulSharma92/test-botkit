@@ -8,7 +8,8 @@ module.exports = controller => {
 
         try {
             console.log('-----/oauth/req-----')
-            console.dir(req)
+            console.dir(controller.adapter);
+
             const authData = await controller.adapter.validateOauthCode(req.query.code);
             console.log('-----/authData/-----')
             console.dir(req.query)
