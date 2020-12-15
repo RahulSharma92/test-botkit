@@ -1195,20 +1195,20 @@ module.exports = controller => {
         console.log('******************-----/oauth_success/-----******************');
         console.log('-----/authData/-----')
         console.dir(authData)
-        console.log('---------------after redirection team id is:::::', authData.team_id);
-        console.log('---------------after redirection team name is:::::', authData.team_name);
+        console.log('---------------after redirection team id is:::::', authData.team.id);
+        console.log('---------------after redirection team name is:::::', authData.team.name);
         console.log('---------------after redirection access_token is:::::', authData.access_token);
         console.log('---------------after redirection bot_user_id is:::::', authData.bot_user_id);
-        console.log('---------------after redirection user_id is:::::', authData.user_id);
+        console.log('---------------after redirection user_id is:::::', authData.authed_user.id);
         try {
-            let existingTeam = await controller.plugins.database.teams.get(authData.team_id);
+            let existingTeam = await controller.plugins.database.teams.get(authData.team.id);
             let isNew = false;
 
             if (!existingTeam) {
                 isNew = true;
                 existingTeam = {
-                    id: authData.team_id,
-                    name: authData.team_name,
+                    id: authData.team.id,
+                    name: authData.team.name,
                     is_migrating: false
                 };
             }
@@ -1217,19 +1217,19 @@ module.exports = controller => {
                 //user_id: authData.bot.bot_user_id,
                 //app_token: authData.access_token,
                 token : authData.access_token,
-                user_id : authData.user_id,
-                created_by: authData.user_id
+                user_id : authData.bot_user_id,
+                created_by: authData.authed_user.id
             };
             await controller.plugins.database.teams.save(existingTeam);
             console.log('-----/existingTeam/-----');
             console.dir(existingTeam);
 
             if (isNew) {
-                let bot = await controller.spawn(authData.team_id);
+                let bot = await controller.spawn(authData.team.id);
                 console.log('-----/bot/-----');
                 console.dir(bot);
                 controller.trigger('create_channel', bot, authData);
-                controller.trigger('onboard', bot, authData.user_id);
+                controller.trigger('onboard', bot, authData.authed_user.id);
             }
         } catch (err) {
             console.log('-------error-----------');
@@ -1255,7 +1255,7 @@ module.exports = controller => {
             const crpTeamChannel = {
                 id: result.channel.id,
                 name: result.channel.name,
-                team_id: authData.team_id
+                team_id: authData.team.id
             };
             console.log('-----/crpTeamChannel/-----');
             console.dir(crpTeamChannel);
