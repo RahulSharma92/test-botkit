@@ -9,7 +9,7 @@ module.exports = controller => {
         try {
             console.log('-----/oauth/req-----')
             console.dir(controller.adapter);
-            let botInstance = controller.spawn({});
+            /* let botInstance = controller.spawn({});
             let options = {
                 client_id: controller.adapter.options.clientId,
                 client_secret: controller.adapter.options.clientSecret,
@@ -35,15 +35,12 @@ module.exports = controller => {
                     controller.trigger('oauth_success', [auth]);
                     res.redirect(`https://slack.com/app_redirect?app=${process.env.SLACK_APP_ID}`);
                 });
-            });
-
-
-
-            //const authData = await controller.adapter.validateOauthCode(req.query.code);
-            /* console.log('-----/authData/-----')
+            }); */
+            const authData = await controller.adapter.validateOauthCode(req.query.code);
+            console.log('-----/authData/-----')
             console.dir(req.query)
             controller.trigger('oauth_success', authData);
-            res.redirect(`https://slack.com/app_redirect?app=${process.env.SLACK_APP_ID}`); */
+            res.redirect(`https://slack.com/app_redirect?app=${process.env.SLACK_APP_ID}`); 
         } catch (err) {
             console.error('OAUTH ERROR: ', err);
             res.status(401);
