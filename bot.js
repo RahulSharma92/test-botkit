@@ -67,11 +67,10 @@ const controller = new Botkit({
 controller.addPluginExtension('database', mongoProvider);
 
 controller.middleware.receive.use(dialogflowMiddleware.receive);
-
+controller.publicFolder('', __dirname + '/public');
 controller.ready(() => {
     controller.loadModules(__dirname + '/dialogs');
     controller.loadModules(__dirname + '/listeners');
-    controller.loadModules(__dirname + '/public');
     console.log('----------------Ready-----------------');
     authRouter(controller);
     sfAuthRouter(controller);
