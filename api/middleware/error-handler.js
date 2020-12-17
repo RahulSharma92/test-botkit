@@ -1,6 +1,5 @@
 
-const logger = require('../../common/logger');
-
+const logger = require('../../util/logger');
 module.exports = {
     notFound: (req, res, next) => {
         const err = new Error('not found!!');
