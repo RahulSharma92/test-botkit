@@ -19,6 +19,8 @@ const mongoProvider = require('./db/mongo-provider')({
 const authRouter = require('./routes/oauth');
 const sfAuthRouter = require('./routes/sf-oauth');
 const sfMsgRouter = require('./routes/msg-handler');
+const corsMiddleware = require('./api/middleware/cors');
+const errorHandlerMiddleware = require('./api/middleware/error-handler');
 
 const adapter = new SlackAdapter({
     clientSigningSecret: process.env.SLACK_SIGNING_SECRET,
@@ -63,11 +65,15 @@ const controller = new Botkit({
     webhook_uri: '/slack/receive',
     adapter
 });
-
+controller.webserver.use(corsMiddleware);
 controller.addPluginExtension('database', mongoProvider);
 
 controller.middleware.receive.use(dialogflowMiddleware.receive);
 controller.publicFolder('', __dirname + '/public');
+controller.webserver.use(errorHandlerMiddleware.notFound);
+controller.webserver.use(errorHandlerMiddleware.internalError);
+
+
 controller.ready(() => {
     controller.loadModules(__dirname + '/dialogs');
     controller.loadModules(__dirname + '/listeners');
