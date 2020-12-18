@@ -29,7 +29,8 @@ module.exports = controller => {
                 const authUrl = connFactory.getAuthUrl(teamResponse.team.id);
                 console.log('-----------URL------------');
                 console.log(authUrl);
-                convo.setVar('authUrl',authUrl);
+                //convo.setVar('authUrl',authUrl);
+                convo.setVar('authUrl','https://login.salesforce.com');
 
                 await convo.gotoThread('connect');
             }
