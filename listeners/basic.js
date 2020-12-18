@@ -682,15 +682,42 @@ module.exports = controller => {
     /* This needs to be updated*/
     controller.on('app_uninstalled', async (ctrl, event) => {
         console.log('--------------uninstalling app----------');
-        try {
+        console.log('teamId', event.team_id);
+        /* try {
             const channels = await controller.plugins.database.channels.find({ team_id: event.team_id });
-
+            console.log('channels', channels);
             if (channels && channels.length > 0) {
                 await controller.plugins.database.channels.delete(channels[0].id);
+                console.log('channels', channels);
             }
             await controller.plugins.database.teams.delete(event.team_id);
         } catch (err) {
             console.log(err);
+        } */
+
+        try {
+            const existingConn = await connFactory.getConnection(event.team_id, controller);
+            const channels = await controller.plugins.database.channels.find({ team_id: event.team_id });
+
+            if (channels && channels.length > 0) {
+                const delChannelResult = await controller.plugins.database.channels.delete(channels[0].id);
+                logger.log('delete channel result:', delChannelResult);
+            }
+
+            if (existingConn) {
+                let teamData = { removeTeam: event.team_id };
+                saveTeamId(existingConn, teamData);
+                const revokeResult = await connFactory.revoke({
+                    revokeUrl: existingConn.oauth2.revokeServiceUrl,
+                    refreshToken: existingConn.refreshToken,
+                    teamId: event.team_id
+                }, controller);
+                logger.log('delete org result:', revokeResult);
+            }
+            const delTeamResult = await controller.plugins.database.teams.delete(event.team_id);
+            logger.log('delete team result:', delTeamResult);
+        } catch (err) {
+            logger.log(err);
         }
     });
 
