@@ -681,7 +681,7 @@ module.exports = controller => {
     });
     /* This needs to be updated*/
     controller.on('app_uninstalled', async (ctrl, event) => {
-
+        console.log('--------------uninstalling app----------');
         try {
             const channels = await controller.plugins.database.channels.find({ team_id: event.team_id });
 

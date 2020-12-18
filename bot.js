@@ -2,6 +2,7 @@ require('dotenv').config();
 
 const { Botkit } = require('botkit');
 const { SlackAdapter, SlackMessageTypeMiddleware, SlackEventMiddleware } = require('botbuilder-adapter-slack');
+const { getFilterMiddleware } = require('./listeners/middleware/migration-filter');
 const projectId = process.env.PROJECT_ID;
 const client_email = process.env.CLIENT_EMAIL;
 const private_key = process.env.PRIVATE_KEY.replace(/\\n/gm, '\n');
@@ -70,6 +71,7 @@ controller.webserver.use(corsMiddleware);
 controller.addPluginExtension('database', mongoProvider);
 
 controller.middleware.receive.use(dialogflowMiddleware.receive);
+controller.middleware.receive.use(getFilterMiddleware);
 controller.publicFolder('', __dirname + '/public');
 
 
