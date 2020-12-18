@@ -71,8 +71,7 @@ controller.addPluginExtension('database', mongoProvider);
 
 controller.middleware.receive.use(dialogflowMiddleware.receive);
 controller.publicFolder('', __dirname + '/public');
-controller.webserver.use(errorHandlerMiddleware.notFound);
-controller.webserver.use(errorHandlerMiddleware.internalError);
+
 
 
 controller.ready(() => {
@@ -111,7 +110,8 @@ async function getBotUserByTeam(teamId) {
         console.log(err);
     }
 }
-
+controller.webserver.use(errorHandlerMiddleware.notFound);
+controller.webserver.use(errorHandlerMiddleware.internalError);
 process.on('uncaughtException', err => {
     console.log('uncaught exception encountered, exiting process', err.stack);
     process.exit(1);
