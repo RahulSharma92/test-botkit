@@ -38,7 +38,8 @@ const adapter = new SlackAdapter({
     'im:history',
     'im:write',
     'incoming-webhook',
-    'commands'
+    'commands',
+    'links:write'
     /* 'links:read',
     'mpim:history',
     'mpim:read',
