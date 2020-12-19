@@ -697,8 +697,8 @@ module.exports = controller => {
         } */
 
         try {
-            const existingConn = await connFactory.getConnection(event.team_id, controller);
-            const channels = await controller.plugins.database.channels.find({ team_id: event.team_id });
+            const existingConn = await connFactory.getConnection(event.team, controller);//team_id is replaced with team probably due to new event payload
+            const channels = await controller.plugins.database.channels.find({ team_id: event.team });
 
             if (channels && channels.length > 0) {
                 const delChannelResult = await controller.plugins.database.channels.delete(channels[0].id);
@@ -706,16 +706,16 @@ module.exports = controller => {
             }
 
             if (existingConn) {
-                let teamData = { removeTeam: event.team_id };
+                let teamData = { removeTeam: event.team };
                 saveTeamId(existingConn, teamData);
                 const revokeResult = await connFactory.revoke({
                     revokeUrl: existingConn.oauth2.revokeServiceUrl,
                     refreshToken: existingConn.refreshToken,
-                    teamId: event.team_id
+                    teamId: event.team
                 }, controller);
                 logger.log('delete org result:', revokeResult);
             }
-            const delTeamResult = await controller.plugins.database.teams.delete(event.team_id);
+            const delTeamResult = await controller.plugins.database.teams.delete(event.team);
             logger.log('delete team result:', delTeamResult);
         } catch (err) {
             logger.log(err);
