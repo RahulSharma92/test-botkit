@@ -663,7 +663,7 @@ module.exports = controller => {
     controller.on('create_channel', async (bot, authData) => {
         console.log('******************-----/create_channel/-----******************');
         try {
-            let result = await bot.api.channels.join({
+            let result = await bot.api.conversations.create({
                 token: authData.access_token,
                 name: '#crp_team'
             });
