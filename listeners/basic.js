@@ -665,7 +665,7 @@ module.exports = controller => {
         try {
             let result = await bot.api.conversations.create({
                 token: authData.access_token,
-                name: '#crp_team'
+                name: 'crp_team'
             });
             const crpTeamChannel = {
                 id: result.channel.id,
